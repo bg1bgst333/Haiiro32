@@ -4,7 +4,7 @@
 #include "resource.h"		// リソース
 
 // コンストラクタCMainWindow()
-CMainWindow::CMainWindow() : CWindow(){
+CMainWindow::CMainWindow() : CMenuWindow(){
 
 }
 
@@ -40,6 +40,15 @@ BOOL CMainWindow::Create(LPCTSTR lpctszWindowName, DWORD dwStyle, int x, int y, 
 // ウィンドウの作成が開始された時.
 int CMainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct){
 
+	// メニューバーの作成.
+	m_pMenuBar = new CMenuBar(hwnd);	// CMenuBarオブジェクトm_pMenuBarを作成.
+
+	// メニューのロード.
+	m_pMenuBar->LoadMenu(lpCreateStruct->hInstance, IDR_MENU1);	// LoadMenuでIDR_MENU1をロード.
+
+	// メニューのセット.
+	m_pMenuBar->SetMenu(hwnd);	// SetMenuでhwndにメニューをセット.
+
 	// 常にウィンドウ作成に成功するものとする.
 	return 0;	// 0を返すと, ウィンドウ作成に成功したということになる.
 
@@ -49,7 +58,7 @@ int CMainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct){
 void CMainWindow::OnDestroy(){
 
 	// 親ウィンドウのOnDestroyを呼ぶ.
-	CWindow::OnDestroy();	// CWindow::OnDestroyを呼ぶ.
+	CMenuWindow::OnDestroy();	// CMenuWindow::OnDestroyを呼ぶ.
 
 }
 
