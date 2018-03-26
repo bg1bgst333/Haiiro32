@@ -7,6 +7,7 @@
 #include <string>	// std::string
 // 独自のヘッダ
 #include "Window.h"	// CWindow
+#include "resource.h"	// リソース.
 
 // マクロの定義
 // UNICODE切り替え
@@ -28,6 +29,7 @@ class CMainWindow : public CWindow{
 		virtual ~CMainWindow();	// デストラクタ~CMainWindow()
 		// staticメンバ関数
 		static BOOL RegisterClass(HINSTANCE hInstance);	// ウィンドウクラス登録関数RegisterClass.
+		static BOOL RegisterClass(HINSTANCE hInstance, LPCTSTR lpszMenuName);	// ウィンドウクラス登録関数RegisterClass.(メニュー名指定バージョン.)
 		// メンバ関数
 		virtual BOOL Create(LPCTSTR lpctszWindowName, DWORD dwStyle, int x, int y, int iWidth, int iHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance);	// ウィンドウ作成関数Create.(ウィンドウクラス名省略バージョン.)
 		virtual int OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct);	// ウィンドウの作成が開始された時.

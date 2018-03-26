@@ -21,6 +21,14 @@ BOOL CMainWindow::RegisterClass(HINSTANCE hInstance){
 
 }
 
+// ウィンドウクラス登録関数RegisterClass.
+BOOL CMainWindow::RegisterClass(HINSTANCE hInstance, LPCTSTR lpszMenuName){
+
+	// ウィンドウプロシージャにはCWindow::StaticWndowProc, メニューはlpszMenuNameとする.((LPCTSTR)でキャストしないとオーバーロードが曖昧になる.)
+	return CWindow::RegisterClass(hInstance, _T("CMainWindow"), (LPCTSTR)lpszMenuName);	// CWindow::RegisterClassで登録.
+
+}
+
 // ウィンドウ作成関数Create.(ウィンドウクラス名省略バージョン.)
 BOOL CMainWindow::Create(LPCTSTR lpctszWindowName, DWORD dwStyle, int x, int y, int iWidth, int iHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance){// ウィンドウ作成関数Create.(ウィンドウクラス名省略バージョン.)
 
