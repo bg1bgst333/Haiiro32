@@ -49,6 +49,9 @@ int CMainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct){
 	// メニューのセット.
 	m_pMenuBar->SetMenu(hwnd);	// SetMenuでhwndにメニューをセット.
 
+	// メニューハンドラの追加.
+	AddCommandHandler(ID_APP_EXIT, 0, (int(CWindow::*)(WPARAM, LPARAM))&CMainWindow::OnAppExit);	// AddCommandHandlerでID_APP_EXITに対するハンドラCMainWindow::OnAppExitを登録.
+
 	// 常にウィンドウ作成に成功するものとする.
 	return 0;	// 0を返すと, ウィンドウ作成に成功したということになる.
 
@@ -57,15 +60,21 @@ int CMainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct){
 // ウィンドウが破棄された時.
 void CMainWindow::OnDestroy(){
 
+	// メニューハンドラの削除.
+	DeleteCommandHandler(ID_APP_EXIT, 0);	// DeleteCommandHandlerでID_APP_EXITのハンドラを削除.
+
 	// 親ウィンドウのOnDestroyを呼ぶ.
 	CMenuWindow::OnDestroy();	// CMenuWindow::OnDestroyを呼ぶ.
 
 }
 
-// コマンドが発生した時.
-BOOL CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam){
+// "アプリケーションの終了"を選択された時のハンドラ.
+int CMainWindow::OnAppExit(WPARAM wParam, LPARAM lParam){
 
-	// 処理していないのでFALSE.
-	return FALSE;	// returnでFALSEを返す.
+	// 閉じる.
+	SendMessage(m_hWnd, WM_CLOSE, 0, 0);	// WM_CLOSEを送信してウィンドウを閉じる.
+
+	// 処理したので0.
+	return 0;	// returnで0を返す.
 
 }
