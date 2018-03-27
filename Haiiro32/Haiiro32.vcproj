@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GraphicalApplication.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainApplication.cpp"
 				>
 			</File>
@@ -210,6 +214,10 @@
 			>
 			<File
 				RelativePath=".\Application.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalApplication.h"
 				>
 			</File>
 			<File

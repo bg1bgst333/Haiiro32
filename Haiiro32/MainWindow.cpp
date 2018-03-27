@@ -82,6 +82,53 @@ void CMainWindow::OnDestroy(){
 
 }
 
+// ウィンドウの描画を要求された時のハンドラOnPaint.
+void CMainWindow::OnPaint(){
+
+	// 変数の初期化.
+	HDC hDC = NULL;	// hDCをNULLで初期化.
+	PAINTSTRUCT ps = {0};	// psを{0}で初期化.
+	HPEN hPen = NULL;	// hPenをNULLで初期化.
+	HBRUSH hBrush = NULL;	// hBrushをNULLで初期化.
+	static int iCount = 0;	// static変数iCountを0で初期化.
+	TCHAR tszCount[32] = {0};	// TCHAR型配列(要素数32)を{0}で初期化.
+
+	// 描画開始.
+	hDC = BeginPaint(m_hWnd, &ps);	// BeginPaintで描画開始.
+
+	// ペンとブラシの生成.
+	hPen = (HPEN)CreatePen(PS_SOLID, 1, RGB(0, 0xff, 0));	// CreatePenで緑(淡)のペンを作成.
+	hBrush = (HBRUSH)CreateSolidBrush(RGB(0, 0x7f, 0));		// CreateSolidBrushで緑(濃)のブラシを作成.
+
+	// ペンとブラシの選択.
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);		// 緑のペンを選択.
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);	// 緑のブラシを選択.
+
+	// 矩形描画.
+	Rectangle(hDC, 0, 0, m_iClientAreaWidth, m_iClientAreaHeight);	// Rectangleで矩形を描画.
+
+	// テキストの表示.
+	_stprintf(tszCount, _T("%d"), iCount);	// _stprintfで整数値iCountを文字列tszCountに変換.
+	SetBkMode(hDC, TRANSPARENT);	// SetBkModeでTRANSPARENT(透過)にする.
+	TextOut(hDC, 50, 50, tszCount, _tcslen(tszCount));	// TextOutでtszCountを出力.
+	iCount++;	// iCountをインクリメント.
+	if (iCount >= 10000){	// iCountが10000以上なら.
+		iCount = 0;	// iCountを0にリセット.
+	}
+
+	// ペンとブラシの復元
+	SelectObject(hDC, hOldBrush);		// 古いブラシを選択.
+	SelectObject(hDC, hOldPen);		// 古いペンを選択.
+
+	// ペンとブラシの破棄.
+	DeleteObject(hBrush);	// ブラシの破棄.
+	DeleteObject(hPen);	// ペンの破棄.
+
+	// 描画終了.
+	EndPaint(m_hWnd, &ps);	// EndPaintで描画終了.
+
+}
+
 // ウィンドウを閉じた時.
 int CMainWindow::OnClose(){
 

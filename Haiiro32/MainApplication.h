@@ -4,10 +4,10 @@
 
 // ヘッダのインクルード
 // 独自のヘッダ
-#include "Application.h"	// CApplication
+#include "GraphicalApplication.h"	// CGraphicalApplication
 
 // メインアプリケーションクラスCMainApplication
-class CMainApplication : public CApplication{
+class CMainApplication : public CGraphicalApplication{
 
 	// publicメンバ
 	public:
