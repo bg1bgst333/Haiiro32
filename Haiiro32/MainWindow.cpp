@@ -11,6 +11,9 @@ CMainWindow::CMainWindow() : CMenuWindow(){
 // デストラクタ~CMainWindow()
 CMainWindow::~CMainWindow(){
 
+	// メンバの終了処理
+	Destroy();	// Destroyでこのウィンドウの終了処理をする.
+
 }
 
 // ウィンドウクラス登録関数RegisterClass.
@@ -34,6 +37,14 @@ BOOL CMainWindow::Create(LPCTSTR lpctszWindowName, DWORD dwStyle, int x, int y, 
 
 	// ウィンドウクラス名は"CMainWindow".
 	return CWindow::Create(_T("CMainWindow"), lpctszWindowName, dwStyle, x, y, iWidth, iHeight, hWndParent, hMenu, hInstance);	// CWindow::Createにウィンドウクラス名"CMainWindow"を指定.
+
+}
+
+// ウィンドウの破棄と終了処理関数Destroy.
+void CMainWindow::Destroy(){
+
+	// 親ウィンドウのDestroyを呼ぶ.
+	CMenuWindow::Destroy();	// CMenuWindow::Destroyを呼ぶ.
 
 }
 
@@ -65,6 +76,32 @@ void CMainWindow::OnDestroy(){
 
 	// 親ウィンドウのOnDestroyを呼ぶ.
 	CMenuWindow::OnDestroy();	// CMenuWindow::OnDestroyを呼ぶ.
+
+	// 終了メッセージの送信.
+	PostQuitMessage(0);	// PostQuitMessageで終了コードを0としてWM_QUITメッセージを送信.
+
+}
+
+// ウィンドウを閉じた時.
+int CMainWindow::OnClose(){
+
+	// アプリケーションを終了するかどうかの判定.
+	int iRet = MessageBox(m_hWnd, _T("アプリケーションを終了しますか?"), _T("Haiiro"), MB_YESNO | MB_ICONQUESTION);	// "アプリケーションを終了しますか?"と表示.("はい", "いいえ"のメッセージボックスが表示される.)
+	if (iRet == IDYES){	// "はい"が押された時.
+
+		// ウィンドウの終了処理.
+		Destroy();	// Destroyでこのウィンドウの終了処理をする.
+
+		// 0を返す.
+		return 0;	// 0を返してウィンドウを閉じる.
+
+	}
+	else{	// "いいえ"が押された時など.
+
+		// -1を返す.
+		return -1;	// -1を返してウィンドウを閉じない.
+
+	}
 
 }
 

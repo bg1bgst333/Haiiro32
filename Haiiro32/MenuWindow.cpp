@@ -14,10 +14,7 @@ CMenuWindow::CMenuWindow() : CWindow(){
 CMenuWindow::~CMenuWindow(){
 
 	// メンバの終了処理
-	if (m_pMenuBar != NULL){	// m_pMenuBarがNULLでなければ.
-		delete m_pMenuBar;	// deleteでm_pMenuBarを解放.
-		m_pMenuBar = NULL;	// m_pMenuBarにNULLをセット.
-	}
+	Destroy();	// Destroyでこのウィンドウの終了処理をする.
 
 }
 
@@ -37,16 +34,35 @@ BOOL  CMenuWindow::Create(LPCTSTR lpctszClassName, LPCTSTR lpctszWindowName, DWO
 
 }
 
+// ウィンドウの破棄と終了処理関数Destroy.
+void CMenuWindow::Destroy(){
+
+	// メニューバーの破棄.
+ 	if (m_pMenuBar != NULL){	// m_pMenuBarがNULLでなければ.
+ 		delete m_pMenuBar;	// deleteでm_pMenuBarを解放.
+ 		m_pMenuBar = NULL;	// m_pMenuBarにNULLをセット.
+ 	}
+ 
+	// 親ウィンドウのDestroyを呼ぶ.
+	CWindow::Destroy();	// CWindow::Destroyを呼ぶ.
+
+}
+
 // ウィンドウが破棄された時.
 void CMenuWindow::OnDestroy(){
 
-	// メンバの終了処理
-	if (m_pMenuBar != NULL){	// m_pMenuBarがNULLでなければ.
-		delete m_pMenuBar;	// deleteでm_pMenuBarを解放.
-		m_pMenuBar = NULL;	// m_pMenuBarにNULLをセット.
-	}
-
 	// 親ウィンドウのOnDestroy.
-	CWindow::OnDestroy();	// CWindowのOnDestroyを呼ぶ.
+ 	CWindow::OnDestroy();	// CWindow::OnDestroyを呼ぶ.
+
+}
+
+// ウィンドウを閉じた時.
+int CMenuWindow::OnClose(){
+
+	// ウィンドウの終了処理.
+	Destroy();	// Destroyでこのウィンドウの終了処理をする.
+
+	// 0を返す.
+	return 0;	// 0を返してウィンドウを閉じる.
 
 }

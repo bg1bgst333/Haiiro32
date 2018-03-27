@@ -24,7 +24,9 @@ class CMenuWindow : public CWindow{
 		static BOOL RegisterClass(HINSTANCE hInstance, LPCTSTR lpctszClassName, LPCTSTR lpszMenuName);	// ウィンドウクラス登録関数RegisterClass.(ウィンドウプロシージャ省略, メニュー名指定バージョン.)
 		// メンバ関数
 		virtual BOOL Create(LPCTSTR lpctszClassName, LPCTSTR lpctszWindowName, DWORD dwStyle, int x, int y, int iWidth, int iHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance);	// ウィンドウ作成関数Create.
+		virtual void Destroy();	// ウィンドウの破棄と終了処理関数Destroy.
 		virtual void OnDestroy();	// ウィンドウが破棄された時.
+		virtual int OnClose();	// ウィンドウを閉じた時.
 
 };
 
