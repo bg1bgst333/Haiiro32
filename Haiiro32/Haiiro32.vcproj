@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameApplication.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GraphicalApplication.cpp"
 				>
 			</File>
@@ -214,6 +218,10 @@
 			>
 			<File
 				RelativePath=".\Application.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameApplication.h"
 				>
 			</File>
 			<File
