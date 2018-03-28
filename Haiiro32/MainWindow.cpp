@@ -85,6 +85,8 @@ void CMainWindow::OnDestroy(){
 // ウィンドウの描画を要求された時のハンドラOnPaint.
 void CMainWindow::OnPaint(){
 
+	// 使わないのでコメントアウト.
+#if 0
 	// 変数の初期化.
 	HDC hDC = NULL;	// hDCをNULLで初期化.
 	PAINTSTRUCT ps = {0};	// psを{0}で初期化.
@@ -126,6 +128,7 @@ void CMainWindow::OnPaint(){
 
 	// 描画終了.
 	EndPaint(m_hWnd, &ps);	// EndPaintで描画終了.
+#endif
 
 }
 
