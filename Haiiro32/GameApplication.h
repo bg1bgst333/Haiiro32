@@ -15,6 +15,14 @@ class CGameApplication : public CGraphicalApplication{
 		// publicメンバ変数
 		int m_iSceneNo;	// シーン番号m_iSceneNo.
 		int m_iSceneStatus;	// シーン状態を表す変数m_iSceneStatus.
+		HDC m_hDC;	// ウィンドウデバイスコンテキストm_hDC.
+		HDC m_hMemDC;	// メモリデバイスコンテキストm_hMemDC.
+		HBITMAP m_hMemBitmap;	// メモリビットマップm_hMemBitmap.
+		HBITMAP m_hOldMemBitmap;	// 元のメモリビットマップm_hOldMemBitmap.
+		HPEN m_hBackPen;	// 背景ペンm_hBackPen.
+		HPEN m_hOldBackPen;	// 元の背景ペンm_hOldBackPen.
+		HBRUSH m_hBackBrush;	// 背景ブラシm_hBackBrush.
+		HBRUSH m_hOldBackBrush;	// 元の背景ブラシm_hOldBackBrush.
 
 		// publicメンバ関数
 		// コンストラクタ
