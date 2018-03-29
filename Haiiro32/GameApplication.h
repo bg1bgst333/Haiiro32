@@ -23,6 +23,12 @@ class CGameApplication : public CGraphicalApplication{
 		HPEN m_hOldBackPen;	// 元の背景ペンm_hOldBackPen.
 		HBRUSH m_hBackBrush;	// 背景ブラシm_hBackBrush.
 		HBRUSH m_hOldBackBrush;	// 元の背景ブラシm_hOldBackBrush.
+		HPEN m_hCursorPen;	// カーソルペンm_hCursorPen.
+		HPEN m_hOldCursorPen;	// 元のカーソルペンm_hOldCursorPen.
+		HBRUSH m_hCursorBrush;	// カーソルブラシm_hCursorBrush.
+		HBRUSH m_hOldCursorBrush;	// カーソルブラシm_hOldCursorBrush.
+		int m_iCursorX;	// カーソルのx座標m_iCursorX.
+		int m_iCursorY;	// カーソルのy座標m_iCursorY.
 
 		// publicメンバ関数
 		// コンストラクタ

@@ -16,6 +16,12 @@ CGameApplication::CGameApplication() : CGraphicalApplication(){
 	m_hOldBackPen = NULL;	// m_hOldBackPenをNULLで初期化.
 	m_hBackBrush = NULL;	// m_hBackBrushをNULLで初期化.
 	m_hOldBackBrush = NULL;	// m_hOldBackBrushをNULLで初期化.
+	m_hCursorPen = NULL;	// m_hCursorPenをNULLで初期化.
+	m_hOldCursorPen = NULL;	// m_hOldCursorPenをNULLで初期化.
+	m_hCursorBrush = NULL;	// m_hCursorBrushをNULLで初期化.
+	m_hOldCursorBrush = NULL;	// m_hOldCursorBrushをNULLで初期化.
+	m_iCursorX = 0;	// m_iCursorXを0で初期化.
+	m_iCursorY = 0;	// m_iCursorYを0で初期化.
 
 }
 
@@ -97,6 +103,22 @@ int CGameApplication::InitScene(HWND hWnd, int iClientAreaWidth, int iClientArea
 	// 背景ブラシの選択.
 	m_hOldBackBrush = (HBRUSH)SelectObject(m_hMemDC, m_hBackBrush);	// SelectObjectでm_hBackBrushを選択.
 
+	// カーソルペンの生成.
+	m_hCursorPen = CreatePen(PS_SOLID, 1, RGB(0x0, 0xff, 0x0));	// CreatePenでm_hCursorPenを生成.
+
+	// カーソルペンの選択.
+	m_hOldCursorPen = (HPEN)SelectObject(m_hMemDC, m_hCursorPen);	// SelectObjectでm_hCursorPenを選択.
+
+	// カーソルブラシの生成.
+	m_hCursorBrush = CreateSolidBrush(RGB(0x0, 0x7f, 0x0));	// CreateSolidBrushでm_hCursorBrushを生成.
+
+	// カーソルブラシの選択.
+	m_hOldCursorBrush = (HBRUSH)SelectObject(m_hMemDC, m_hCursorBrush);	// SelectObjectでm_hCursorBrushを選択.
+
+	// カーソル位置の初期化.
+	m_iCursorX = 0;	// m_iCursorXに0をセット.
+	m_iCursorY = 0;	// m_iCursorYに0をセット.
+
 	// 初期化終了なので1.
 	return 1;	// 1を返す.
 
@@ -105,11 +127,47 @@ int CGameApplication::InitScene(HWND hWnd, int iClientAreaWidth, int iClientArea
 // シーンの処理中RunScene.
 int CGameApplication::RunScene(HWND hWnd, int iClientAreaWidth, int iClientAreaHeight){
 
-	// 背景矩形の描画.
+	// キー入力の受信とカーソルの移動.
+	if (GetAsyncKeyState(VK_RIGHT)){	// 右キーが押された時.
+		m_iCursorX++;	// m_iCursorXをインクリメント.
+	}
+	if (GetAsyncKeyState(VK_LEFT)){	// 左キーが押された時.
+		m_iCursorX--;	// m_iCursorX\をデクリメント.
+	}
+	if (GetAsyncKeyState(VK_DOWN)){	// 下キーが押された時.
+		m_iCursorY++;	// m_iCursorYをインクリメント.
+	}
+	if (GetAsyncKeyState(VK_UP)){	// 上キーが押された時.
+		m_iCursorY--;	// m_iCursorYをデクリメント.
+	}
+
+	// カーソル位置の制限.
+	if (m_iCursorX >= 608){	// m_iCursorXが608以上なら.
+		m_iCursorX = 608;	// 608で止める.
+	}
+	if (m_iCursorX <= 0){	// m_iCursorXが0以下なら.
+		m_iCursorX = 0;	// 0で止める.
+	}
+	if (m_iCursorY >= 448){	// m_iCursorYが448以上なら.
+		m_iCursorY = 448;	// 448で止める.
+	}
+	if (m_iCursorY <= 0){	// m_iCursorYが0以下なら.
+		m_iCursorY = 0;	// 0で止める.
+	}
+
+	// 矩形の描画.
 	if (m_hMemDC != NULL){	// m_hMemDCがNULLでない時.
+
+		// 背景矩形の描画.
 		SelectObject(m_hMemDC, m_hBackPen);	// SelectObjectでm_hBackPenを選択.
 		SelectObject(m_hMemDC, m_hBackBrush);	// SelectObjectでm_hBackBrushを選択.
 		Rectangle(m_hMemDC, 0, 0, 640, 480);	// Rectangleで背景矩形を描画.
+
+		// カーソル矩形の描画.
+		SelectObject(m_hMemDC, m_hCursorPen);	// SelectObjectでm_hCursorPenを選択.
+		SelectObject(m_hMemDC, m_hCursorBrush);	// SelectObjectでm_hCursorBrushを選択.
+		Rectangle(m_hMemDC, m_iCursorX, m_iCursorY, m_iCursorX + 32, m_iCursorY + 32);	// Rectangleでカーソル矩形を描画.
+
 	}
 
 	// 前面に転送.
@@ -130,6 +188,30 @@ int CGameApplication::RunScene(HWND hWnd, int iClientAreaWidth, int iClientAreaH
 
 // シーンの終了処理ExitScene.
 int CGameApplication::ExitScene(HWND hWnd, int iClientAreaWidth, int iClientAreaHeight){
+
+	// カーソルブラシを戻す.
+	if (m_hOldCursorBrush != NULL){	// m_hOldCursorBrushがNULLでない時.
+		SelectObject(m_hMemDC, m_hOldCursorBrush);	// SelectObjectでm_hOldCursorBrushを選択.
+		m_hOldCursorBrush = NULL;	// m_hOldCursorBrushにNULLをセット.
+	}
+
+	// カーソルブラシの削除.
+	if (m_hCursorBrush != NULL){	// m_hCursorBrushがNULLでない時.
+		DeleteObject(m_hCursorBrush);	// DeleteObjectでm_hCursorBrushを削除.
+		m_hCursorBrush = NULL;	// m_hCursorBrushにNULLをセット.
+	}
+
+	// カーソルペンを戻す.
+	if (m_hOldCursorPen != NULL){	// m_hOldCursorPenがNULLでない時.
+		SelectObject(m_hMemDC, m_hOldCursorPen);	// SelectObjectでm_hOldCursorPenを選択.
+		m_hOldCursorPen = NULL;	// m_hOldCursorPenにNULLをセット.
+	}
+
+	// カーソルペンを削除.
+	if (m_hCursorPen != NULL){	// m_hCursorPenがNULLでない時.
+		DeleteObject(m_hCursorPen);	// DeleteObjectでm_hCursorPenを削除.
+		m_hCursorPen = NULL;	// m_hCursorPenにNULLをセット.
+	}
 
 	// 背景ブラシを戻す.
 	if (m_hOldBackBrush != NULL){	// m_hOldBackBrushがNULLでない時.
