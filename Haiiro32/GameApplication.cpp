@@ -58,6 +58,13 @@ int CGameApplication::Main(HWND hWnd, int iClientAreaWidth, int iClientAreaHeigh
 // シーンの初期化InitScene.
 int CGameApplication::InitScene(HWND hWnd, int iClientAreaWidth, int iClientAreaHeight){
 
+	// ウィンドウサイズをクライアント領域のサイズが640x480になるようなサイズする.
+	RECT rc = {0, 0, 640, 480};	// RECT型rcを{0, 0, 640, 480}で初期化.
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX, TRUE);	// AdjustWindowRectで適切なウィンドウサイズを取得.
+	RECT rcWnd = {0};	// ウィンドウ矩形領域rcWndを{0}で初期化.
+	GetWindowRect(hWnd, &rcWnd);	// GetWindowRectでrcWndを取得.
+	MoveWindow(hWnd, rcWnd.left, rcWnd.top, rc.right - rc.left, rc.bottom - rc.top, TRUE);	// MoveWindowでリサイズ.
+
 	// 初期化終了なので1.
 	return 1;	// 1を返す.
 
