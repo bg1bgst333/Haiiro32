@@ -12,6 +12,7 @@ CGameApplication::CGameApplication() : CGraphicalApplication(){
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.
 	m_hOldMemBitmap = NULL;	// m_hOldMemBitmapをNULLで初期化.
+#if 0
 	m_hBackPen = NULL;	// m_hBackPenをNULLで初期化.
 	m_hOldBackPen = NULL;	// m_hOldBackPenをNULLで初期化.
 	m_hBackBrush = NULL;	// m_hBackBrushをNULLで初期化.
@@ -22,6 +23,7 @@ CGameApplication::CGameApplication() : CGraphicalApplication(){
 	m_hOldCursorBrush = NULL;	// m_hOldCursorBrushをNULLで初期化.
 	m_iCursorX = 0;	// m_iCursorXを0で初期化.
 	m_iCursorY = 0;	// m_iCursorYを0で初期化.
+#endif
 
 }
 
@@ -72,52 +74,11 @@ int CGameApplication::Main(HWND hWnd, int iClientAreaWidth, int iClientAreaHeigh
 // シーンの初期化InitScene.
 int CGameApplication::InitScene(HWND hWnd, int iClientAreaWidth, int iClientAreaHeight){
 
-	// ウィンドウサイズをクライアント領域のサイズが640x480になるようなサイズする.
-	RECT rc = {0, 0, 640, 480};	// RECT型rcを{0, 0, 640, 480}で初期化.
-	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX, TRUE);	// AdjustWindowRectで適切なウィンドウサイズを取得.
-	RECT rcWnd = {0};	// ウィンドウ矩形領域rcWndを{0}で初期化.
-	GetWindowRect(hWnd, &rcWnd);	// GetWindowRectでrcWndを取得.
-	MoveWindow(hWnd, rcWnd.left, rcWnd.top, rc.right - rc.left, rc.bottom - rc.top, TRUE);	// MoveWindowでリサイズ.
+	// ウィンドウのリサイズ.
+	ResizeWindow(hWnd, 640, 480);	// ResizeWindowでクライアント領域が(640, 480)となるウィンドウにリサイズ. 
 
-	// デバイスコンテキストの取得.
-	m_hDC = GetDC(hWnd);	// GetDCでm_hDCを取得.
-
-	// メモリデバイスコンテキストの生成.
-	m_hMemDC = CreateCompatibleDC(m_hDC);	// CreateCompatibleDCでm_hMemDCを生成.
-
-	// メモリビットマップの生成.
-	m_hMemBitmap = CreateCompatibleBitmap(m_hDC, 640, 480);	// CreateCompatibleBitmapでm_hMemBitmapを生成.
-
-	// メモリデバイスコンテキストの選択.
-	m_hOldMemBitmap = (HBITMAP)SelectObject(m_hMemDC, m_hMemBitmap);	// SelectObjectでm_hMemBitmapを選択.
-
-	// 背景ペンの生成.
-	m_hBackPen = CreatePen(PS_SOLID, 1, RGB(0xff, 0x0, 0x0));	// CreatePenでm_hBackPenを生成.
-
-	// 背景ペンの選択.
-	m_hOldBackPen = (HPEN)SelectObject(m_hMemDC, m_hBackPen);	// SelectObjectでm_hBackPenを選択.
-
-	// 背景ブラシの生成.
-	m_hBackBrush = CreateSolidBrush(RGB(0x7f, 0x0, 0x0));	// CreateSolidBrushでm_hBackBrushを生成.
-
-	// 背景ブラシの選択.
-	m_hOldBackBrush = (HBRUSH)SelectObject(m_hMemDC, m_hBackBrush);	// SelectObjectでm_hBackBrushを選択.
-
-	// カーソルペンの生成.
-	m_hCursorPen = CreatePen(PS_SOLID, 1, RGB(0x0, 0xff, 0x0));	// CreatePenでm_hCursorPenを生成.
-
-	// カーソルペンの選択.
-	m_hOldCursorPen = (HPEN)SelectObject(m_hMemDC, m_hCursorPen);	// SelectObjectでm_hCursorPenを選択.
-
-	// カーソルブラシの生成.
-	m_hCursorBrush = CreateSolidBrush(RGB(0x0, 0x7f, 0x0));	// CreateSolidBrushでm_hCursorBrushを生成.
-
-	// カーソルブラシの選択.
-	m_hOldCursorBrush = (HBRUSH)SelectObject(m_hMemDC, m_hCursorBrush);	// SelectObjectでm_hCursorBrushを選択.
-
-	// カーソル位置の初期化.
-	m_iCursorX = 0;	// m_iCursorXに0をセット.
-	m_iCursorY = 0;	// m_iCursorYに0をセット.
+	// スクリーンの作成.
+	CreateScreen(hWnd);	// CreateScreenでスクリーン作成.
 
 	// 初期化終了なので1.
 	return 1;	// 1を返す.
@@ -127,53 +88,8 @@ int CGameApplication::InitScene(HWND hWnd, int iClientAreaWidth, int iClientArea
 // シーンの処理中RunScene.
 int CGameApplication::RunScene(HWND hWnd, int iClientAreaWidth, int iClientAreaHeight){
 
-	// キー入力の受信とカーソルの移動.
-	if (GetAsyncKeyState(VK_RIGHT)){	// 右キーが押された時.
-		m_iCursorX++;	// m_iCursorXをインクリメント.
-	}
-	if (GetAsyncKeyState(VK_LEFT)){	// 左キーが押された時.
-		m_iCursorX--;	// m_iCursorX\をデクリメント.
-	}
-	if (GetAsyncKeyState(VK_DOWN)){	// 下キーが押された時.
-		m_iCursorY++;	// m_iCursorYをインクリメント.
-	}
-	if (GetAsyncKeyState(VK_UP)){	// 上キーが押された時.
-		m_iCursorY--;	// m_iCursorYをデクリメント.
-	}
-
-	// カーソル位置の制限.
-	if (m_iCursorX >= 608){	// m_iCursorXが608以上なら.
-		m_iCursorX = 608;	// 608で止める.
-	}
-	if (m_iCursorX <= 0){	// m_iCursorXが0以下なら.
-		m_iCursorX = 0;	// 0で止める.
-	}
-	if (m_iCursorY >= 448){	// m_iCursorYが448以上なら.
-		m_iCursorY = 448;	// 448で止める.
-	}
-	if (m_iCursorY <= 0){	// m_iCursorYが0以下なら.
-		m_iCursorY = 0;	// 0で止める.
-	}
-
-	// 矩形の描画.
-	if (m_hMemDC != NULL){	// m_hMemDCがNULLでない時.
-
-		// 背景矩形の描画.
-		SelectObject(m_hMemDC, m_hBackPen);	// SelectObjectでm_hBackPenを選択.
-		SelectObject(m_hMemDC, m_hBackBrush);	// SelectObjectでm_hBackBrushを選択.
-		Rectangle(m_hMemDC, 0, 0, 640, 480);	// Rectangleで背景矩形を描画.
-
-		// カーソル矩形の描画.
-		SelectObject(m_hMemDC, m_hCursorPen);	// SelectObjectでm_hCursorPenを選択.
-		SelectObject(m_hMemDC, m_hCursorBrush);	// SelectObjectでm_hCursorBrushを選択.
-		Rectangle(m_hMemDC, m_iCursorX, m_iCursorY, m_iCursorX + 32, m_iCursorY + 32);	// Rectangleでカーソル矩形を描画.
-
-	}
-
-	// 前面に転送.
-	if (m_hDC != NULL){	// m_hDCがNULLでない時.
-		BitBlt(m_hDC, 0, 0, 640, 480, m_hMemDC, 0, 0, SRCCOPY);	// BitBltでm_hMemDCからm_hDCに転送.
-	}
+	// フロントバッファへ転送.
+	Present(iClientAreaWidth, iClientAreaHeight);	// Presentで表示.
 
 	// ESCキーを押したら抜ける.
 	if (GetAsyncKeyState(VK_ESCAPE)){	// GetAsyncKeyStateでESCが押されていたら.
@@ -189,53 +105,61 @@ int CGameApplication::RunScene(HWND hWnd, int iClientAreaWidth, int iClientAreaH
 // シーンの終了処理ExitScene.
 int CGameApplication::ExitScene(HWND hWnd, int iClientAreaWidth, int iClientAreaHeight){
 
-	// カーソルブラシを戻す.
-	if (m_hOldCursorBrush != NULL){	// m_hOldCursorBrushがNULLでない時.
-		SelectObject(m_hMemDC, m_hOldCursorBrush);	// SelectObjectでm_hOldCursorBrushを選択.
-		m_hOldCursorBrush = NULL;	// m_hOldCursorBrushにNULLをセット.
+	// スクリーンの破棄.
+	DestroyScreen(hWnd);	// DestroyScreenでスクリーン破棄.
+
+	// m_iSceneNoが3なら終了.
+	if (m_iSceneNo == 3){	// m_iSceneNoが3の時.
+		// アプリ終了なので2を返す.
+		return 2;	// 2を返す.
 	}
 
-	// カーソルブラシの削除.
-	if (m_hCursorBrush != NULL){	// m_hCursorBrushがNULLでない時.
-		DeleteObject(m_hCursorBrush);	// DeleteObjectでm_hCursorBrushを削除.
-		m_hCursorBrush = NULL;	// m_hCursorBrushにNULLをセット.
+	// 終了処理なので1.
+	return 1;	// 1を返す.
+
+}
+
+// ウィンドウのリサイズResizeWindow.
+void CGameApplication::ResizeWindow(HWND hWnd, int iWidth, int iHeight){
+
+	// ウィンドウサイズをクライアント領域のサイズがiWidthxiHeightになるようなサイズする.
+	RECT rc = {0, 0, iWidth, iHeight};	// RECT型rcを{0, 0, iWidth, iHeight}で初期化.
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX, TRUE);	// AdjustWindowRectで適切なウィンドウサイズを取得.
+	RECT rcWnd = {0};	// ウィンドウ矩形領域rcWndを{0}で初期化.
+	GetWindowRect(hWnd, &rcWnd);	// GetWindowRectでrcWndを取得.
+	MoveWindow(hWnd, rcWnd.left, rcWnd.top, rc.right - rc.left, rc.bottom - rc.top, TRUE);	// MoveWindowでリサイズ.
+
+}
+
+// スクリーンの作成CreateScreen.
+void CGameApplication::CreateScreen(HWND hWnd){
+
+	// デバイスコンテキストの取得.
+	m_hDC = GetDC(hWnd);	// GetDCでm_hDCを取得.
+
+	// メモリデバイスコンテキストの生成.
+	m_hMemDC = CreateCompatibleDC(m_hDC);	// CreateCompatibleDCでm_hMemDCを生成.
+
+	// メモリビットマップの生成.
+	m_hMemBitmap = CreateCompatibleBitmap(m_hDC, 640, 480);	// CreateCompatibleBitmapでm_hMemBitmapを生成.
+
+	// メモリデバイスコンテキストの選択.
+	m_hOldMemBitmap = (HBITMAP)SelectObject(m_hMemDC, m_hMemBitmap);	// SelectObjectでm_hMemBitmapを選択.
+
+}
+
+// フロントバッファに転送Present.
+void CGameApplication::Present(int iClientAreaWidth, int iClientAreaHeight){
+
+	// 前面に転送.
+	if (m_hDC != NULL){	// m_hDCがNULLでない時.
+		BitBlt(m_hDC, 0, 0, iClientAreaWidth, iClientAreaHeight, m_hMemDC, 0, 0, SRCCOPY);	// BitBltでm_hMemDCからm_hDCに転送.
 	}
 
-	// カーソルペンを戻す.
-	if (m_hOldCursorPen != NULL){	// m_hOldCursorPenがNULLでない時.
-		SelectObject(m_hMemDC, m_hOldCursorPen);	// SelectObjectでm_hOldCursorPenを選択.
-		m_hOldCursorPen = NULL;	// m_hOldCursorPenにNULLをセット.
-	}
+}
 
-	// カーソルペンを削除.
-	if (m_hCursorPen != NULL){	// m_hCursorPenがNULLでない時.
-		DeleteObject(m_hCursorPen);	// DeleteObjectでm_hCursorPenを削除.
-		m_hCursorPen = NULL;	// m_hCursorPenにNULLをセット.
-	}
-
-	// 背景ブラシを戻す.
-	if (m_hOldBackBrush != NULL){	// m_hOldBackBrushがNULLでない時.
-		SelectObject(m_hMemDC, m_hOldBackBrush);	// SelectObjectでm_hOldBackBrushを選択.
-		m_hOldBackBrush = NULL;	// m_hOldBackBrushにNULLをセット.
-	}
-
-	// 背景ブラシの削除.
-	if (m_hBackBrush != NULL){	// m_hBackBrushがNULLでない時.
-		DeleteObject(m_hBackBrush);	// DeleteObjectでm_hBackBrushを削除.
-		m_hBackBrush = NULL;	// m_hBackBrushにNULLをセット.
-	}
-
-	// 背景ペンを戻す.
-	if (m_hOldBackPen != NULL){	// m_hOldBackPenがNULLでない時.
-		SelectObject(m_hMemDC, m_hOldBackPen);	// SelectObjectでm_hOldBackPenを選択.
-		m_hOldBackPen = NULL;	// m_hOldBackPenにNULLをセット.
-	}
-
-	// 背景ペンを削除.
-	if (m_hBackPen != NULL){	// m_hBackPenがNULLでない時.
-		DeleteObject(m_hBackPen);	// DeleteObjectでm_hBackPenを削除.
-		m_hBackPen = NULL;	// m_hBackPenにNULLをセット.
-	}
+// スクリーンの破棄DestroyScreen.
+void CGameApplication::DestroyScreen(HWND hWnd){
 
 	// メモリデバイスコンテキストを戻す.
 	if (m_hOldMemBitmap != NULL){	// m_hOldMemBitmapがNULLでない時.
@@ -260,14 +184,5 @@ int CGameApplication::ExitScene(HWND hWnd, int iClientAreaWidth, int iClientArea
 		ReleaseDC(hWnd, m_hDC);	// ReleaseDCでm_hDCを解放.
 		m_hDC = NULL;	// m_hDCにNULLをセット.
 	}
-
-	// m_iSceneNoが3なら終了.
-	if (m_iSceneNo == 3){	// m_iSceneNoが3の時.
-		// アプリ終了なので2を返す.
-		return 2;	// 2を返す.
-	}
-
-	// 終了処理なので1.
-	return 1;	// 1を返す.
 
 }
