@@ -19,7 +19,7 @@ class CGraphicalApplication : public CApplication{
 		virtual int Run();	// メッセージループ処理関数Run.
 		virtual int ExitInstance();	// 終了処理関数ExitInstance.
 		virtual BOOL OnIdle(LONG lCount);	// アイドル処理関数OnIdle.
-		virtual int Main(HWND hWnd, int iClientAreaWidth, int iClientAreaHeight);	// グラフィカルメイン処理関数Main.
+		virtual int Main();	// グラフィカルメイン処理関数Main.
 
 };
 
