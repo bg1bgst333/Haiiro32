@@ -14,6 +14,12 @@ class CScene{
 
 		// publicメンバ変数
 		const CWindow *m_pMainWnd;	// CWindowオブジェクトポインタm_pMainWnd.(const)
+		HDC m_hDC;	// ウィンドウデバイスコンテキストハンドルm_hDC.
+		HDC m_hMemDC;	// メモリデバイスコンテキストハンドルm_hMemDC.
+		HBITMAP m_hMemBitmap;	// メモリビットマップハンドルm_hMemBitmap.
+		HBITMAP m_hOldMemBitmap;	// 元のメモリビットマップハンドルm_hOldMemBitmap.
+		int m_iScreenWidth;	// スクリーン幅.
+		int m_iScreenHeight;	// スクリーン高さ.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -23,6 +29,10 @@ class CScene{
 		virtual int InitScene();	// シーン初期化InitScene.
 		virtual int RunScene();	// シーン処理中RunScene.
 		virtual int ExitScene();	// シーン終了処理ExitScene.
+		virtual void ResizeWindow(int iWidth, int iHeight);	// ウィンドウのリサイズResizeWindow.
+		virtual void CreateScreen(int iWidth, int iHeight);	// スクリーンの作成CreateScreen.
+		virtual void Present();	// バックバッファからフロントバッファへ転送することで画面を描画するPresent.
+		virtual void DestroyScreen();	// スクリーンの破棄DestroyScreen.
 
 };
 
