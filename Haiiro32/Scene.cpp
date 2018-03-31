@@ -13,6 +13,7 @@ CScene::CScene(){
 	m_hOldMemBitmap = NULL;	// m_hOldMemBitmapをNULLで初期化.
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
+	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 
 }
 
@@ -27,6 +28,7 @@ CScene::CScene(const CWindow *pWnd){
 	m_hOldMemBitmap = NULL;	// m_hOldMemBitmapをNULLで初期化.
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
+	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 
 }
 
@@ -43,6 +45,10 @@ int CScene::InitScene(){
 
 	// スクリーンの作成.
 	CreateScreen(640, 480);	// CreateScreenで(640, 480)のサイズのスクリーンを作成.
+
+	// 背景の作成.
+	m_pBackground = new CGameObject(this);	// CGameObjectオブジェクトを生成(thisを渡す.)し, ポインタをm_pBackgroundに格納.
+	m_pBackground->Create(0, 0, 640, 480, RGB(0xff, 0x0, 0x0), RGB(0x7f, 0x0, 0x0));	// m_pBackground->Createで背景オブジェクトを作成.
 
 	// 成功なら0.
 	return 0;	// 0を返す.
@@ -64,7 +70,12 @@ int CScene::RunScene(){
 		return 2;	// 2を返す.
 	}
 
-	// 描画.
+	// 背景の描画.
+	if (m_pBackground != NULL){	// m_pBackgroundがNULLでない時.
+		m_pBackground->DrawRect(0, 0);	// m_pBackground->DrawRectで(0, 0)の位置に描画.
+	}
+
+	// 前面に転送..
 	Present();	// Presentでバックバッファからフロントバッファへ転送.
 
 	// 継続なら0.
@@ -74,6 +85,13 @@ int CScene::RunScene(){
 
 // シーン終了処理ExitScene.
 int CScene::ExitScene(){
+
+	// 背景の破棄.
+	if (m_pBackground != NULL){	// m_pBackgroundがNULLでない時.
+		m_pBackground->Destroy();	// m_pBackground->Destroyで破棄.
+		delete m_pBackground;	// deleteでm_pBackgroundを解放.
+		m_pBackground = NULL;	// m_pBackgroundにNULlをセット.
+	}
 
 	// スクリーンの破棄.
 	DestroyScreen();	// DestroyScreenでスクリーンを破棄.

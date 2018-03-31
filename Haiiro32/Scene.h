@@ -5,6 +5,10 @@
 // ヘッダのインクルード
 // 独自のヘッダ
 #include "Window.h"	// CWindow
+#include "GameObject.h"	// CGameObject
+
+// 前方宣言.
+class CGameObject;	// CGameObject.
 
 // シーンクラスCScene
 class CScene{
@@ -20,6 +24,7 @@ class CScene{
 		HBITMAP m_hOldMemBitmap;	// 元のメモリビットマップハンドルm_hOldMemBitmap.
 		int m_iScreenWidth;	// スクリーン幅.
 		int m_iScreenHeight;	// スクリーン高さ.
+		CGameObject *m_pBackground;	// 背景ゲームオブジェクトm_pBackground.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
