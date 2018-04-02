@@ -17,6 +17,7 @@ CWindow::CWindow(){
 	m_iHeight = 0;	// m_iHeightを0で初期化.
 	m_iClientAreaWidth = 0;	// m_iClientAreaWidthを0で初期化.
 	m_iClientAreaHeight = 0;	// m_iClientAreaHeightを0で初期化.
+	m_bClose = FALSE;	// m_bCloseをFALSEで初期化.
 
 }
 
@@ -401,6 +402,9 @@ void CWindow::OnPaint(){
 
 // ウィンドウを閉じた時.
 int CWindow::OnClose(){
+
+	// 閉じるボタンが押された.
+	m_bClose = TRUE;	// m_bCloseにTRUEをセット.
 
 	// ウィンドウの終了処理.
 	Destroy();	// Destroyでこのウィンドウの終了処理をする.

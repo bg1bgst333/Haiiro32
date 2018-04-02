@@ -31,13 +31,17 @@ int CGameApplication::Main(){
 
 	if (m_pScene == NULL){	// m_pSceneがNULLの時.	
 		m_pScene = pScene;	// pSceneを格納.
+		if (pScene == NULL){	// pSceneがNULLなら.
+			// InitSceneが呼べないので終了.
+			return 0;	// 0を返す.
+		}
 		iRet = m_pScene->InitScene();	// 成功なら0を返す.
 		if (iRet == -1){	// -1の時.
 			m_pScene->ExitScene();	// 終了処理.
 			delete m_pScene;	// m_pSceneを削除.
 			m_pScene = NULL;	// NULLをセット.
 			m_iNo = -1;	// m_iNoを-1にすることで終了したこと(もうシーン切り替えしないこと)を示す.
-			SendMessage(m_pMainWnd->m_hWnd, WM_DESTROY, 0, 0);	// WM_DESTROYを送信して終了.
+			m_pMainWnd->Destroy();	// m_pMainWnd->Destroyでウィンドウを閉じる.
 		}
 		else{	// 0の時.
 			iRet = m_pScene->RunScene();	// 処理中.
@@ -52,7 +56,7 @@ int CGameApplication::Main(){
 				delete m_pScene;	// m_pSceneを削除.
 				m_pScene = NULL;	// NULLをセット.
 				m_iNo = -1;	// m_iNoを-1にすることで終了したこと(もうシーン切り替えしないこと)を示す.
-				SendMessage(m_pMainWnd->m_hWnd, WM_DESTROY, 0, 0);	// WM_DESTROYを送信して終了.
+				m_pMainWnd->Destroy();	// m_pMainWnd->Destroyでウィンドウを閉じる.
 			}
 		}
 	}
@@ -69,7 +73,7 @@ int CGameApplication::Main(){
 			delete m_pScene;	// m_pSceneを削除.
 			m_pScene = NULL;	// NULLをセット.
 			m_iNo = -1;	// m_iNoを-1にすることで終了したこと(もうシーン切り替えしないこと)を示す.
-			SendMessage(m_pMainWnd->m_hWnd, WM_DESTROY, 0, 0);	// WM_DESTROYを送信して終了.
+			m_pMainWnd->Destroy();	// m_pMainWnd->Destroyでウィンドウを閉じる.
 		}
 	}
 

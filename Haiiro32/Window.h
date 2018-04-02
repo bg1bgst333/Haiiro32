@@ -24,6 +24,7 @@ class CWindow{
 		int m_iHeight;	// ウィンドウの高さm_iHeight.
 		int m_iClientAreaWidth;		// クライアント領域幅
 		int m_iClientAreaHeight;	// クライアント領域高さ
+		BOOL m_bClose;	// 閉じるボタンが押されたか.
 		// staticメンバ変数
 		static std::map<HWND, CWindow *>m_mapWindowMap;	// ウィンドウハンドルをキー, CWindowオブジェクトポインタを値とするマップm_mapWindowMap.
 		static std::map<DWORD, HandlerConditions *>m_mapHandlerMap;	// DWORD値をキー, HandlerConditions構造体ポインタを値とするマップm_mapHandlerMap.

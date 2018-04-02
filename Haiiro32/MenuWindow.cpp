@@ -59,6 +59,9 @@ void CMenuWindow::OnDestroy(){
 // ウィンドウを閉じた時.
 int CMenuWindow::OnClose(){
 
+	// 閉じるボタンが押された.
+	m_bClose = TRUE;	// m_bCloseにTRUEをセット.
+
 	// ウィンドウの終了処理.
 	Destroy();	// Destroyでこのウィンドウの終了処理をする.
 

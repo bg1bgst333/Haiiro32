@@ -52,12 +52,19 @@ int CScene::InitScene(){
 
 	// 成功なら0.
 	return 0;	// 0を返す.
+	//return -1;	// -1を返して最初に強制終了.	
 
 }
 
 // シーン処理中RunScene.
 int CScene::RunScene(){
 
+	// 閉じるボタンが押された時.
+	if (m_pMainWnd->m_bClose){	// m_pMainWnd->m_bCloseがTRUEなら.
+		return 2;	// 2を返す.
+	}
+
+#if 0
 	// SPACEキーを押したら抜ける.
 	if (GetAsyncKeyState(VK_SPACE)){	// GetAsyncKeyStateでSPACEが押されていたら.
 		MessageBox(NULL, _T("SPACE"), _T("Haiiro"), MB_OK);	// MessageBoxで"SPACE"と表示.(長く押すと, 2回以上分になってしまう.)
@@ -69,6 +76,7 @@ int CScene::RunScene(){
 		MessageBox(NULL, _T("ESCAPE"), _T("Haiiro"), MB_OK);	// MessageBoxで"ESCAPE"と表示.(長く押すと, 2回以上分になってしまう.)
 		return 2;	// 2を返す.
 	}
+#endif
 
 	// 背景の描画.
 	if (m_pBackground != NULL){	// m_pBackgroundがNULLでない時.

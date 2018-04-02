@@ -139,14 +139,25 @@ int CMainWindow::OnClose(){
 	int iRet = MessageBox(m_hWnd, _T("アプリケーションを終了しますか?"), _T("Haiiro"), MB_YESNO | MB_ICONQUESTION);	// "アプリケーションを終了しますか?"と表示.("はい", "いいえ"のメッセージボックスが表示される.)
 	if (iRet == IDYES){	// "はい"が押された時.
 
+		// 閉じるボタンが押された.
+		m_bClose = TRUE;	// m_bCloseにTRUEをセット.
+
+#if 0
 		// ウィンドウの終了処理.
 		Destroy();	// Destroyでこのウィンドウの終了処理をする.
 
 		// 0を返す.
 		return 0;	// 0を返してウィンドウを閉じる.
+#endif
+
+		// -1を返す.
+		return -1;	// -1を返してウィンドウを閉じない.
 
 	}
 	else{	// "いいえ"が押された時など.
+
+		// 閉じないのでFALSEに戻す.
+		m_bClose = FALSE;	// m_bCloseにをセット.
 
 		// -1を返す.
 		return -1;	// -1を返してウィンドウを閉じない.
