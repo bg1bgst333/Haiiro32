@@ -13,6 +13,7 @@ CScene::CScene(){
 	m_hOldMemBitmap = NULL;	// m_hOldMemBitmapをNULLで初期化.
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
+	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 
 }
@@ -28,6 +29,7 @@ CScene::CScene(const CWindow *pWnd){
 	m_hOldMemBitmap = NULL;	// m_hOldMemBitmapをNULLで初期化.
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
+	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 
 }
@@ -50,6 +52,12 @@ int CScene::InitScene(){
 	m_pBackground = new CGameObject(this);	// CGameObjectオブジェクトを生成(thisを渡す.)し, ポインタをm_pBackgroundに格納.
 	m_pBackground->Create(0, 0, 640, 480, RGB(0xff, 0x0, 0x0), RGB(0x7f, 0x0, 0x0));	// m_pBackground->Createで背景オブジェクトを作成.
 
+	// キーボードオブジェクトの作成.
+	m_pKeyboard = new CKeyboard();	// CKeyboardオブジェクトを作成し, ポインタをm_pKeyboardに格納.
+
+	// 監視キーの追加.
+	m_pKeyboard->AddKey(VK_ESCAPE);	// ESCキーを追加.
+
 	// 成功なら0.
 	return 0;	// 0を返す.
 	//return -1;	// -1を返して最初に強制終了.	
@@ -59,10 +67,28 @@ int CScene::InitScene(){
 // シーン処理中RunScene.
 int CScene::RunScene(){
 
+	// スタティック変数の初期化.
+	static int i = 0;	// IsDownを数えるiを0で初期化.
+	static int j = 0;	// IsPressを数えるjを0で初期化.
+
 	// 閉じるボタンが押された時.
 	if (m_pMainWnd->m_bClose){	// m_pMainWnd->m_bCloseがTRUEなら.
 		return 2;	// 2を返す.
 	}
+
+	// キー状態の取得.
+	m_pKeyboard->Check();	// m_pKeyboard->Checkで状態確認.
+
+	// 現在押されているか.(押した時に流れたフレーム分カウントされる.)
+	if (m_pKeyboard->IsDown(0)){	// IsDownがTRUE.
+		i++;	// iをインクリメント.
+	}
+	
+	// 押した回数(押しっぱなしはカウントされない.)
+	if (m_pKeyboard->IsPress(0)){	// IsPressがTRUE.
+		j++;	// jをインクリメント.
+	}
+	
 
 #if 0
 	// SPACEキーを押したら抜ける.
@@ -83,7 +109,17 @@ int CScene::RunScene(){
 		m_pBackground->DrawRect(0, 0);	// m_pBackground->DrawRectで(0, 0)の位置に描画.
 	}
 
-	// 前面に転送..
+	// iの描画.
+	TCHAR ti[100] ={0};	// tiを{0}で初期化.
+	_stprintf(ti, _T("%d"), i);	// iをtiに変換.
+	TextOut(m_hMemDC, 0, 0, (const TCHAR *)ti, _tcslen(ti));	// TextOutでtiを描画.
+
+	// jの描画.
+	TCHAR tj[100] ={0};	// tjを{0}で初期化.
+	_stprintf(tj, _T("%d"), j);	// jをtjに変換.
+	TextOut(m_hMemDC, 0, 50, (const TCHAR *)tj, _tcslen(tj));	// TextOutでtjを描画.
+
+	// 前面に転送.
 	Present();	// Presentでバックバッファからフロントバッファへ転送.
 
 	// 継続なら0.
@@ -93,6 +129,12 @@ int CScene::RunScene(){
 
 // シーン終了処理ExitScene.
 int CScene::ExitScene(){
+
+	// キーボードオブジェクトの破棄.
+	if (m_pKeyboard != NULL){	// m_pKeyboardがNULLでない時.
+		delete m_pKeyboard;	// deleteでm_pKeyboardを解放.
+		m_pKeyboard = NULL;	// m_pKeyboardにNULLをセット.
+	}
 
 	// 背景の破棄.
 	if (m_pBackground != NULL){	// m_pBackgroundがNULLでない時.

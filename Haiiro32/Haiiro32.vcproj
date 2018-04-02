@@ -191,6 +191,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Keyboard.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainApplication.cpp"
 				>
 			</File>
@@ -242,6 +246,10 @@
 			</File>
 			<File
 				RelativePath=".\HandlerConditions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Keyboard.h"
 				>
 			</File>
 			<File
