@@ -75,6 +75,7 @@ BOOL CKeyboard::IsDown(int iNo){
 BOOL CKeyboard::IsPress(int iNo){
 	
 	// 押した瞬間かどうかをチェック.
+	IsDown(iNo);	// まずIsDownを呼んで, 押されているかどうかの状態を取得.
 	if (m_aryiPressKeys[m_veciKeyList[iNo]] == 1){	// 押した瞬間だけ.
 		return TRUE;
 	}

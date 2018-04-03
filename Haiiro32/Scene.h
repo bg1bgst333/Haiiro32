@@ -26,7 +26,6 @@ class CScene{
 		int m_iScreenWidth;	// スクリーン幅.
 		int m_iScreenHeight;	// スクリーン高さ.
 		CKeyboard *m_pKeyboard;	// キーボードオブジェクトm_pKeyboard.
-		CGameObject *m_pBackground;	// 背景ゲームオブジェクトm_pBackground.
 		
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -40,6 +39,14 @@ class CScene{
 		virtual void CreateScreen(int iWidth, int iHeight);	// スクリーンの作成CreateScreen.
 		virtual void Present();	// バックバッファからフロントバッファへ転送することで画面を描画するPresent.
 		virtual void DestroyScreen();	// スクリーンの破棄DestroyScreen.
+		virtual int InitGameObjects();	// ゲームオブジェクトの初期化.
+		virtual int InitKeyboard();	// キーボードの初期化.
+		virtual int CheckClose();	// 閉じるボタンのチェック.
+		virtual int CheckKeyboard();	// キーボードのチェック.
+		virtual int RunProc();	// キー入力や時間などから処理を計算.
+		virtual int DrawGameObjects();	// ゲームオブジェクトの描画.
+		virtual int ExitGameObjects();	// ゲームオブジェクトの終了処理.
+		virtual int ExitKeyboard();	// キーボードの終了処理.
 
 };
 

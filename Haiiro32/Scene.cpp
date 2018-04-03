@@ -14,7 +14,6 @@ CScene::CScene(){
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
-	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 
 }
 
@@ -30,7 +29,6 @@ CScene::CScene(const CWindow *pWnd){
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
-	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 
 }
 
@@ -48,78 +46,42 @@ int CScene::InitScene(){
 	// スクリーンの作成.
 	CreateScreen(640, 480);	// CreateScreenで(640, 480)のサイズのスクリーンを作成.
 
-	// 背景の作成.
-	m_pBackground = new CGameObject(this);	// CGameObjectオブジェクトを生成(thisを渡す.)し, ポインタをm_pBackgroundに格納.
-	m_pBackground->Create(0, 0, 640, 480, RGB(0xff, 0x0, 0x0), RGB(0x7f, 0x0, 0x0));	// m_pBackground->Createで背景オブジェクトを作成.
+	// ゲームオブジェクトの初期化.
+	int iRetGO = InitGameObjects();	// InitGameObjectsで初期化.
+	if (iRetGO != 0){	// 0でなければ.
+		return -1;	// -1を返して強制終了.
+	}
 
-	// キーボードオブジェクトの作成.
-	m_pKeyboard = new CKeyboard();	// CKeyboardオブジェクトを作成し, ポインタをm_pKeyboardに格納.
-
-	// 監視キーの追加.
-	m_pKeyboard->AddKey(VK_ESCAPE);	// ESCキーを追加.
+	// キーボードの初期化.
+	int iRetKeys = InitKeyboard();	// InitKeyboardで初期化.
+	if (iRetKeys != 0){	// 0でなければ.
+		return -1;	// -1を返して強制終了.
+	}
 
 	// 成功なら0.
 	return 0;	// 0を返す.
-	//return -1;	// -1を返して最初に強制終了.	
 
 }
 
 // シーン処理中RunScene.
 int CScene::RunScene(){
 
-	// スタティック変数の初期化.
-	static int i = 0;	// IsDownを数えるiを0で初期化.
-	static int j = 0;	// IsPressを数えるjを0で初期化.
-
-	// 閉じるボタンが押された時.
-	if (m_pMainWnd->m_bClose){	// m_pMainWnd->m_bCloseがTRUEなら.
-		return 2;	// 2を返す.
+	// 閉じるボタンのチェック.
+	int iRetClose = CheckClose();	// CheckCloseで閉じるボタンが押されたかをチェック.
+	if (iRetClose == 1){	// iRetCloseが1なら.
+		return 2;	// 2を返してアプリを終了.
 	}
 
 	// キー状態の取得.
-	m_pKeyboard->Check();	// m_pKeyboard->Checkで状態確認.
+	CheckKeyboard();	// CheckKeyboardでキーボードのチェック.
 
-	// 現在押されているか.(押した時に流れたフレーム分カウントされる.)
-	if (m_pKeyboard->IsDown(0)){	// IsDownがTRUE.
-		i++;	// iをインクリメント.
-	}
-	
-	// 押した回数(押しっぱなしはカウントされない.)
-	if (m_pKeyboard->IsPress(0)){	// IsPressがTRUE.
-		j++;	// jをインクリメント.
-	}
-	
+	// 入力や状態から次の状態を計算.
+	RunProc();	// RunProcで計算処理.
 
-#if 0
-	// SPACEキーを押したら抜ける.
-	if (GetAsyncKeyState(VK_SPACE)){	// GetAsyncKeyStateでSPACEが押されていたら.
-		MessageBox(NULL, _T("SPACE"), _T("Haiiro"), MB_OK);	// MessageBoxで"SPACE"と表示.(長く押すと, 2回以上分になってしまう.)
-		return 1;	// 1を返す.
-	}
+	// ゲームオブジェクトの描画.
+	DrawGameObjects();	// DrawGameObjectsでバックバッファへ描画処理.	
 
-	// ESCAPEキーを押したら抜ける.
-	if (GetAsyncKeyState(VK_ESCAPE)){	// GetAsyncKeyStateでESCAPEが押されていたら.
-		MessageBox(NULL, _T("ESCAPE"), _T("Haiiro"), MB_OK);	// MessageBoxで"ESCAPE"と表示.(長く押すと, 2回以上分になってしまう.)
-		return 2;	// 2を返す.
-	}
-#endif
-
-	// 背景の描画.
-	if (m_pBackground != NULL){	// m_pBackgroundがNULLでない時.
-		m_pBackground->DrawRect(0, 0);	// m_pBackground->DrawRectで(0, 0)の位置に描画.
-	}
-
-	// iの描画.
-	TCHAR ti[100] ={0};	// tiを{0}で初期化.
-	_stprintf(ti, _T("%d"), i);	// iをtiに変換.
-	TextOut(m_hMemDC, 0, 0, (const TCHAR *)ti, _tcslen(ti));	// TextOutでtiを描画.
-
-	// jの描画.
-	TCHAR tj[100] ={0};	// tjを{0}で初期化.
-	_stprintf(tj, _T("%d"), j);	// jをtjに変換.
-	TextOut(m_hMemDC, 0, 50, (const TCHAR *)tj, _tcslen(tj));	// TextOutでtjを描画.
-
-	// 前面に転送.
+	// フロントバッファに転送.
 	Present();	// Presentでバックバッファからフロントバッファへ転送.
 
 	// 継続なら0.
@@ -130,18 +92,11 @@ int CScene::RunScene(){
 // シーン終了処理ExitScene.
 int CScene::ExitScene(){
 
-	// キーボードオブジェクトの破棄.
-	if (m_pKeyboard != NULL){	// m_pKeyboardがNULLでない時.
-		delete m_pKeyboard;	// deleteでm_pKeyboardを解放.
-		m_pKeyboard = NULL;	// m_pKeyboardにNULLをセット.
-	}
-
-	// 背景の破棄.
-	if (m_pBackground != NULL){	// m_pBackgroundがNULLでない時.
-		m_pBackground->Destroy();	// m_pBackground->Destroyで破棄.
-		delete m_pBackground;	// deleteでm_pBackgroundを解放.
-		m_pBackground = NULL;	// m_pBackgroundにNULlをセット.
-	}
+	// キーボードの終了処理.
+	ExitKeyboard();	// ExitKeyboardでキーボードの終了処理.
+	
+	// ゲームオブジェクトの終了処理.
+	ExitGameObjects();	// ExitGameObjectsでゲームオブジェクトの終了処理.
 
 	// スクリーンの破棄.
 	DestroyScreen();	// DestroyScreenでスクリーンを破棄.
@@ -220,5 +175,86 @@ void CScene::DestroyScreen(){
 		ReleaseDC(m_pMainWnd->m_hWnd, m_hDC);	// ReleaseDCでm_hDCを解放.
 		m_hDC = NULL;	// m_hDCにNULLをセット.
 	}
+
+}
+
+// ゲームオブジェクトの初期化.
+int CScene::InitGameObjects(){
+
+	// 成功なら0を返す.
+	return 0;	// 0を返す.
+
+}
+
+// キーボードの初期化.
+int CScene::InitKeyboard(){
+
+	// キーボードオブジェクトの作成.
+	m_pKeyboard = new CKeyboard();	// CKeyboardオブジェクトを作成し, ポインタをm_pKeyboardに格納.
+
+	// 成功なら0を返す.
+	return 0;	// 0を返す.
+
+}
+
+// 閉じるボタンのチェック.
+int CScene::CheckClose(){
+
+	// 閉じるボタンが押された時.
+	if (m_pMainWnd->m_bClose){	// m_pMainWnd->m_bCloseがTRUEなら.
+		return 1;	// 1を返す.
+	}
+
+	// 閉じられていない場合は0を返す.
+	return 0;	// 0を返す.
+
+}
+
+// キーボードのチェック.
+int CScene::CheckKeyboard(){
+
+	// キー状態の取得.
+	m_pKeyboard->Check();	// m_pKeyboard->Checkで状態確認.
+
+	// 常に成功なので0.
+	return 0;	// 0を返す.
+
+}
+
+// キー入力や時間などから処理を計算.
+int CScene::RunProc(){
+
+	// 常に成功なので0.
+	return 0;	// 0を返す.
+
+}
+
+// ゲームオブジェクトの描画.
+int CScene::DrawGameObjects(){
+
+	// 常に成功なので0.
+	return 0;	// 0を返す.
+
+}
+
+// ゲームオブジェクトの終了処理.
+int CScene::ExitGameObjects(){
+
+	// 常に成功なので0.
+	return 0;	// 0を返す.
+
+}
+
+// キーボードの終了処理.
+int CScene::ExitKeyboard(){
+
+	// キーボードオブジェクトの破棄.
+	if (m_pKeyboard != NULL){	// m_pKeyboardがNULLでない時.
+		delete m_pKeyboard;	// deleteでm_pKeyboardを解放.
+		m_pKeyboard = NULL;	// m_pKeyboardにNULLをセット.
+	}
+
+	// 常に成功なので0.
+	return 0;	// 0を返す.
 
 }

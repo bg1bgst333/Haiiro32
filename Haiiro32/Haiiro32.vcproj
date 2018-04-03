@@ -215,6 +215,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TitleScene.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Window.cpp"
 				>
 			</File>
@@ -274,6 +278,10 @@
 			</File>
 			<File
 				RelativePath=".\Scene.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TitleScene.h"
 				>
 			</File>
 			<File
