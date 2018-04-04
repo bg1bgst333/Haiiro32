@@ -8,6 +8,7 @@ CTitleScene::CTitleScene() : CScene(){
 
 	// メンバの初期化.
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
+	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
 
 }
 
@@ -16,6 +17,7 @@ CTitleScene::CTitleScene(const CWindow *pWnd) : CScene(pWnd){
 
 	// メンバの初期化.
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
+	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
 
 }
 
@@ -30,6 +32,10 @@ int CTitleScene::InitGameObjects(){
 	// 背景の作成.
 	m_pBackground = new CBackground(this);	// CBackgroundオブジェクトを生成(thisを渡す.)し, ポインタをm_pBackgroundに格納.
 	m_pBackground->Create(0, 0, m_iScreenWidth, m_iScreenHeight, m_pMainWnd->m_hWnd, IDB_BACKGROUND1);	// m_pBackground->Createで背景オブジェクトを作成.
+
+	// タイトルの作成.
+	m_pTitle = new CTitle(this);	// CTitleオブジェクトを生成(thisを渡す.)し, ポインタをm_pTitleに格納.
+	m_pTitle->Create(160, 60, 320, 240, m_pMainWnd->m_hWnd, IDB_TITLE1);	// m_pTitle->Createでタイトルオブジェクトを作成.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
@@ -82,6 +88,12 @@ int CTitleScene::DrawGameObjects(){
 		m_pBackground->DrawRect(0, 0);	// m_pBackground->DrawRectで(0, 0)の位置に描画.
 	}
 
+	// タイトルの描画.
+	if (m_pTitle != NULL){	// m_pTitleがNULLでない時.
+		m_pTitle->DrawRect(160, 60);	// m_pTitle->DrawRectで(160, 60)の位置に描画.
+		m_pTitle->DrawText(160, 60, 320, 240, _T("Haiiro"), RGB(0xff, 0xff, 0xff));	// m_pTitle->DrawTextでタイトルテキストの描画.
+	}
+
 	// 常に成功なので0.
 	return 0;	// 0を返す.
 
@@ -89,6 +101,13 @@ int CTitleScene::DrawGameObjects(){
 
 // ゲームオブジェクトの終了処理.
 int CTitleScene::ExitGameObjects(){
+
+	// タイトルの破棄.
+	if (m_pTitle != NULL){	// m_pTitleがNULLでない時.
+		m_pTitle->Destroy();	// m_pTitle->Destroyで破棄.
+		delete m_pTitle;	// deleteでm_pTitleを解放.
+		m_pTitle = NULL;	// m_pTitleにNULLをセット.
+	}
 
 	// 背景の破棄.
 	if (m_pBackground != NULL){	// m_pBackgroundがNULLでない時.

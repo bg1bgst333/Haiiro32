@@ -6,6 +6,7 @@
 // 独自のヘッダ
 #include "Scene.h"	// CScene
 #include "Background.h"	// CBackground
+#include "Title.h"	// CTitle
 
 // タイトルシーンクラスCTitleScene
 class CTitleScene : public CScene{
@@ -15,6 +16,7 @@ class CTitleScene : public CScene{
 
 		// publicメンバ変数
 		CBackground *m_pBackground;	// 背景オブジェクトm_pBackground.
+		CTitle *m_pTitle;	// タイトルオブジェクトm_pTitle.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
