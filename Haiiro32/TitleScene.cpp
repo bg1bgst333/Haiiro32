@@ -1,5 +1,6 @@
 // ヘッダのインクルード
 // 独自のヘッダ
+#include "resource.h"	// リソース
 #include "TitleScene.h"	// CTitleScene
 
 // コンストラクタCTitleScene
@@ -27,8 +28,8 @@ CTitleScene::~CTitleScene(){
 int CTitleScene::InitGameObjects(){
 
 	// 背景の作成.
-	m_pBackground = new CGameObject(this);	// CGameObjectオブジェクトを生成(thisを渡す.)し, ポインタをm_pBackgroundに格納.
-	m_pBackground->Create(0, 0, m_iScreenWidth, m_iScreenHeight, RGB(0xff, 0x0, 0x0), RGB(0x7f, 0x0, 0x0));	// m_pBackground->Createで背景オブジェクトを作成.
+	m_pBackground = new CBackground(this);	// CBackgroundオブジェクトを生成(thisを渡す.)し, ポインタをm_pBackgroundに格納.
+	m_pBackground->Create(0, 0, m_iScreenWidth, m_iScreenHeight, m_pMainWnd->m_hWnd, IDB_BACKGROUND1);	// m_pBackground->Createで背景オブジェクトを作成.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
