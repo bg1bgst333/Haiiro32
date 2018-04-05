@@ -9,6 +9,8 @@ CTitle::CTitle() : CGameObject(){
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hBitmap = NULL;	// m_hBitmapをNULLで初期化.
 	m_hOldBitmap = NULL;	// m_hOldBitmapをNULLで初期化.
+	m_hFont = NULL;	// m_hFontをNULLで初期化.
+	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
 
 }
 
@@ -19,6 +21,8 @@ CTitle::CTitle(const CScene *pScene) : CGameObject(pScene){
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hBitmap = NULL;	// m_hBitmapをNULLで初期化.
 	m_hOldBitmap = NULL;	// m_hOldBitmapをNULLで初期化.
+	m_hFont = NULL;	// m_hFontをNULLで初期化.
+	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
 
 }
 
@@ -28,7 +32,7 @@ CTitle::~CTitle(){
 }
 
 // ゲームオブジェクトの作成Create.(指定されたリソースIDの画像をロード.)
-BOOL CTitle::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID){
+BOOL CTitle::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID, int nFontSize, LPCTSTR lpctszFontName){
 
 	// メモリデバイスコンテキストの作成.
 	m_hMemDC = CreateCompatibleDC(m_pScene->m_hDC);	// CreateCompatibleDCでm_hMemDCを作成.
@@ -39,13 +43,13 @@ BOOL CTitle::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID){
 	// ビットマップのロード.
 	HINSTANCE hInstance = (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE);	// GetWindowLongでhInstance取得.
 	m_hBitmap = (HBITMAP)LoadImage(hInstance, MAKEINTRESOURCE(nID), IMAGE_BITMAP, iWidth, iHeight, LR_DEFAULTCOLOR);	// LoadImageでリソースIDがnIDのビットマップをロード.
-	if (m_hBitmap == NULL){	// m_hBitmaoがNULLなら.
+	if (m_hBitmap == NULL){	// m_hBitmapがNULLなら.
 		DeleteDC(m_hMemDC);	// m_hMemDCをDeleteDCで削除.
 		m_hMemDC = NULL;	// m_hMemDCにNULLをセット.
 		return FALSE;	// FALSEを返す.
 	}
 
-	// ブラシの選択.
+	// ビットマップの選択.
 	m_hOldBitmap = (HBITMAP)SelectObject(m_hMemDC, m_hBitmap);	// SelectObjectでm_hBitmapを選択.
 
 	// 位置とサイズの取得.
@@ -53,6 +57,20 @@ BOOL CTitle::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID){
 	m_y = y;	// m_yにyをセット.
 	m_iWidth = iWidth;	// m_iWidthにiWidthをセット.
 	m_iHeight = iHeight;	// m_iHeightにiHeightをセット.
+
+	// フォントの作成.
+	m_hFont = CreateFont(nFontSize, 0, 0, 0, FW_REGULAR, FALSE, FALSE, FALSE, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, lpctszFontName);	// CreateFontでフォントを作成し, m_hFontに格納.
+	if (m_hFont == NULL){	// m_hFontがNULLなら.
+		SelectObject(m_hMemDC, m_hOldBitmap);	// ビットマップを戻す.
+		m_hOldBitmap = NULL;	// m_hOldBitmapにNULLをセット.
+		DeleteObject(m_hBitmap);	// DeleteObjectでm_hBitmapを削除.
+		m_hBitmap = NULL;	// m_hBitmapにNULLをセット.
+		DeleteDC(m_hMemDC);	// m_hMemDCをDeleteDCで削除.
+		m_hMemDC = NULL;	// m_hMemDCにNULLをセット.
+	}
+
+	// フォントの選択.
+	m_hOldFont = (HFONT)SelectObject(m_pScene->m_hMemDC, m_hFont);	// SelectObjectでm_hFontを選択.
 
 	// 成功なのでTRUE.
 	return TRUE;	// TRUEを返す.
@@ -67,6 +85,19 @@ void CTitle::Destroy(){
 	m_y = 0;	// m_yに0を代入.
 	m_iWidth = 0;	// m_iWidthに0を代入.
 	m_iHeight = 0;	// m_iHeightに0を代入.
+
+	// フォントを戻す.
+	if (m_hOldFont != NULL){	// m_hOldFontがNULLでなければ.
+		SelectObject(m_pScene->m_hMemDC, m_hOldFont);	// SelectObjectでm_hOldFontに戻す.
+		m_hOldFont = NULL;	// m_hOldFontにNULLをセット.
+
+	}
+
+	// フォントの削除.
+	if (m_hFont != NULL){	// m_hFontがNULLでなければ.
+		DeleteObject(m_hFont);	// DeleteObjectでm_hFontを削除.
+		m_hFont = NULL;	// m_hFontにNULLをセット.
+	}
 
 	// ビットマップを戻す.
 	if (m_hOldBitmap != NULL){	// m_hOldBitmapがNULLでなければ.
@@ -108,6 +139,7 @@ void CTitle::DrawText(int x, int y, int iWidth, int iHeight, LPCTSTR lpctszText,
 	RECT rc = {x, y, x + iWidth, y + iHeight};	// rcを引数を使って初期化.
 	SetTextColor(m_pScene->m_hMemDC, clrColor);	// SetTextColorで色はclrColorを指定.
 	SetBkMode(m_pScene->m_hMemDC, TRANSPARENT);	// SetBkModeで背景は透過.
+	SelectObject(m_pScene->m_hMemDC, m_hFont);	// SelectObjectでm_hFontを選択.
 	::DrawText(m_pScene->m_hMemDC, lpctszText, _tcslen(lpctszText), &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);	// WindowsAPIのDrawTextでタイトル文字列の描画.
 	
 }
