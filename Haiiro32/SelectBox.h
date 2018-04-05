@@ -1,32 +1,31 @@
 // 二重インクルード防止
-#ifndef __TITLE_H__
-#define __TITLE_H__
+#ifndef __SELECT_BOX_H__
+#define __SELECT_BOX_H__
 
 // ヘッダのインクルード
 // 独自のヘッダ
 #include "GameObject.h"	// CGameObject
 
-// タイトルクラスCTitle
-class CTitle : public CGameObject{
+// セレクトボックスクラスCSelectBox
+class CSelectBox : public CGameObject{
 
 	// publicメンバ
 	public:
 
 		// publicメンバ変数
-		HDC m_hMemDC;	// メモリデバイスコンテキストm_hMemDC.
-		HBITMAP m_hBitmap;	// ロードしたビットマップm_hBitmap.
-		HBITMAP m_hOldBitmap;	// 以前のビットマップm_hOldBitmap.
+		HDC m_hBackgroundMemDC;	// 背景メモリデバイスコンテキストm_hBackgroundMemDC.
+		HBITMAP m_hBackgroundBitmap;	// ロードした背景ビットマップm_hBackgroundBitmap.
+		HBITMAP m_hOldBackgroundBitmap;	// 以前の背景ビットマップm_hOldBackgroundBitmap.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
-		CTitle();	// コンストラクタCTitle()
-		CTitle(const CScene *pScene);	// コンストラクタCTitle(const CScene *pScene)
-		virtual ~CTitle();	// デストラクタ~CTitle()
+		CSelectBox();	// コンストラクタCSelectBox()
+		CSelectBox(const CScene *pScene);	// コンストラクタCSelectBox(const CScene *pScene)
+		virtual ~CSelectBox();	// デストラクタ~CSelectBox()
 		// メンバ関数
 		virtual BOOL Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID);	// ゲームオブジェクトの作成Create.(指定されたリソースIDの画像をロード.)
 		virtual void Destroy();	// ゲームオブジェクトの破棄Destroy.
 		virtual void DrawRect(int x, int y);	// ゲームオブジェクトの描画DrawRect.(指定されたリソースIDの画像をロード.)
-		virtual void DrawText(int x, int y, int iWidth, int iHeight, LPCTSTR lpctszText, COLORREF clrColor);	// DrawTextでテキストを描画.
 
 };
 

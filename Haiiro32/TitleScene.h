@@ -7,6 +7,7 @@
 #include "Scene.h"	// CScene
 #include "Background.h"	// CBackground
 #include "Title.h"	// CTitle
+#include "SelectBox.h"	// CSelectBox
 
 // タイトルシーンクラスCTitleScene
 class CTitleScene : public CScene{
@@ -17,6 +18,7 @@ class CTitleScene : public CScene{
 		// publicメンバ変数
 		CBackground *m_pBackground;	// 背景オブジェクトm_pBackground.
 		CTitle *m_pTitle;	// タイトルオブジェクトm_pTitle.
+		CSelectBox *m_pSelectBox;	// セレクトボックスm_pSelectBox.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ

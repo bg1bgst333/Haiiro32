@@ -9,6 +9,7 @@ CTitleScene::CTitleScene() : CScene(){
 	// メンバの初期化.
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
+	m_pSelectBox = NULL;	// m_pSelectBoxをNULLで初期化.
 
 }
 
@@ -18,6 +19,7 @@ CTitleScene::CTitleScene(const CWindow *pWnd) : CScene(pWnd){
 	// メンバの初期化.
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
+	m_pSelectBox = NULL;	// m_pSelectBoxをNULLで初期化.
 
 }
 
@@ -36,6 +38,10 @@ int CTitleScene::InitGameObjects(){
 	// タイトルの作成.
 	m_pTitle = new CTitle(this);	// CTitleオブジェクトを生成(thisを渡す.)し, ポインタをm_pTitleに格納.
 	m_pTitle->Create(160, 60, 320, 240, m_pMainWnd->m_hWnd, IDB_TITLE1);	// m_pTitle->Createでタイトルオブジェクトを作成.
+
+	// セレクトボックスの作成.
+	m_pSelectBox = new CSelectBox(this);	// CSelectBoxオブジェクトを生成(thisを渡す.), ポインタをm_pSelectBoxに格納.
+	m_pSelectBox->Create(160, 300, 320, 120, m_pMainWnd->m_hWnd, IDB_SELECTBOX1);	// m_pSelectBox->Createでセレクトボックスオブジェクトを作成.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
@@ -94,6 +100,11 @@ int CTitleScene::DrawGameObjects(){
 		m_pTitle->DrawText(160, 60, 320, 240, _T("Haiiro"), RGB(0xff, 0xff, 0xff));	// m_pTitle->DrawTextでタイトルテキストの描画.
 	}
 
+	// セレクトボックスの描画.
+	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.
+		m_pSelectBox->DrawRect(160, 300);	// m_pSelectBox->DrawRectで(160, 300)の位置に描画.
+	}
+
 	// 常に成功なので0.
 	return 0;	// 0を返す.
 
@@ -101,6 +112,13 @@ int CTitleScene::DrawGameObjects(){
 
 // ゲームオブジェクトの終了処理.
 int CTitleScene::ExitGameObjects(){
+
+	// セレクトボックスの破棄.
+	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.
+		m_pSelectBox->Destroy();	// m_pSelectBox->Destroyで破棄.
+		delete m_pSelectBox;	// deleteでm_pSelectBoxを解放.
+		m_pSelectBox = NULL;	// m_pSelectBoxにNULLをセット.
+	}
 
 	// タイトルの破棄.
 	if (m_pTitle != NULL){	// m_pTitleがNULLでない時.
