@@ -42,6 +42,9 @@ int CTitleScene::InitGameObjects(){
 	// セレクトボックスの作成.
 	m_pSelectBox = new CSelectBox(this);	// CSelectBoxオブジェクトを生成(thisを渡す.), ポインタをm_pSelectBoxに格納.
 	m_pSelectBox->Create(160, 300, 320, 120, m_pMainWnd->m_hWnd, IDB_SELECTBOX1);	// m_pSelectBox->Createでセレクトボックスオブジェクトを作成.
+	m_pSelectBox->AddSelectItem(_T("NEW GAME"));	// "NEW GAME"を追加.
+	m_pSelectBox->AddSelectItem(_T("CONTINUE"));	// "CONTINUE"を追加.
+	m_pSelectBox->AddSelectItem(_T("SETTING"));	// "SETTING"を追加.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
@@ -103,6 +106,7 @@ int CTitleScene::DrawGameObjects(){
 	// セレクトボックスの描画.
 	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.
 		m_pSelectBox->DrawRect(160, 300);	// m_pSelectBox->DrawRectで(160, 300)の位置に描画.
+		m_pSelectBox->DrawSelectItemList(0, 0, RGB(0xff, 0xff, 0xff));	// m_pSelectBox->DrawSelectItemListでリスト描画.
 	}
 
 	// 常に成功なので0.
