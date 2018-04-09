@@ -19,7 +19,7 @@
 #endif
 
 // セレクトボックスクラスCSelectBox
-class CSelectBox : public CGameObject{
+class CSelectBox sealed : public CGameObject{
 
 	// publicメンバ
 	public:
@@ -28,6 +28,10 @@ class CSelectBox : public CGameObject{
 		HDC m_hBackgroundMemDC;	// 背景メモリデバイスコンテキストm_hBackgroundMemDC.
 		HBITMAP m_hBackgroundBitmap;	// ロードした背景ビットマップm_hBackgroundBitmap.
 		HBITMAP m_hOldBackgroundBitmap;	// 以前の背景ビットマップm_hOldBackgroundBitmap.
+		HFONT m_hFont;	// フォントm_hFont.
+		HFONT m_hOldFont;	// 以前のフォントm_hOldFont.
+		int m_iLineHeight;	// 行の高さm_iLineHeight.
+		int m_iMargin;	// 行の間隔m_iMargin.
 		std::vector<tstring> m_vectstrSelectItemList;	// セレクトアイテムリストm_vectstrSelectItemList.
 
 		// publicメンバ関数
@@ -36,7 +40,7 @@ class CSelectBox : public CGameObject{
 		CSelectBox(const CScene *pScene);	// コンストラクタCSelectBox(const CScene *pScene)
 		virtual ~CSelectBox();	// デストラクタ~CSelectBox()
 		// メンバ関数
-		virtual BOOL Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID);	// ゲームオブジェクトの作成Create.(指定されたリソースIDの画像をロード.)
+		virtual BOOL Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID, int nFontSize, LPCTSTR lpctszFontName, int iMargin);	// ゲームオブジェクトの作成Create.(指定されたリソースIDの画像をロード.)
 		virtual void Destroy();	// ゲームオブジェクトの破棄Destroy.
 		virtual void AddSelectItem(tstring tstrSelectItem);	// セレクトアイテムの追加AddSelectItem.
 		virtual void ClearSelectItem();	// セレクトアイテムのクリアClearSelectItem.
