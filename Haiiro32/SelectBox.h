@@ -32,6 +32,11 @@ class CSelectBox sealed : public CGameObject{
 		HFONT m_hOldFont;	// 以前のフォントm_hOldFont.
 		int m_iLineHeight;	// 行の高さm_iLineHeight.
 		int m_iMargin;	// 行の間隔m_iMargin.
+		HDC m_hCursorMemDC;	// カーソルメモリデバイスコンテキストm_hCursorMemDC.
+		HBITMAP m_hCursorBitmap;	// ロードしたカーソルビットマップm_hCursorBitmap.
+		HBITMAP m_hOldCursorBitmap;	// 以前のカーソルビットマップm_hOldCursorBitmap.
+		int m_iCursorWidth;	// カーソルの幅m_iCursorWidth.
+		int m_iCursorHeight;	// カーソルの高さm_iCursorHeight.
 		std::vector<tstring> m_vectstrSelectItemList;	// セレクトアイテムリストm_vectstrSelectItemList.
 
 		// publicメンバ関数
@@ -40,12 +45,13 @@ class CSelectBox sealed : public CGameObject{
 		CSelectBox(const CScene *pScene);	// コンストラクタCSelectBox(const CScene *pScene)
 		virtual ~CSelectBox();	// デストラクタ~CSelectBox()
 		// メンバ関数
-		virtual BOOL Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID, int nFontSize, LPCTSTR lpctszFontName, int iMargin);	// ゲームオブジェクトの作成Create.(指定されたリソースIDの画像をロード.)
+		virtual BOOL Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID, int nFontSize, LPCTSTR lpctszFontName, int iMargin, int iCursorWidth, int iCursorHeight, UINT nCursorID);	// ゲームオブジェクトの作成Create.(指定されたリソースIDの画像をロード.)
 		virtual void Destroy();	// ゲームオブジェクトの破棄Destroy.
 		virtual void AddSelectItem(tstring tstrSelectItem);	// セレクトアイテムの追加AddSelectItem.
 		virtual void ClearSelectItem();	// セレクトアイテムのクリアClearSelectItem.
-		virtual void DrawRect(int x, int y);	// ゲームオブジェクトの描画DrawRect.(指定されたリソースIDの画像をロード.)
+		virtual void DrawRect(int x, int y);	// ゲームオブジェクトの描画DrawRect.
 		virtual void DrawSelectItemList(int x, int y, COLORREF clrColor);	// セレクトアイテムリストの描画DrawSelectItemList.
+		virtual void DrawCursor(int x, int y);	// カーソルの描画DrawCursor.
 
 };
 

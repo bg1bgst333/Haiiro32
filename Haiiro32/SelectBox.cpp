@@ -13,6 +13,11 @@ CSelectBox::CSelectBox() : CGameObject(){
 	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
 	m_iLineHeight = 0;	// m_iLineHeightを0で初期化.
 	m_iMargin = 0;	// m_iMarginを0で初期化.
+	m_hCursorMemDC = NULL;	// m_hCursorMemDCをNULLで初期化.
+	m_hCursorBitmap = NULL;	// m_hCursorBitmapをNULLで初期化.
+	m_hOldCursorBitmap = NULL;	// m_hOldCursorBitmapをNULLで初期化.
+	m_iCursorWidth = 0;	// m_iCursorWidthを0で初期化.
+	m_iCursorHeight = 0;	// m_iCursorHeightを0で初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -28,6 +33,11 @@ CSelectBox::CSelectBox(const CScene *pScene) : CGameObject(pScene){
 	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
 	m_iLineHeight = 0;	// m_iLineHeightを0で初期化.
 	m_iMargin = 0;	// m_iMarginを0で初期化.
+	m_hCursorMemDC = NULL;	// m_hCursorMemDCをNULLで初期化.
+	m_hCursorBitmap = NULL;	// m_hCursorBitmapをNULLで初期化.
+	m_hOldCursorBitmap = NULL;	// m_hOldCursorBitmapをNULLで初期化.
+	m_iCursorWidth = 0;	// m_iCursorWidthを0で初期化.
+	m_iCursorHeight = 0;	// m_iCursorHeightを0で初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -38,7 +48,7 @@ CSelectBox::~CSelectBox(){
 }
 
 // ゲームオブジェクトの作成Create.(指定されたリソースIDの画像をロード.)
-BOOL CSelectBox::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID, int nFontSize, LPCTSTR lpctszFontName, int iMargin){
+BOOL CSelectBox::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID, int nFontSize, LPCTSTR lpctszFontName, int iMargin, int iCursorWidth, int iCursorHeight, UINT nCursorID){
 
 	// 背景メモリデバイスコンテキストの作成.
 	m_hBackgroundMemDC = CreateCompatibleDC(m_pScene->m_hDC);	// CreateCompatibleDCでm_hBackgroundMemDCを作成.
@@ -55,7 +65,7 @@ BOOL CSelectBox::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT n
 		return FALSE;	// FALSEを返す.
 	}
 
-	// ブラシの選択.
+	// 背景ビットマップの選択.
 	m_hOldBackgroundBitmap = (HBITMAP)SelectObject(m_hBackgroundMemDC, m_hBackgroundBitmap);	// SelectObjectでm_hBackgroundBitmapを選択.
 
 	// 位置とサイズの取得.
@@ -87,6 +97,45 @@ BOOL CSelectBox::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT n
 	// 行の間隔のセット.
 	m_iMargin = iMargin;	// m_iMarginにiMarginをセット.
 
+	// カーソルメモリデバイスコンテキストの作成.
+	m_hCursorMemDC = CreateCompatibleDC(m_pScene->m_hDC);	// CreateCompatibleDCでm_hCursorMemDCを作成.
+	if (m_hCursorMemDC == NULL){	// m_hCursorMemDCがNULLなら.
+		SelectObject(m_pScene->m_hMemDC, m_hOldFont);	// SelectObjectでm_hOldFontに戻す.
+		m_hOldFont = NULL;	// m_hOldFontにNULLをセット.
+		DeleteObject(m_hFont);	// DeleteObjectでm_hFontを削除.
+		m_hFont = NULL;	// m_hFontにNULLをセット.
+		SelectObject(m_hBackgroundMemDC, m_hOldBackgroundBitmap);	// SelectObjectでm_hOldBackgroundBitmapを選択.
+		m_hOldBackgroundBitmap = NULL;	// m_hOldBackgroundBitmapにNULLをセット.
+		DeleteObject(m_hBackgroundBitmap);	// DeleteObjectでm_hBackgroundBitmapを削除.
+		m_hBackgroundBitmap = NULL;	// m_hBackgroundBitmapにNULLをセット.
+		DeleteDC(m_hBackgroundMemDC);	// m_hBackgroundMemDCをDeleteDCで削除.
+		m_hBackgroundMemDC = NULL;	// m_hBackgroundMemDCにNULLをセット.
+		return FALSE;	// FALSEを返す.
+	}
+
+	// カーソルビットマップのロード.
+	m_iCursorWidth = iCursorWidth;	// m_iCursorWidthにiCursorWidthをセット.
+	m_iCursorHeight = iCursorHeight;	// m_iCursorHeightにiCursorHeightをセット.
+	m_hCursorBitmap = (HBITMAP)LoadImage(hInstance, MAKEINTRESOURCE(nCursorID), IMAGE_BITMAP, m_iCursorWidth, m_iCursorHeight, LR_DEFAULTCOLOR);	// LoadImageでリソースIDがnCursorIDのビットマップをロード.
+	if (m_hCursorBitmap == NULL){	// m_hCursorBitmapがNULLなら.
+		DeleteDC(m_hCursorMemDC);	// DeleteDCでm_hCursorMemDCを削除.
+		m_hCursorMemDC = NULL;	// m_hCursorMemDCにNULLをセット.
+		SelectObject(m_pScene->m_hMemDC, m_hOldFont);	// SelectObjectでm_hOldFontに戻す.
+		m_hOldFont = NULL;	// m_hOldFontにNULLをセット.
+		DeleteObject(m_hFont);	// DeleteObjectでm_hFontを削除.
+		m_hFont = NULL;	// m_hFontにNULLをセット.
+		SelectObject(m_hBackgroundMemDC, m_hOldBackgroundBitmap);	// SelectObjectでm_hOldBackgroundBitmapを選択.
+		m_hOldBackgroundBitmap = NULL;	// m_hOldBackgroundBitmapにNULLをセット.
+		DeleteObject(m_hBackgroundBitmap);	// DeleteObjectでm_hBackgroundBitmapを削除.
+		m_hBackgroundBitmap = NULL;	// m_hBackgroundBitmapにNULLをセット.
+		DeleteDC(m_hBackgroundMemDC);	// m_hBackgroundMemDCをDeleteDCで削除.
+		m_hBackgroundMemDC = NULL;	// m_hBackgroundMemDCにNULLをセット.
+		return FALSE;	// FALSEを返す.
+	}
+
+	// カーソルビットマップの選択.
+	m_hOldCursorBitmap = (HBITMAP)SelectObject(m_hCursorMemDC, m_hCursorBitmap);	// SelectObjectでm_hCursorBitmapを選択.
+
 	// 成功なのでTRUE.
 	return TRUE;	// TRUEを返す.
 
@@ -102,12 +151,25 @@ void CSelectBox::Destroy(){
 	m_iHeight = 0;	// m_iHeightに0を代入.
 	m_iMargin = 0;	// m_iMarginに0を代入.
 	m_iLineHeight = 0;	// m_iLineHeightに0を代入.
+	m_iCursorWidth = 0;	// m_iCursorWidthに0を代入.
+	m_iCursorHeight = 0;	// m_iCursorHeightに0を代入.
+
+	// カーソルビットマップを戻す.
+	if (m_hOldCursorBitmap != NULL){	// m_hOldCursorBitmapがNULLでなければ.
+		SelectObject(m_hCursorMemDC, m_hOldCursorBitmap);	// SelectObjectでm_hOldCursorBitmapに戻す.
+		m_hOldCursorBitmap = NULL;	// m_hOldCursorBitmapにNULLをセット.
+	}
+
+	// カーソルビットマップの削除.
+	if (m_hCursorBitmap != NULL){	// m_hCursorBitmapがNULLでなければ.
+		DeleteObject(m_hCursorBitmap);	// DeleteObjectでm_hCursorBitmapを削除.
+		m_hCursorBitmap = NULL;	// m_hCursorBitmapにNULLをセット.
+	}
 
 	// フォントを戻す.
 	if (m_hOldFont != NULL){	// m_hOldFontがNULLでなければ.
 		SelectObject(m_pScene->m_hMemDC, m_hOldFont);	// SelectObjectでm_hOldFontに戻す.
 		m_hOldFont = NULL;	// m_hOldFontにNULLをセット.
-
 	}
 
 	// フォントの削除.
@@ -179,5 +241,13 @@ void CSelectBox::DrawSelectItemList(int x, int y, COLORREF clrColor){
 		iPosY = iPosY + m_iLineHeight;	// iPosYにm_iLineHeightを足す.
 		iPosY = iPosY + m_iMargin;	// iPosYにm_iMarginを足す.
 	}
+
+}
+
+// カーソルの描画DrawCursor.
+void CSelectBox::DrawCursor(int x, int y){
+
+	// カーソルの描画.
+	BitBlt(m_pScene->m_hMemDC, m_x + x,  m_y + y, m_iCursorWidth, m_iCursorHeight, m_hCursorMemDC, 0, 0, SRCCOPY);	// BitBltでカーソルを描画.
 
 }

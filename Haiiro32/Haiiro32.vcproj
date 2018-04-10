@@ -323,6 +323,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cursor1.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\Haiiro32.rc"
 				>
 			</File>
