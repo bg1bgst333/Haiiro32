@@ -35,8 +35,13 @@ class CSelectBox sealed : public CGameObject{
 		HDC m_hCursorMemDC;	// カーソルメモリデバイスコンテキストm_hCursorMemDC.
 		HBITMAP m_hCursorBitmap;	// ロードしたカーソルビットマップm_hCursorBitmap.
 		HBITMAP m_hOldCursorBitmap;	// 以前のカーソルビットマップm_hOldCursorBitmap.
+		int m_iCursorX;	// カーソルのx座標m_iCursorX.
+		int m_iCursorY;	// カーソルのy座標m_iCursorY.
 		int m_iCursorWidth;	// カーソルの幅m_iCursorWidth.
 		int m_iCursorHeight;	// カーソルの高さm_iCursorHeight.
+		int m_iCursorIndex;	// カーソルインデックスm_iCursorIndex.
+		BOOL m_bDown;	// 下が押されているフラグm_bDown.
+		BOOL m_bUp;	// 上が押されているフラグm_bUp.
 		std::vector<tstring> m_vectstrSelectItemList;	// セレクトアイテムリストm_vectstrSelectItemList.
 
 		// publicメンバ関数
@@ -52,6 +57,10 @@ class CSelectBox sealed : public CGameObject{
 		virtual void DrawRect(int x, int y);	// ゲームオブジェクトの描画DrawRect.
 		virtual void DrawSelectItemList(int x, int y, COLORREF clrColor);	// セレクトアイテムリストの描画DrawSelectItemList.
 		virtual void DrawCursor(int x, int y);	// カーソルの描画DrawCursor.
+		virtual void ClearInput();	// 入力クリア.
+		virtual void Down();	// カーソルを下に移動Down.
+		virtual void Up();	// カーソルを上に移動Up.
+		virtual int Proc();	// 処理をするProc.
 
 };
 

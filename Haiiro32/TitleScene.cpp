@@ -59,6 +59,8 @@ int CTitleScene::InitKeyboard(){
 
 	// 監視キーの追加.
 	m_pKeyboard->AddKey(VK_ESCAPE);	// ESCキーを追加.
+	m_pKeyboard->AddKey(VK_DOWN);	// 下キーを追加.
+	m_pKeyboard->AddKey(VK_UP);	// 上キーを追加.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
@@ -68,12 +70,25 @@ int CTitleScene::InitKeyboard(){
 // キーボードのチェック.
 int CTitleScene::CheckKeyboard(){
 
+	// セレクトボックスの入力状態クリア.
+	m_pSelectBox->ClearInput();	// 入力クリア.
+
 	// キー状態の取得.
 	m_pKeyboard->Check();	// m_pKeyboard->Checkで状態確認.
 
 	// 0番目のキー(ここではESCキー.)が押された時.
 	if (m_pKeyboard->IsPress(0)){	// m_pKeyboard->IsPress(0)がTRUEなら.
 		SendMessage(m_pMainWnd->m_hWnd, WM_CLOSE, 0, 0);	// SendMessageでWM_CLOSEを送信.
+	}
+
+	// 1番目のキー(ここでは下キー.)が押された時.
+	if (m_pKeyboard->IsPress(1)){	// m_Keyboard->IsPress(1)がTRUEなら.
+		m_pSelectBox->Down();	// カーソルを下に.
+	}
+
+	// 2番目のキー(ここでは上キー.)が押された時.
+	if (m_pKeyboard->IsPress(2)){	// m_pKeyboard->IsPress(2)がTRUEなら.
+		m_pSelectBox->Up();	// カーソルを上に.
 	}
 
 	// 常に成功なので0.
@@ -83,6 +98,11 @@ int CTitleScene::CheckKeyboard(){
 
 // キー入力や時間などから処理を計算.
 int CTitleScene::RunProc(){
+
+	// セレクトボックス処理.
+	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.
+		m_pSelectBox->Proc();	// m_pSelectBox->Procで処理.
+	}
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.

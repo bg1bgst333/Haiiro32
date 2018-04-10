@@ -16,8 +16,13 @@ CSelectBox::CSelectBox() : CGameObject(){
 	m_hCursorMemDC = NULL;	// m_hCursorMemDCをNULLで初期化.
 	m_hCursorBitmap = NULL;	// m_hCursorBitmapをNULLで初期化.
 	m_hOldCursorBitmap = NULL;	// m_hOldCursorBitmapをNULLで初期化.
+	m_iCursorX = 0;	// m_iCursorXを0で初期化.
+	m_iCursorY = 0;	// m_iCursorYを0で初期化.
 	m_iCursorWidth = 0;	// m_iCursorWidthを0で初期化.
 	m_iCursorHeight = 0;	// m_iCursorHeightを0で初期化.
+	m_iCursorIndex = 0;	// m_iCursorIndexを0で初期化.
+	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
+	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -36,8 +41,13 @@ CSelectBox::CSelectBox(const CScene *pScene) : CGameObject(pScene){
 	m_hCursorMemDC = NULL;	// m_hCursorMemDCをNULLで初期化.
 	m_hCursorBitmap = NULL;	// m_hCursorBitmapをNULLで初期化.
 	m_hOldCursorBitmap = NULL;	// m_hOldCursorBitmapをNULLで初期化.
+	m_iCursorX = 0;	// m_iCursorXを0で初期化.
+	m_iCursorY = 0;	// m_iCursorYを0で初期化.
 	m_iCursorWidth = 0;	// m_iCursorWidthを0で初期化.
 	m_iCursorHeight = 0;	// m_iCursorHeightを0で初期化.
+	m_iCursorIndex = 0;	// m_iCursorIndexを0で初期化.
+	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
+	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -114,8 +124,13 @@ BOOL CSelectBox::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT n
 	}
 
 	// カーソルビットマップのロード.
+	m_iCursorX = 0;	// m_iCursorXを0で初期化.
+	m_iCursorY = 0;	// m_iCursorYを0で初期化.
 	m_iCursorWidth = iCursorWidth;	// m_iCursorWidthにiCursorWidthをセット.
 	m_iCursorHeight = iCursorHeight;	// m_iCursorHeightにiCursorHeightをセット.
+	m_iCursorIndex = 0;	// m_iCursorIndexを0で初期化.
+	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
+	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
 	m_hCursorBitmap = (HBITMAP)LoadImage(hInstance, MAKEINTRESOURCE(nCursorID), IMAGE_BITMAP, m_iCursorWidth, m_iCursorHeight, LR_DEFAULTCOLOR);	// LoadImageでリソースIDがnCursorIDのビットマップをロード.
 	if (m_hCursorBitmap == NULL){	// m_hCursorBitmapがNULLなら.
 		DeleteDC(m_hCursorMemDC);	// DeleteDCでm_hCursorMemDCを削除.
@@ -151,8 +166,13 @@ void CSelectBox::Destroy(){
 	m_iHeight = 0;	// m_iHeightに0を代入.
 	m_iMargin = 0;	// m_iMarginに0を代入.
 	m_iLineHeight = 0;	// m_iLineHeightに0を代入.
+	m_iCursorX = 0;	// m_iCursorXを0で初期化.
+	m_iCursorY = 0;	// m_iCursorYを0で初期化.
 	m_iCursorWidth = 0;	// m_iCursorWidthに0を代入.
 	m_iCursorHeight = 0;	// m_iCursorHeightに0を代入.
+	m_iCursorIndex = 0;	// m_iCursorIndexに0を代入.
+	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
+	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
 
 	// カーソルビットマップを戻す.
 	if (m_hOldCursorBitmap != NULL){	// m_hOldCursorBitmapがNULLでなければ.
@@ -247,7 +267,63 @@ void CSelectBox::DrawSelectItemList(int x, int y, COLORREF clrColor){
 // カーソルの描画DrawCursor.
 void CSelectBox::DrawCursor(int x, int y){
 
+	// カーソル位置の決定.
+	m_iCursorY = (m_iLineHeight + m_iMargin) * m_iCursorIndex;	// (m_iLineHeight + m_iMargin) * m_iCursorIndexをセット.
+
 	// カーソルの描画.
-	BitBlt(m_pScene->m_hMemDC, m_x + x,  m_y + y, m_iCursorWidth, m_iCursorHeight, m_hCursorMemDC, 0, 0, SRCCOPY);	// BitBltでカーソルを描画.
+	BitBlt(m_pScene->m_hMemDC, m_x + x + m_iCursorX,  m_y + y + m_iCursorY, m_iCursorWidth, m_iCursorHeight, m_hCursorMemDC, 0, 0, SRCCOPY);	// BitBltでカーソルを描画.
+
+}
+
+// 入力クリア.
+void CSelectBox::ClearInput(){
+
+	// 入力クリア.
+	m_bDown = FALSE;	// m_bDownをFALSEに初期化.
+	m_bUp = FALSE;	// m_bUpをFALSEに初期化.
+
+}
+
+// カーソルを下に移動Down.
+void CSelectBox::Down(){
+
+	// 下が有効.
+	m_bDown = TRUE;	// m_bDownをTRUEにする.
+
+}
+
+// カーソルを上に移動Up.
+void CSelectBox::Up(){
+
+	// 上が有効.
+	m_bUp = TRUE;	// m_bUpをTRUEにする.
+
+}
+
+// 処理をするProc.
+int CSelectBox::Proc(){
+
+	// 下が押された時.
+	if (m_bDown){	// m_bDownがTRUE.
+		m_iCursorIndex++;	// m_iCursorIndexをインクリメント.
+	}
+
+	// 上が押された時.
+	if (m_bUp){	// m_bUpがTRUE.
+		m_iCursorIndex--;	// m_iCursorIndexをデクリメント.
+	}
+
+	// インデックスが要素数以上の時.
+	if (m_iCursorIndex > (int)m_vectstrSelectItemList.size() - 1){	// 最後の要素を越えたら.
+		m_iCursorIndex = 0;	// 0にする.
+	}
+
+	// インデックスが0未満の時.
+	if (m_iCursorIndex < 0){	// 0未満の時.
+		m_iCursorIndex = (int)m_vectstrSelectItemList.size() - 1;	// 最後の要素にする.
+	}
+
+	// 成功なので0.
+	return 0;	// 0を返す.
 
 }
