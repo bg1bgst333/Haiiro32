@@ -8,6 +8,7 @@
 #include "Background.h"	// CBackground
 #include "Title.h"	// CTitle
 #include "SelectBox.h"	// CSelectBox
+#include "GameTimeBox.h"	// CGameTimeBox
 
 // タイトルシーンクラスCTitleScene
 class CTitleScene : public CScene{
@@ -19,11 +20,13 @@ class CTitleScene : public CScene{
 		CBackground *m_pBackground;	// 背景オブジェクトm_pBackground.
 		CTitle *m_pTitle;	// タイトルオブジェクトm_pTitle.
 		CSelectBox *m_pSelectBox;	// セレクトボックスm_pSelectBox.
+		CGameTimeBox *m_pGameTimeBox;	// ゲームタイムボックスm_pGameTimeBox.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
 		CTitleScene();	// コンストラクタCTitleScene
 		CTitleScene(const CWindow *pWnd);	// コンストラクタCTitleScene(const CWindow *pWnd)
+		CTitleScene(const CWindow *pWnd, CGameTime *pTime);	// コンストラクタCTitleScene(const CWindow *pWnd, CGameTime *pTime)
 		virtual ~CTitleScene();	// デストラクタ~CTitleScene
 		virtual int InitGameObjects();	// ゲームオブジェクトの初期化.
 		virtual int InitKeyboard();	// キーボードの初期化.

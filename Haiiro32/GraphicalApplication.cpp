@@ -58,17 +58,8 @@ int CGraphicalApplication::Run(){
 // 終了処理関数ExitInstance.
 int CGraphicalApplication::ExitInstance(){
 
-	// メインウィンドウの破棄
-	if (m_pMainWnd != NULL){	// m_pMainWndがNULLでない時.
-
-		// 破棄する.
-		delete m_pMainWnd;	// deleteでm_pMainWndを破棄.
-		m_pMainWnd = NULL;	// m_pMainWndにNULLをセット.
-
-	}
-
-	// 今回は常に0を返す.
-	return 0;	// returnで0を返す.
+	// 親のExitInstance.
+	return CApplication::ExitInstance();	// CApplication::ExitInstanceを戻り値とする.
 
 }
 

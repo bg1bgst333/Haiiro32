@@ -24,8 +24,8 @@ BOOL CMainApplication::InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int n
 	// ウィンドウの表示.
 	m_pMainWnd->ShowWindow(SW_SHOW);	// m_pMainWnd->ShowWindowで表示.
 
-	// TRUEを返す.
-	return TRUE;	// returnでTRUEを返す.
+	// 親のInitInstanceを呼ぶ.
+	return CGameApplication::InitInstance(hInstance, lpCmdLine, nShowCmd);	// CGameApplication::InitInstanceを呼ぶ.
 
 }
 
@@ -38,7 +38,7 @@ int CMainApplication::Main(){
 
 	// 生成.
 	if (m_iNo == 0 && m_pScene == NULL){	// m_iNoが0で生成されていない時.
-		pScene = new CTitleScene(m_pMainWnd);	// CTitleSceneを生成し, pSceneに格納.(m_pMainWndを渡す.)
+		pScene = new CTitleScene(m_pMainWnd, m_pGameTime);	// CTitleSceneを生成し, pSceneに格納.(m_pMainWndとm_pGameTimeを渡す.)
 	}
 
 	if (m_pScene == NULL){	// m_pSceneがNULLの時.	

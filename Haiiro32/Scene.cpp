@@ -7,6 +7,7 @@ CScene::CScene(){
 
 	// メンバの初期化.
 	m_pMainWnd = NULL;	// m_pMainWndをNULLで初期化.
+	m_pGameTime = NULL;	// m_pGameTimeをNULLで初期化.
 	m_hDC = NULL;	// m_hDCをNULLで初期化.
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.
@@ -22,6 +23,23 @@ CScene::CScene(const CWindow *pWnd){
 
 	// メンバの初期化.
 	m_pMainWnd = pWnd;	// m_pMainWndをpWndで初期化.
+	m_pGameTime = NULL;	// m_pGameTimeをNULLで初期化.
+	m_hDC = NULL;	// m_hDCをNULLで初期化.
+	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
+	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.
+	m_hOldMemBitmap = NULL;	// m_hOldMemBitmapをNULLで初期化.
+	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
+	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
+	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
+
+}
+
+// コンストラクタCScene(const CWindow *pWnd, CGameTime *pTime)
+CScene::CScene(const CWindow *pWnd, CGameTime *pTime){
+
+	// メンバの初期化.
+	m_pMainWnd = pWnd;	// m_pMainWndをpWndで初期化.
+	m_pGameTime = pTime;	// m_pGameTimeをpTimeで初期化.
 	m_hDC = NULL;	// m_hDCをNULLで初期化.
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.

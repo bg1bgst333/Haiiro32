@@ -7,6 +7,7 @@
 #include "Window.h"	// CWindow
 #include "Keyboard.h"	// CKeyboard
 #include "GameObject.h"	// CGameObject
+#include "GameTime.h"	// CGameTime
 
 // 前方宣言.
 class CGameObject;	// CGameObject.
@@ -19,6 +20,7 @@ class CScene{
 
 		// publicメンバ変数
 		const CWindow *m_pMainWnd;	// CWindowオブジェクトポインタm_pMainWnd.(const)
+		CGameTime *m_pGameTime;	// CGameTimeオブジェクトポインタm_pGameTime.
 		HDC m_hDC;	// ウィンドウデバイスコンテキストハンドルm_hDC.
 		HDC m_hMemDC;	// メモリデバイスコンテキストハンドルm_hMemDC.
 		HBITMAP m_hMemBitmap;	// メモリビットマップハンドルm_hMemBitmap.
@@ -31,6 +33,7 @@ class CScene{
 		// コンストラクタ・デストラクタ
 		CScene();	// コンストラクタCScene
 		CScene(const CWindow *pWnd);	// コンストラクタCScene(const CWindow *pWnd)
+		CScene(const CWindow *pWnd, CGameTime *pTime);	// コンストラクタCScene(const CWindow *pWnd, CGameTime *pTime)
 		virtual ~CScene();	// デストラクタ~CScene
 		virtual int InitScene();	// シーン初期化InitScene.
 		virtual int RunScene();	// シーン処理中RunScene.

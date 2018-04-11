@@ -19,7 +19,7 @@
 #endif
 
 // セレクトボックスクラスCSelectBox
-class CSelectBox sealed : public CGameObject{
+class CSelectBox : public CGameObject{
 
 	// publicメンバ
 	public:

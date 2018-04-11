@@ -67,6 +67,7 @@ BOOL CTitle::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT nID, 
 		m_hBitmap = NULL;	// m_hBitmapにNULLをセット.
 		DeleteDC(m_hMemDC);	// m_hMemDCをDeleteDCで削除.
 		m_hMemDC = NULL;	// m_hMemDCにNULLをセット.
+		return FALSE;	// FALSEを返す.
 	}
 
 	// フォントの選択.

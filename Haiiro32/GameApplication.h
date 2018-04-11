@@ -6,6 +6,7 @@
 // 独自のヘッダ
 #include "GraphicalApplication.h"	// CGraphicalApplication
 #include "Scene.h"	// CScene
+#include "GameTime.h"	// CGameTime
 
 // ゲームアプリケーションクラスCGameApplication
 class CGameApplication : public CGraphicalApplication{
@@ -15,6 +16,7 @@ class CGameApplication : public CGraphicalApplication{
 
 		// publicメンバ変数
 		CScene *m_pScene;	// CSceneオブジェクトポインタm_pScene.
+		CGameTime *m_pGameTime;	// CGameTimeオブジェクトポインタm_pGameTime.
 		int m_iNo;	// 番号m_iNo.
 
 		// publicメンバ関数
@@ -22,6 +24,8 @@ class CGameApplication : public CGraphicalApplication{
 		CGameApplication();	// コンストラクタCGameApplication
 
 		// メンバ関数.
+		virtual BOOL InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int nShowCmd);	// インスタンス初期化関数InitInstance.
+		virtual int ExitInstance();	// 終了処理関数ExitInstance.
 		virtual int Main();	// ゲームメイン処理関数Main.
 
 };

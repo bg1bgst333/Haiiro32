@@ -10,6 +10,7 @@ CTitleScene::CTitleScene() : CScene(){
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
 	m_pSelectBox = NULL;	// m_pSelectBoxをNULLで初期化.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
 
@@ -20,6 +21,18 @@ CTitleScene::CTitleScene(const CWindow *pWnd) : CScene(pWnd){
 	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
 	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
 	m_pSelectBox = NULL;	// m_pSelectBoxをNULLで初期化.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
+
+}
+
+// コンストラクタCTitleScene(const CWindow *pWnd, CGameTime *pTime)
+CTitleScene::CTitleScene(const CWindow *pWnd, CGameTime *pTime) : CScene(pWnd, pTime){
+
+	// メンバの初期化.
+	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
+	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
+	m_pSelectBox = NULL;	// m_pSelectBoxをNULLで初期化.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
 
@@ -45,6 +58,10 @@ int CTitleScene::InitGameObjects(){
 	m_pSelectBox->AddSelectItem(_T("NEW GAME"));	// "NEW GAME"を追加.
 	m_pSelectBox->AddSelectItem(_T("CONTINUE"));	// "CONTINUE"を追加.
 	m_pSelectBox->AddSelectItem(_T("SETTING"));	// "SETTING"を追加.
+
+	// ゲームタイムボックスの描画.
+	m_pGameTimeBox = new CGameTimeBox(this);	// CGameTimeBoxオブジェクトを生成(thisを渡す.), ポインタをm_pGameTimeBoxに格納.
+	m_pGameTimeBox->Create(0, 0, 160, 30, 36, _T("ＭＳ ゴシック"));	// m_pGameTimeBox->Createで作成.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
@@ -130,6 +147,11 @@ int CTitleScene::DrawGameObjects(){
 		m_pSelectBox->DrawCursor(80, 0);	// m_pSelectBox->DrawCursorで(80, 0)の位置に描画.
 	}
 
+	// ゲームタイムボックスの描画.
+	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
+		m_pGameTimeBox->DrawTime(0, 0, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawTimeで時刻を描画.
+	}
+
 	// 常に成功なので0.
 	return 0;	// 0を返す.
 
@@ -137,6 +159,13 @@ int CTitleScene::DrawGameObjects(){
 
 // ゲームオブジェクトの終了処理.
 int CTitleScene::ExitGameObjects(){
+
+	// ゲームタイムボックスの破棄.
+	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
+		m_pGameTimeBox->Destroy();	// m_pGameTimeBox->Destroyで廃棄.
+		delete m_pGameTimeBox;	// deleteでm_pGameTimeBoxを解放.
+		m_pGameTimeBox = NULL;	// m_pGameTimeBoxにNULLをセット.
+	}
 
 	// セレクトボックスの破棄.
 	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.

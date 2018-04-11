@@ -7,7 +7,33 @@ CGameApplication::CGameApplication() : CGraphicalApplication(){
 
 	// メンバの初期化.
 	m_pScene = NULL;	// m_pSceneをNULLで初期化.
+	m_pGameTime = NULL;	// m_pGameTimeをNULLで初期化.
 	m_iNo = 0;	// m_iNoを0で初期化.
+
+}
+
+// インスタンス初期化関数InitInstance.
+BOOL CGameApplication::InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int nShowCmd){
+
+	// ゲームタイムの作成.
+	m_pGameTime = new CGameTime();	// CGameTimeオブジェクトの作成.
+
+	// TRUE.
+	return TRUE;	// TRUEを返す.
+
+}
+
+// 終了処理関数ExitInstance.
+int CGameApplication::ExitInstance(){
+
+	// ゲームタイムの破棄.
+	if (m_pGameTime != NULL){	// m_pGameTimeがNULLでなければ.
+		delete m_pGameTime;	// deleteでm_pGameTimeを削除.
+		m_pGameTime = NULL;	// m_pGameTimeにNULLをセット.
+	}
+
+	// 親のExitInstanceを呼ぶ.
+	return CGraphicalApplication::ExitInstance();	// 戻り値は親の戻り値.
 
 }
 
