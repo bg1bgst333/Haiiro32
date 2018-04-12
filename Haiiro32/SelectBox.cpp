@@ -400,7 +400,7 @@ void CSelectBox::SetTimer(DWORD dwInterval){
 	// É^ÉCÉ}Å[ÇÃÉZÉbÉg.
 	const CScene *pScene = m_pScene;	// m_pSceneÇpSceneÇ…äiî[.
 	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeÇpTimeÇ…äiî[.
-	m_dwTimerStart = pTime->Get();	// pTime->GetÇ≈éÊìæÇµÇΩéûçèÇm_dwTimerStartÇ…äiî[.
+	m_dwTimerStart = pTime->GetSystemTime();	// pTime->GetSystemTimeÇ≈éÊìæÇµÇΩéûçèÇm_dwTimerStartÇ…äiî[.
 
 }
 
@@ -410,7 +410,7 @@ BOOL CSelectBox::IsElapsed(){
 	// åªç›éûçèÇÃéÊìæ.
 	const CScene *pScene = m_pScene;	// m_pSceneÇpSceneÇ…äiî[.
 	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeÇpTimeÇ…äiî[.
-	DWORD dwNow = pTime->Get();	// pTime->GetÇ≈éÊìæÇµÇΩéûçèÇdwNowÇ…äiî[.
+	DWORD dwNow = pTime->GetSystemTime();	// pTime->GetSystemTimeÇ≈éÊìæÇµÇΩéûçèÇdwNowÇ…äiî[.
 
 	// åoâﬂéûä‘É`ÉFÉbÉN.
 	if (dwNow - m_dwTimerStart >= m_dwInterval){	// m_dwIntervalà»è„Ç»ÇÁ.
