@@ -8,6 +8,7 @@ CGameTimeBox::CGameTimeBox(){
 	// メンバの初期化.
 	m_hFont = NULL;	// m_hFontをNULLで初期化.
 	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
+	m_dwTime = 0;	// m_dwTimeを0で初期化.
 
 }
 
@@ -17,6 +18,7 @@ CGameTimeBox::CGameTimeBox(const CScene *pScene) : CGameObject(pScene){
 	// メンバの初期化.
 	m_hFont = NULL;	// m_hFontをNULLで初期化.
 	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
+	m_dwTime = 0;	// m_dwTimeを0で初期化.
 
 }
 
@@ -51,6 +53,9 @@ BOOL CGameTimeBox::Create(int x, int y, int iWidth, int iHeight, int nFontSize, 
 // ゲームオブジェクトの破棄Destroy.
 void CGameTimeBox::Destroy(){
 
+	// メンバの終了処理.
+	m_dwTime = 0;	// m_dwTimeに0をセット.
+
 	// フォントを戻す.
 	if (m_hOldFont != NULL){	// m_hOldFontがNULLでなければ.
 		SelectObject(m_pScene->m_hMemDC, m_hOldFont);	// SelectObjectでm_hOldFontに戻す.
@@ -63,6 +68,20 @@ void CGameTimeBox::Destroy(){
 		DeleteObject(m_hFont);	// DeleteObjectでm_hFontを削除.
 		m_hFont = NULL;	// m_hFontにNULLをセット.
 	}
+
+}
+
+// 処理をするProc.
+int CGameTimeBox::Proc(){
+	
+	// 時刻を取得.
+	TCHAR tszTime[256] = {0};	// TCHAR配列tszTimeを{0}で初期化.
+	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
+	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
+	m_dwTime = pTime->Get();	// pTime->Getで取得した時刻をm_dwTimeに格納.
+
+	// 成功なので0.
+	return 0;	// 0を返す.
 
 }
 
@@ -83,9 +102,7 @@ void CGameTimeBox::DrawTime(int x, int y, int iWidth, int iHeight, COLORREF clrC
 
 	// 時刻を取得.
 	TCHAR tszTime[256] = {0};	// TCHAR配列tszTimeを{0}で初期化.
-	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
-	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
-	_stprintf(tszTime, _T("%lu"), pTime->Get());	// _stprintfでdwTimeからtszTimeに変換.
+	_stprintf(tszTime, _T("%lu"), m_dwTime);	// _stprintfでm_dwTimeからtszTimeに変換.
 	DrawText(x, y, iWidth, iHeight, tszTime, clrColor);	// DrawTextでシステム時間を描画.
 
 }

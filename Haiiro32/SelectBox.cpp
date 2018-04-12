@@ -21,8 +21,13 @@ CSelectBox::CSelectBox() : CGameObject(){
 	m_iCursorWidth = 0;	// m_iCursorWidthを0で初期化.
 	m_iCursorHeight = 0;	// m_iCursorHeightを0で初期化.
 	m_iCursorIndex = 0;	// m_iCursorIndexを0で初期化.
+	m_bCursorVisible = FALSE;	// m_bCursorVisibleをFALSEで初期化.
 	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
 	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
+	m_bReturn = FALSE;	// m_bReturnをFALSEで初期化.
+	m_bDetermine = FALSE;	// m_bDetermineをFALSEで初期化.
+	m_dwInterval = 0;	// m_dwIntervalを0で初期化.
+	m_dwTimerStart = 0;	// m_dwTimerStartを0で初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -46,8 +51,13 @@ CSelectBox::CSelectBox(const CScene *pScene) : CGameObject(pScene){
 	m_iCursorWidth = 0;	// m_iCursorWidthを0で初期化.
 	m_iCursorHeight = 0;	// m_iCursorHeightを0で初期化.
 	m_iCursorIndex = 0;	// m_iCursorIndexを0で初期化.
+	m_bCursorVisible = FALSE;	// m_bCursorVisibleをFALSEで初期化.
 	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
 	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
+	m_bReturn = FALSE;	// m_bReturnをFALSEで初期化.
+	m_bDetermine = FALSE;	// m_bDetermineをFALSEで初期化.
+	m_dwInterval = 0;	// m_dwIntervalを0で初期化.
+	m_dwTimerStart = 0;	// m_dwTimerStartを0で初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -129,8 +139,13 @@ BOOL CSelectBox::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT n
 	m_iCursorWidth = iCursorWidth;	// m_iCursorWidthにiCursorWidthをセット.
 	m_iCursorHeight = iCursorHeight;	// m_iCursorHeightにiCursorHeightをセット.
 	m_iCursorIndex = 0;	// m_iCursorIndexを0で初期化.
+	m_bCursorVisible = TRUE;	// m_bCursorVisibleにTRUEを代入.
 	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
 	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
+	m_bReturn = FALSE;	// m_bReturnをFALSEで初期化.
+	m_bDetermine = FALSE;	// m_bDetermineをFALSEで初期化.
+	m_dwInterval = 0;	// m_dwIntervalを0で初期化.
+	m_dwTimerStart = 0;	// m_dwTimerStartを0で初期化.
 	m_hCursorBitmap = (HBITMAP)LoadImage(hInstance, MAKEINTRESOURCE(nCursorID), IMAGE_BITMAP, m_iCursorWidth, m_iCursorHeight, LR_DEFAULTCOLOR);	// LoadImageでリソースIDがnCursorIDのビットマップをロード.
 	if (m_hCursorBitmap == NULL){	// m_hCursorBitmapがNULLなら.
 		DeleteDC(m_hCursorMemDC);	// DeleteDCでm_hCursorMemDCを削除.
@@ -166,13 +181,18 @@ void CSelectBox::Destroy(){
 	m_iHeight = 0;	// m_iHeightに0を代入.
 	m_iMargin = 0;	// m_iMarginに0を代入.
 	m_iLineHeight = 0;	// m_iLineHeightに0を代入.
-	m_iCursorX = 0;	// m_iCursorXを0で初期化.
-	m_iCursorY = 0;	// m_iCursorYを0で初期化.
+	m_iCursorX = 0;	// m_iCursorXに0を代入.
+	m_iCursorY = 0;	// m_iCursorYに0を代入.
 	m_iCursorWidth = 0;	// m_iCursorWidthに0を代入.
 	m_iCursorHeight = 0;	// m_iCursorHeightに0を代入.
 	m_iCursorIndex = 0;	// m_iCursorIndexに0を代入.
-	m_bDown = FALSE;	// m_bDownをFALSEで初期化.
-	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
+	m_bCursorVisible = FALSE;	// m_bCursorVisibleにFALSEを代入.
+	m_bDown = FALSE;	// m_bDownにFALSEを代入.
+	m_bUp = FALSE;	// m_bUpにFALSEを代入.
+	m_bReturn = FALSE;	// m_bReturnにFALSEを代入.
+	m_bDetermine = FALSE;	// m_bDetermineにFALSEを代入.
+	m_dwInterval = 0;	// m_dwIntervalに0を代入.
+	m_dwTimerStart = 0;	// m_dwTimerStartに0を代入.
 
 	// カーソルビットマップを戻す.
 	if (m_hOldCursorBitmap != NULL){	// m_hOldCursorBitmapがNULLでなければ.
@@ -271,7 +291,9 @@ void CSelectBox::DrawCursor(int x, int y){
 	m_iCursorY = (m_iLineHeight + m_iMargin) * m_iCursorIndex;	// (m_iLineHeight + m_iMargin) * m_iCursorIndexをセット.
 
 	// カーソルの描画.
-	BitBlt(m_pScene->m_hMemDC, m_x + x + m_iCursorX,  m_y + y + m_iCursorY, m_iCursorWidth, m_iCursorHeight, m_hCursorMemDC, 0, 0, SRCCOPY);	// BitBltでカーソルを描画.
+	if (m_bCursorVisible){	// m_bCursorVisibleがTRUEなら.
+		BitBlt(m_pScene->m_hMemDC, m_x + x + m_iCursorX,  m_y + y + m_iCursorY, m_iCursorWidth, m_iCursorHeight, m_hCursorMemDC, 0, 0, SRCCOPY);	// BitBltでカーソルを描画.
+	}
 
 }
 
@@ -281,6 +303,7 @@ void CSelectBox::ClearInput(){
 	// 入力クリア.
 	m_bDown = FALSE;	// m_bDownをFALSEに初期化.
 	m_bUp = FALSE;	// m_bUpをFALSEに初期化.
+	m_bReturn = FALSE;	// m_bReturnをFALSEに初期化.
 
 }
 
@@ -300,30 +323,102 @@ void CSelectBox::Up(){
 
 }
 
+// 決定Return.
+void CSelectBox::Return(){
+
+	// リターンが有効.
+	m_bReturn = TRUE;	// m_bReturnをTRUEにする.
+
+}
+
 // 処理をするProc.
 int CSelectBox::Proc(){
 
-	// 下が押された時.
-	if (m_bDown){	// m_bDownがTRUE.
-		m_iCursorIndex++;	// m_iCursorIndexをインクリメント.
-	}
+	// 未確定の時.
+	if (!m_bDetermine){	// m_bDeterminがFALSE.
 
-	// 上が押された時.
-	if (m_bUp){	// m_bUpがTRUE.
-		m_iCursorIndex--;	// m_iCursorIndexをデクリメント.
-	}
+		// リターンが押された時.
+		if (m_bReturn){	// m_bReturnがTRUE.
 
-	// インデックスが要素数以上の時.
-	if (m_iCursorIndex > (int)m_vectstrSelectItemList.size() - 1){	// 最後の要素を越えたら.
-		m_iCursorIndex = 0;	// 0にする.
-	}
+			// 確定状態.
+			m_bDetermine = TRUE;	// m_bDeterminにTRUEをセット.
 
-	// インデックスが0未満の時.
-	if (m_iCursorIndex < 0){	// 0未満の時.
-		m_iCursorIndex = (int)m_vectstrSelectItemList.size() - 1;	// 最後の要素にする.
+			// タイマーのセット.
+			SetTimer(100);	// 100ミリ秒(0.1秒)のタイマーをセット.
+
+			// 成功なので0.
+			return 0;	// 0を返す.
+
+		}
+
+		// 下が押された時.
+		if (m_bDown){	// m_bDownがTRUE.
+			m_iCursorIndex++;	// m_iCursorIndexをインクリメント.
+		}
+
+		// 上が押された時.
+		if (m_bUp){	// m_bUpがTRUE.
+			m_iCursorIndex--;	// m_iCursorIndexをデクリメント.
+		}
+
+		// インデックスが要素数以上の時.
+		if (m_iCursorIndex > (int)m_vectstrSelectItemList.size() - 1){	// 最後の要素を越えたら.
+			m_iCursorIndex = 0;	// 0にする.
+		}
+
+		// インデックスが0未満の時.
+		if (m_iCursorIndex < 0){	// 0未満の時.
+			m_iCursorIndex = (int)m_vectstrSelectItemList.size() - 1;	// 最後の要素にする.
+		}
+
+	}
+	else{	// m_bDetermineがTRUEの時.
+
+		// タイマー発生ごとに切り替える.
+		if (IsElapsed()){	// IsElapsedがTRUE.
+			if (m_bCursorVisible){	// TRUEなら
+				m_bCursorVisible = FALSE;	// FALSEに切り替え.
+			}
+			else{	// FALSEなら
+				m_bCursorVisible = TRUE;	// TRUEに切り替え.
+			}
+		}
+
 	}
 
 	// 成功なので0.
 	return 0;	// 0を返す.
+
+}
+
+// タイマーのセットSetTimer.
+void CSelectBox::SetTimer(DWORD dwInterval){
+
+	// インターバルのセット.
+	m_dwInterval = dwInterval;	// m_dwIntervalにdwIntervalをセット.
+
+	// タイマーのセット.
+	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
+	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
+	m_dwTimerStart = pTime->Get();	// pTime->Getで取得した時刻をm_dwTimerStartに格納.
+
+}
+
+// タイマーが経過時間を過ぎたかをチェックIsElapsed.
+BOOL CSelectBox::IsElapsed(){
+
+	// 現在時刻の取得.
+	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
+	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
+	DWORD dwNow = pTime->Get();	// pTime->Getで取得した時刻をdwNowに格納.
+
+	// 経過時間チェック.
+	if (dwNow - m_dwTimerStart >= m_dwInterval){	// m_dwInterval以上なら.
+		m_dwTimerStart = dwNow;	// dwNowをm_dwTimerStartにセット.
+		return TRUE;	// TRUEを返す.
+	}
+	else{
+		return FALSE;	// FALSEを返す.
+	}
 
 }

@@ -40,8 +40,13 @@ class CSelectBox : public CGameObject{
 		int m_iCursorWidth;	// カーソルの幅m_iCursorWidth.
 		int m_iCursorHeight;	// カーソルの高さm_iCursorHeight.
 		int m_iCursorIndex;	// カーソルインデックスm_iCursorIndex.
+		BOOL m_bCursorVisible;	// カーソルの表示状態m_bCursorVisible.
 		BOOL m_bDown;	// 下が押されているフラグm_bDown.
 		BOOL m_bUp;	// 上が押されているフラグm_bUp.
+		BOOL m_bReturn;	// リターンが押されているフラグm_bReturn.
+		BOOL m_bDetermine;	// 確定状態かどうかフラグm_bDetermine.
+		DWORD m_dwInterval;	// タイマー間隔m_dwInterval.
+		DWORD m_dwTimerStart;	// タイマー開始時刻.
 		std::vector<tstring> m_vectstrSelectItemList;	// セレクトアイテムリストm_vectstrSelectItemList.
 
 		// publicメンバ関数
@@ -60,7 +65,10 @@ class CSelectBox : public CGameObject{
 		virtual void ClearInput();	// 入力クリア.
 		virtual void Down();	// カーソルを下に移動Down.
 		virtual void Up();	// カーソルを上に移動Up.
+		virtual void Return();	// 決定Return.
 		virtual int Proc();	// 処理をするProc.
+		virtual void SetTimer(DWORD dwInterval);	// タイマーのセットSetTimer.
+		virtual BOOL IsElapsed();	// タイマーが経過時間を過ぎたかをチェックIsElapsed.
 
 };
 

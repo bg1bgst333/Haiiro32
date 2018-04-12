@@ -78,6 +78,7 @@ int CTitleScene::InitKeyboard(){
 	m_pKeyboard->AddKey(VK_ESCAPE);	// ESCキーを追加.
 	m_pKeyboard->AddKey(VK_DOWN);	// 下キーを追加.
 	m_pKeyboard->AddKey(VK_UP);	// 上キーを追加.
+	m_pKeyboard->AddKey(VK_RETURN);	// リターンキーを追加.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
@@ -108,6 +109,11 @@ int CTitleScene::CheckKeyboard(){
 		m_pSelectBox->Up();	// カーソルを上に.
 	}
 
+	// 3番目のキー(ここではリターンキー.)が押された時.
+	if (m_pKeyboard->IsPress(3)){	// m_pKeyboard->IsPress(3)がTRUEなら.
+		m_pSelectBox->Return();	// カーソル決定.
+	}
+
 	// 常に成功なので0.
 	return 0;	// 0を返す.
 
@@ -119,6 +125,11 @@ int CTitleScene::RunProc(){
 	// セレクトボックス処理.
 	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.
 		m_pSelectBox->Proc();	// m_pSelectBox->Procで処理.
+	}
+
+	// ゲームタイムボックス処理.
+	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
+		m_pGameTimeBox->Proc();	// m_pGameTimeBox->Procで処理.
 	}
 
 	// 常に成功なので0.
