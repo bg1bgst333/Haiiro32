@@ -90,17 +90,30 @@ int CScene::RunScene(){
 		return 2;	// 2を返してアプリを終了.
 	}
 
-	// キー状態の取得.
-	CheckKeyboard();	// CheckKeyboardでキーボードのチェック.
+	// FPS調整判定.
+	if (m_pGameTime->IsProc()){	// m_pGameTime->IsProcがTRUE.
 
-	// 入力や状態から次の状態を計算.
-	RunProc();	// RunProcで計算処理.
+		// キー状態の取得.
+		CheckKeyboard();	// CheckKeyboardでキーボードのチェック.
 
-	// ゲームオブジェクトの描画.
-	DrawGameObjects();	// DrawGameObjectsでバックバッファへ描画処理.	
+		// 入力や状態から次の状態を計算.
+		RunProc();	// RunProcで計算処理.
 
-	// フロントバッファに転送.
-	Present();	// Presentでバックバッファからフロントバッファへ転送.
+		// ゲームオブジェクトの描画.
+		DrawGameObjects();	// DrawGameObjectsでバックバッファへ描画処理.	
+
+		// フロントバッファに転送.
+		Present();	// Presentでバックバッファからフロントバッファへ転送.
+
+	}
+
+	// フレームカウントの計測.
+	m_pGameTime->CountFrame();	// m_pGameTime->CountFrameでフレームを1つ増やす.
+
+	// 1秒経過したら, リセット.
+	if (m_pGameTime->IsNextSecond()){	// 次の秒なら.
+		m_pGameTime->ResetFrame();	// m_pGameTime->ResetFrameでフレームカウントをリセット.
+	}
 
 	// 継続なら0.
 	return 0;	// 0を返す.

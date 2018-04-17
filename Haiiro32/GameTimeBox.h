@@ -28,6 +28,7 @@ class CGameTimeBox : public CGameObject{
 		HFONT m_hOldFont;	// 以前のフォントm_hOldFont.
 		DWORD m_dwTime;	// 時刻(ミリ秒)m_dwTime.
 		DWORD m_dwFPS;	// FPS値m_dwFPS.
+		DWORD m_dwRunFPS;	// 実行FPS値m_dwRunFPS.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -40,7 +41,8 @@ class CGameTimeBox : public CGameObject{
 		virtual int Proc();	// 処理をするProc.
 		virtual void DrawText(int x, int y, int iWidth, int iHeight, LPCTSTR lpctszText, COLORREF clrColor);	// DrawTextでテキストを描画.
 		virtual void DrawTime(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawTimeで時間を描画.
-		virtual void DrawFPS(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawFPSで時間を描画.
+		virtual void DrawFPS(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawFPSでFPSを描画.
+		virtual void DrawRunFPS(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawRunFPSで実行FPSを描画.
 
 };
 

@@ -19,8 +19,11 @@ class CGameTime{
 		DWORD m_dwUserMilliTime;	// 任意の時間からのミリ秒m_dwUserMilliTime.
 		DWORD m_dwUserStartMilliTime;	// 任意の開始時間m_dwUserStartMilliTime.
 		DWORD m_dwFrame;	// フレーム数m_dwFrame.
+		DWORD m_dwRunFrame;	// 実行フレーム数m_dwRunFrame.
 		DWORD m_dwFPS;	// FPS値m_dwFPS.
 		DWORD m_dwFrameStartMilliTime;	// フレーム計測開始時間m_dwFrameStartMilliTime.
+		DWORD m_dwTargetFPS;	// 目標FPS値m_dwTargetFPS.
+		DWORD m_dwRunFPS;	// 実行FPS値m_dwRunFPS.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -34,6 +37,9 @@ class CGameTime{
 		void ResetFrame();	// フレーム数のリセットResetFrame.
 		BOOL IsNextSecond();	// 1秒経過したかどうかIsNextSecond.
 		DWORD GetFPS();	// FPS値の取得GetFPS.
+		DWORD GetRunFPS();	// 実行FPS値の取得GetRunFPS.
+		void SetTargetFPS(DWORD dwTargetFPS);	// 目標FPS値の設定SetTargetFPS.
+		BOOL IsProc();	// 処理するかどうかを判定IsProc.
 
 };
 

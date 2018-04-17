@@ -25,7 +25,15 @@ BOOL CMainApplication::InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int n
 	m_pMainWnd->ShowWindow(SW_SHOW);	// m_pMainWnd->ShowWindowで表示.
 
 	// 親のInitInstanceを呼ぶ.
-	return CGameApplication::InitInstance(hInstance, lpCmdLine, nShowCmd);	// CGameApplication::InitInstanceを呼ぶ.
+	BOOL bRet = CGameApplication::InitInstance(hInstance, lpCmdLine, nShowCmd);	// CGameApplication::InitInstanceを呼ぶ.
+
+	// 目標FPS値の設定.
+	if (m_pGameTime != NULL){	// m_pGameTimeがNULLでなければ.
+		m_pGameTime->SetTargetFPS(60);	// 60FPSを目指す.
+	}
+
+	// InitInstanceの戻り値を返す.
+	return bRet;	// bRetを返す.
 
 }
 

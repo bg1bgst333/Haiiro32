@@ -122,14 +122,6 @@ int CTitleScene::CheckKeyboard(){
 // キー入力や時間などから処理を計算.
 int CTitleScene::RunProc(){
 
-	// 1秒経過したら, リセット.
-	if (m_pGameTime->IsNextSecond()){	// 次の秒なら.
-		m_pGameTime->ResetFrame();	// m_pGameTime->ResetFrameでフレームカウントをリセット.
-	}
-
-	// フレームカウントの計測.
-	m_pGameTime->CountFrame();	// m_pGameTime->CountFrameでフレームを1つ増やす.
-
 	// セレクトボックス処理.
 	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.
 		m_pSelectBox->Proc();	// m_pSelectBox->Procで処理.
@@ -170,6 +162,7 @@ int CTitleScene::DrawGameObjects(){
 	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
 		m_pGameTimeBox->DrawTime(0, 0, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawTimeで時刻を描画.
 		m_pGameTimeBox->DrawFPS(0, 30, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawFPSでFPSを描画.
+		m_pGameTimeBox->DrawRunFPS(0, 60, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawRunFPSで実行PFSを描画.
 	}
 
 	// 常に成功なので0.

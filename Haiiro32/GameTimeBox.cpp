@@ -10,6 +10,7 @@ CGameTimeBox::CGameTimeBox(){
 	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
 	m_dwTime = 0;	// m_dwTimeを0で初期化.
 	m_dwFPS = 0;	// m_dwFPSを0で初期化.
+	m_dwRunFPS = 0;	// m_dwRunFPSを0で初期化.
 
 }
 
@@ -21,6 +22,7 @@ CGameTimeBox::CGameTimeBox(const CScene *pScene) : CGameObject(pScene){
 	m_hOldFont = NULL;	// m_hOldFontをNULLで初期化.
 	m_dwTime = 0;	// m_dwTimeを0で初期化.
 	m_dwFPS = 0;	// m_dwFPSを0で初期化.
+	m_dwRunFPS = 0;	// m_dwRunFPSを0で初期化.
 
 }
 
@@ -63,6 +65,7 @@ void CGameTimeBox::Destroy(){
 	// メンバの終了処理.
 	m_dwTime = 0;	// m_dwTimeに0をセット.
 	m_dwFPS = 0;	// m_dwFPSに0をセット.
+	m_dwRunFPS = 0;	// m_dwRunFPSに0をセット.
 
 	// フォントを戻す.
 	if (m_hOldFont != NULL){	// m_hOldFontがNULLでなければ.
@@ -88,6 +91,7 @@ int CGameTimeBox::Proc(){
 	//m_dwTime = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をm_dwTimeに格納.
 	m_dwTime = pTime->GetUserTime();	// pTime->GetUserTimeで取得した時刻をm_dwTimeに格納.
 	m_dwFPS = pTime->GetFPS();	// pTime->GetFPSをm_dwFPSにセット.
+	m_dwRunFPS = pTime->GetRunFPS();	// pTime->GetRunFPSをm_dwRunFPSのセット.
 
 	// 成功なので0.
 	return 0;	// 0を返す.
@@ -123,5 +127,15 @@ void CGameTimeBox::DrawFPS(int x, int y, int iWidth, int iHeight, COLORREF clrCo
 	TCHAR tszFPS[256] = {0};	// TCHAR配列tszFPSを{0}で初期化.
 	_stprintf(tszFPS, _T("%lu"), m_dwFPS);	// _stprintfでm_dwFPSからtszFPSに変換.
 	DrawText(x, y, iWidth, iHeight, tszFPS, clrColor);	// DrawTextでFPSを描画.
+
+}
+
+// DrawRunFPSで実行FPSを描画
+void CGameTimeBox::DrawRunFPS(int x, int y, int iWidth, int iHeight, COLORREF clrColor){
+
+	// 実行FPSを取得.
+	TCHAR tszRunFPS[256] = {0};	// TCHAR配列tszRunFPSを{0}で初期化.
+	_stprintf(tszRunFPS, _T("%lu"), m_dwRunFPS);	// _stprintfでm_dwRunFPSからtszRunFPSに変換.
+	DrawText(x, y, iWidth, iHeight, tszRunFPS, clrColor);	// DrawTextで実行FPSを描画.
 
 }
