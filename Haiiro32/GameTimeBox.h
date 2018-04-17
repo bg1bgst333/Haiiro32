@@ -29,6 +29,7 @@ class CGameTimeBox : public CGameObject{
 		DWORD m_dwTime;	// 時刻(ミリ秒)m_dwTime.
 		DWORD m_dwFPS;	// FPS値m_dwFPS.
 		DWORD m_dwRunFPS;	// 実行FPS値m_dwRunFPS.
+		DWORD m_dwFrameIntervalMilliTime;	// フレーム間隔m_dwFrameIntervalMilliTime.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -43,6 +44,7 @@ class CGameTimeBox : public CGameObject{
 		virtual void DrawTime(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawTimeで時間を描画.
 		virtual void DrawFPS(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawFPSでFPSを描画.
 		virtual void DrawRunFPS(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawRunFPSで実行FPSを描画.
+		virtual void DrawFrameIntervalMilliTime(int x, int y, int iWidth, int iHeight, COLORREF clrColor);	// DrawFrameIntervalMilliTimeでフレーム間隔を描画.
 
 };
 

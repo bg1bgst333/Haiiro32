@@ -9,6 +9,8 @@ CGameTime::CGameTime(){
 	m_dwMilliTime = 0;	// m_dwMilliTimeを0で初期化.
 	m_dwUserMilliTime = 0;	// m_dwUserMilliTimeを0で初期化.
 	m_dwUserStartMilliTime = 0;	// m_dwUserStartMilliTimeを0で初期化.
+	m_dwFrameIntervalMilliTime = 0;	// m_dwFrameIntervalMilliTimeを0で初期化.
+	m_dwFrameIntervalStart = 0;	// m_dwFrameIntervalStartを0で初期化.
 	m_dwFrame = 0;	// m_dwFrameを0で初期化.
 	m_dwRunFrame = 0;	// m_dwRunFrameを0で初期化.
 	m_dwFrameStartMilliTime = 0;	// m_dwFrameStartMilliTimeを0で初期化.
@@ -25,6 +27,8 @@ CGameTime::~CGameTime(){
 	m_dwMilliTime = 0;	// m_dwMilliTimeを0にセット.
 	m_dwUserMilliTime = 0;	// m_dwUserMilliTimeを0で初期化.
 	m_dwUserStartMilliTime = 0;	// m_dwUserStartMilliTimeを0で初期化.
+	m_dwFrameIntervalMilliTime = 0;	// m_dwFrameIntervalMilliTimeを0で初期化.
+	m_dwFrameIntervalStart = 0;	// m_dwFrameIntervalStartを0で初期化.
 	m_dwFrame = 0;	// m_dwFrameを0で初期化.
 	m_dwRunFrame = 0;	// m_dwRunFrameを0で初期化.
 	m_dwFrameStartMilliTime = 0;	// m_dwFrameStartMilliTimeを0で初期化.
@@ -81,15 +85,25 @@ void CGameTime::ResetFrame(){
 // 1秒経過したかどうかIsNextSecond.
 BOOL CGameTime::IsNextSecond(){
 
+	// フレーム間隔取得.
+	BOOL bRet = FALSE;	// 戻り値bRet.
+	DWORD dwUserTime = GetUserTime();	// ユーザ時刻取得.
 	// 1秒経過したかチェック.
-	if (GetUserTime() - m_dwFrameStartMilliTime >= 1000){	// 1秒以上差があったら.
+	if (dwUserTime - m_dwFrameStartMilliTime >= 1000){	// 1秒以上差があったら.
 		m_dwFPS = m_dwFrame;	// m_dwFPSにm_dwFrameを代入.
 		m_dwRunFPS = m_dwRunFrame;	// m_dwRunFPSにm_dwRunFrameを代入.
-		return TRUE;	// TRUEを返す.
+		bRet = TRUE;	// TRUEを返す.
 	}
 	else{
-		return FALSE;	// FALSEを返す.
+		bRet = FALSE;	// FALSEを返す.
 	}
+	m_dwFrameIntervalMilliTime = dwUserTime - m_dwFrameIntervalStart;	// 現在時刻からフレーム間隔開始秒を引く.
+	DWORD dwSleep = 1000 / m_dwTargetFPS;	// Sleepミリ秒を計算.
+	m_dwFrameIntervalStart = dwUserTime;	// 現在時刻に更新.
+	if (m_dwFrameIntervalMilliTime <= dwSleep){	// Sleepより間隔が小さい場合.
+		Sleep(dwSleep - m_dwFrameIntervalMilliTime);	// スリープ.(スリープ時間からフレーム間隔を引いた時間.)
+	}
+	return bRet;	// bRetを返す.
 
 }
 
@@ -106,6 +120,14 @@ DWORD CGameTime::GetRunFPS(){
 
 	// 実行FPSを返す.
 	return m_dwRunFPS;	// m_dwRunFPSを返す.
+
+}
+
+// フレーム間隔を取得GetFrameIntervalMilliTime.
+DWORD CGameTime::GetFrameIntervalMilliTime(){
+
+	// フレーム間隔を返す.
+	return m_dwFrameIntervalMilliTime;
 
 }
 

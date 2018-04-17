@@ -162,7 +162,8 @@ int CTitleScene::DrawGameObjects(){
 	if (m_pGameTimeBox != NULL){	// m_pGameTimeBox‚ªNULL‚Å‚È‚¢.
 		m_pGameTimeBox->DrawTime(0, 0, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawTime‚Å‚ğ•`‰æ.
 		m_pGameTimeBox->DrawFPS(0, 30, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawFPS‚ÅFPS‚ğ•`‰æ.
-		m_pGameTimeBox->DrawRunFPS(0, 60, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawRunFPS‚ÅÀsPFS‚ğ•`‰æ.
+		//m_pGameTimeBox->DrawRunFPS(0, 60, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawRunFPS‚ÅÀsPFS‚ğ•`‰æ.
+		m_pGameTimeBox->DrawFrameIntervalMilliTime(0, 60, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawFrameIntervalMilliTime‚ÅƒtƒŒ[ƒ€ŠÔŠu‚ğ•`‰æ.
 	}
 
 	// í‚É¬Œ÷‚È‚Ì‚Å0.

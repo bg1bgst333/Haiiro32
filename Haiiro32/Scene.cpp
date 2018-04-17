@@ -84,6 +84,8 @@ int CScene::InitScene(){
 // シーン処理中RunScene.
 int CScene::RunScene(){
 
+	// この方法は中止.
+#if 0
 	// 閉じるボタンのチェック.
 	int iRetClose = CheckClose();	// CheckCloseで閉じるボタンが押されたかをチェック.
 	if (iRetClose == 1){	// iRetCloseが1なら.
@@ -114,6 +116,35 @@ int CScene::RunScene(){
 	if (m_pGameTime->IsNextSecond()){	// 次の秒なら.
 		m_pGameTime->ResetFrame();	// m_pGameTime->ResetFrameでフレームカウントをリセット.
 	}
+#else	// こちらの方法に変更.
+	// 閉じるボタンのチェック.
+	int iRetClose = CheckClose();	// CheckCloseで閉じるボタンが押されたかをチェック.
+	if (iRetClose == 1){	// iRetCloseが1なら.
+		return 2;	// 2を返してアプリを終了.
+	}
+
+	// 1秒経過したら, リセット.
+	if (m_pGameTime->IsNextSecond()){	// 次の秒なら.
+		m_pGameTime->ResetFrame();	// m_pGameTime->ResetFrameでフレームカウントをリセット.
+	}
+
+	// キー状態の取得.
+	CheckKeyboard();	// CheckKeyboardでキーボードのチェック.
+
+	// 入力や状態から次の状態を計算.
+	RunProc();	// RunProcで計算処理.
+
+	// ゲームオブジェクトの描画.
+	DrawGameObjects();	// DrawGameObjectsでバックバッファへ描画処理.	
+
+	// フロントバッファに転送.
+	Present();	// Presentでバックバッファからフロントバッファへ転送.
+
+	// フレームカウントの計測.
+	m_pGameTime->CountFrame();	// m_pGameTime->CountFrameでフレームを1つ増やす.
+
+	
+#endif
 
 	// 継続なら0.
 	return 0;	// 0を返す.

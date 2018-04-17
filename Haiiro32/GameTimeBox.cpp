@@ -92,6 +92,7 @@ int CGameTimeBox::Proc(){
 	m_dwTime = pTime->GetUserTime();	// pTime->GetUserTimeで取得した時刻をm_dwTimeに格納.
 	m_dwFPS = pTime->GetFPS();	// pTime->GetFPSをm_dwFPSにセット.
 	m_dwRunFPS = pTime->GetRunFPS();	// pTime->GetRunFPSをm_dwRunFPSのセット.
+	m_dwFrameIntervalMilliTime = pTime->GetFrameIntervalMilliTime();	// pTime->GetFrameIntervalMilliTimeをm_dwFrameIntervalMilliTimeにセット.
 
 	// 成功なので0.
 	return 0;	// 0を返す.
@@ -137,5 +138,15 @@ void CGameTimeBox::DrawRunFPS(int x, int y, int iWidth, int iHeight, COLORREF cl
 	TCHAR tszRunFPS[256] = {0};	// TCHAR配列tszRunFPSを{0}で初期化.
 	_stprintf(tszRunFPS, _T("%lu"), m_dwRunFPS);	// _stprintfでm_dwRunFPSからtszRunFPSに変換.
 	DrawText(x, y, iWidth, iHeight, tszRunFPS, clrColor);	// DrawTextで実行FPSを描画.
+
+}
+
+// DrawFrameIntervalMilliTimeでフレーム間隔を描画.
+void CGameTimeBox::DrawFrameIntervalMilliTime(int x, int y, int iWidth, int iHeight, COLORREF clrColor){
+
+	// フレーム間隔を取得.
+	TCHAR tszFrameInterval[256] = {0};	// tszFrameIntervalを{0}で初期化.
+	_stprintf(tszFrameInterval, _T("%lu"), m_dwFrameIntervalMilliTime);	// m_dwFrameIntervalMilliTimeをtszFrameIntervalに変換.
+	DrawText(x, y, iWidth, iHeight, tszFrameInterval, clrColor);	// DrawTextでフレーム間隔を描画.
 
 }
