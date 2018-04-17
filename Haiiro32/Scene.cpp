@@ -123,6 +123,11 @@ int CScene::RunScene(){
 		return 2;	// 2を返してアプリを終了.
 	}
 
+	// FPSのさらなる調整(FPSはぴったり60にならないので.)
+	if (m_pGameTime->m_dwFrame % 3 == 1){	// 3の余りが1の時.
+		Sleep(1);	// 1ミリ秒休止.
+	}
+
 	// 1秒経過したら, リセット.
 	if (m_pGameTime->IsNextSecond()){	// 次の秒なら.
 		m_pGameTime->ResetFrame();	// m_pGameTime->ResetFrameでフレームカウントをリセット.
