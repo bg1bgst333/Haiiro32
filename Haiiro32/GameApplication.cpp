@@ -8,12 +8,16 @@ CGameApplication::CGameApplication() : CGraphicalApplication(){
 	// メンバの初期化.
 	m_pScene = NULL;	// m_pSceneをNULLで初期化.
 	m_pGameTime = NULL;	// m_pGameTimeをNULLで初期化.
+	m_pGameSystem = NULL;	// m_pGameSystemをNULLで初期化.
 	m_iNo = 0;	// m_iNoを0で初期化.
 
 }
 
 // インスタンス初期化関数InitInstance.
 BOOL CGameApplication::InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int nShowCmd){
+
+	// ゲームシステムの作成.
+	m_pGameSystem = new CGameSystem();	// CGameSystemオブジェクトの作成え.
 
 	// ゲームタイムの作成.
 	m_pGameTime = new CGameTime();	// CGameTimeオブジェクトの作成.
@@ -30,6 +34,12 @@ int CGameApplication::ExitInstance(){
 	if (m_pGameTime != NULL){	// m_pGameTimeがNULLでなければ.
 		delete m_pGameTime;	// deleteでm_pGameTimeを削除.
 		m_pGameTime = NULL;	// m_pGameTimeにNULLをセット.
+	}
+
+	// ゲームシステムの破棄.
+	if (m_pGameSystem != NULL){	// m_pGameSystemがNULLでなければ.
+		delete m_pGameSystem;	// deleteでm_pGameSystemを削除.
+		m_pGameSystem = NULL;	// m_pGameSystemにNULLをセット.
 	}
 
 	// 親のExitInstanceを呼ぶ.
@@ -55,6 +65,7 @@ int CGameApplication::Main(){
 		pScene = new CScene(m_pMainWnd);	// CSceneを生成し, pSceneに格納.(m_pMainWndを渡す.)
 	}
 
+	// 処理.
 	if (m_pScene == NULL){	// m_pSceneがNULLの時.	
 		m_pScene = pScene;	// pSceneを格納.
 		if (pScene == NULL){	// pSceneがNULLなら.

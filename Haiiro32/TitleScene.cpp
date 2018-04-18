@@ -36,6 +36,17 @@ CTitleScene::CTitleScene(const CWindow *pWnd, CGameTime *pTime) : CScene(pWnd, p
 
 }
 
+// コンストラクタCTitleScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSystem)
+CTitleScene::CTitleScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSystem) : CScene(pWnd, pTime, pSystem){
+
+	// メンバの初期化.
+	m_pBackground = NULL;	// m_pBackgroundをNULLで初期化.
+	m_pTitle = NULL;	// m_pTitleをNULLで初期化.
+	m_pSelectBox = NULL;	// m_pSelectBoxをNULLで初期化.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
+
+}
+
 // デストラクタ~CTitleScene
 CTitleScene::~CTitleScene(){
 

@@ -27,6 +27,7 @@ class CTitleScene : public CScene{
 		CTitleScene();	// コンストラクタCTitleScene
 		CTitleScene(const CWindow *pWnd);	// コンストラクタCTitleScene(const CWindow *pWnd)
 		CTitleScene(const CWindow *pWnd, CGameTime *pTime);	// コンストラクタCTitleScene(const CWindow *pWnd, CGameTime *pTime)
+		CTitleScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSystem);	// コンストラクタCTitleScnen(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSystem)
 		virtual ~CTitleScene();	// デストラクタ~CTitleScene
 		virtual int InitGameObjects();	// ゲームオブジェクトの初期化.
 		virtual int InitKeyboard();	// キーボードの初期化.

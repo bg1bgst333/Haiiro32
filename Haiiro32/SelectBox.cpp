@@ -351,6 +351,9 @@ int CSelectBox::Proc(){
 			// 確定状態.
 			m_bDetermine = TRUE;	// m_bDeterminにTRUEをセット.
 
+			// ゲームシステムのモードをセット.
+			m_pScene->m_pGameSystem->SetMode(m_iCursorIndex + 1);	// 確定したアイテムのインデックス+1をモードとしてセット.
+
 			// タイマーのセット.
 			SetFlashTimer(100);	// 100ミリ秒(0.1秒)のフラッシュタイマーをセット.
 			SetDetermineTimer(3000);	// 3000ミリ秒(3秒)の確定タイマーをセット.

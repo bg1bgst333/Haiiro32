@@ -8,6 +8,7 @@ CScene::CScene(){
 	// メンバの初期化.
 	m_pMainWnd = NULL;	// m_pMainWndをNULLで初期化.
 	m_pGameTime = NULL;	// m_pGameTimeをNULLで初期化.
+	m_pGameSystem = NULL;	// m_pGameSystemをNULLで初期化.
 	m_hDC = NULL;	// m_hDCをNULLで初期化.
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.
@@ -15,6 +16,7 @@ CScene::CScene(){
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
+	m_pTest = NULL;	// m_pTestをNULLで初期化.
 
 }
 
@@ -24,6 +26,7 @@ CScene::CScene(const CWindow *pWnd){
 	// メンバの初期化.
 	m_pMainWnd = pWnd;	// m_pMainWndをpWndで初期化.
 	m_pGameTime = NULL;	// m_pGameTimeをNULLで初期化.
+	m_pGameSystem = NULL;	// m_pGameSystemをNULLで初期化.
 	m_hDC = NULL;	// m_hDCをNULLで初期化.
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.
@@ -31,6 +34,7 @@ CScene::CScene(const CWindow *pWnd){
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
+	m_pTest = NULL;	// m_pTestをNULLで初期化.
 
 }
 
@@ -40,6 +44,7 @@ CScene::CScene(const CWindow *pWnd, CGameTime *pTime){
 	// メンバの初期化.
 	m_pMainWnd = pWnd;	// m_pMainWndをpWndで初期化.
 	m_pGameTime = pTime;	// m_pGameTimeをpTimeで初期化.
+	m_pGameSystem = NULL;	// m_pGameSystemをNULLで初期化.
 	m_hDC = NULL;	// m_hDCをNULLで初期化.
 	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
 	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.
@@ -47,6 +52,25 @@ CScene::CScene(const CWindow *pWnd, CGameTime *pTime){
 	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
+	m_pTest = NULL;	// m_pTestをNULLで初期化.
+
+}
+
+// コンストラクタCScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSystem)
+CScene::CScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSystem){
+
+	// メンバの初期化.
+	m_pMainWnd = pWnd;	// m_pMainWndをpWndで初期化.
+	m_pGameTime = pTime;	// m_pGameTimeをpTimeで初期化.
+	m_pGameSystem = pSystem;	// m_pGameSystemをpSystemで初期化.
+	m_hDC = NULL;	// m_hDCをNULLで初期化.
+	m_hMemDC = NULL;	// m_hMemDCをNULLで初期化.
+	m_hMemBitmap = NULL;	// m_hMemBitmapをNULLで初期化.
+	m_hOldMemBitmap = NULL;	// m_hOldMemBitmapをNULLで初期化.
+	m_iScreenWidth = 0;	// m_iScreenWidthを0で初期化.
+	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
+	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
+	m_pTest = NULL;	// m_pTestをNULLで初期化.
 
 }
 
@@ -251,6 +275,18 @@ void CScene::DestroyScreen(){
 // ゲームオブジェクトの初期化.
 int CScene::InitGameObjects(){
 
+	// テストオブジェクトの作成.
+	m_pTest = new CGameObject(this);	// CGameObjectオブジェクトを生成(thisを渡す.)し, ポインタをm_pTestに格納.
+	if (m_pGameSystem->GetMode() == 1){	// m_pGameSystem->GetModeが1の時.
+		m_pTest->Create(0, 0, m_iScreenWidth, m_iScreenHeight, RGB(0xff, 0x0, 0x0), RGB(0x7f, 0x0, 0x0));	// m_pTest->Createでテストオブジェクトを作成.
+	}
+	else if (m_pGameSystem->GetMode() == 2){	// m_pGameSystem->GetModeが2の時.
+		m_pTest->Create(0, 0, m_iScreenWidth, m_iScreenHeight, RGB(0x0, 0xff, 0x0), RGB(0x0, 0x7f, 0x0));	// m_pTest->Createでテストオブジェクトを作成.
+	}
+	else if (m_pGameSystem->GetMode() == 3){	// m_pGameSystem->GetModeが3の時.
+		m_pTest->Create(0, 0, m_iScreenWidth, m_iScreenHeight, RGB(0x0, 0x0, 0xff), RGB(0x0, 0x0, 0x7f));	// m_pTest->Createでテストオブジェクトを作成.
+	}
+
 	// 成功なら0を返す.
 	return 0;	// 0を返す.
 
@@ -302,6 +338,11 @@ int CScene::RunProc(){
 // ゲームオブジェクトの描画.
 int CScene::DrawGameObjects(){
 
+	// テストオブジェクトの描画.
+	if (m_pTest != NULL){	// m_pTestがNULLでない時.
+		m_pTest->DrawRect(0, 0);	// m_pTest->DrawRectで(0, 0)の位置に描画.
+	}
+
 	// 常に成功なので0.
 	return 0;	// 0を返す.
 
@@ -309,6 +350,13 @@ int CScene::DrawGameObjects(){
 
 // ゲームオブジェクトの終了処理.
 int CScene::ExitGameObjects(){
+
+	// テストオブジェクトの破棄.
+	if (m_pTest != NULL){	// m_pTestがNULLでない時.
+		m_pTest->Destroy();	// m_pTest->Destroyで破棄.
+		delete m_pTest;	// deleteでm_pTestを解放.
+		m_pTest = NULL;	// m_pTestにNULlをセット.
+	}
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.

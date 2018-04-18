@@ -7,6 +7,7 @@
 #include "GraphicalApplication.h"	// CGraphicalApplication
 #include "Scene.h"	// CScene
 #include "GameTime.h"	// CGameTime
+#include "GameSystem.h"	// CGameSystem
 
 // ゲームアプリケーションクラスCGameApplication
 class CGameApplication : public CGraphicalApplication{
@@ -17,6 +18,7 @@ class CGameApplication : public CGraphicalApplication{
 		// publicメンバ変数
 		CScene *m_pScene;	// CSceneオブジェクトポインタm_pScene.
 		CGameTime *m_pGameTime;	// CGameTimeオブジェクトポインタm_pGameTime.
+		CGameSystem *m_pGameSystem;	// CGameSystemオブジェクトポインタm_pGameSystem.
 		int m_iNo;	// 番号m_iNo.
 
 		// publicメンバ関数

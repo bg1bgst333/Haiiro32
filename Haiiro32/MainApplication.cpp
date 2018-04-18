@@ -46,12 +46,19 @@ int CMainApplication::Main(){
 
 	// 生成.
 	if (m_iNo == 0 && m_pScene == NULL){	// m_iNoが0で生成されていない時.
-		pScene = new CTitleScene(m_pMainWnd, m_pGameTime);	// CTitleSceneを生成し, pSceneに格納.(m_pMainWndとm_pGameTimeを渡す.)
+		pScene = new CTitleScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CTitleSceneを生成し, pSceneに格納.(m_pMainWndとm_pGameTimeとm_pGameSystemを渡す.)
 	}
 	else if (m_iNo == 1 && m_pScene == NULL){	// m_iNoが1で生成されていない時.
-		pScene = new CScene(m_pMainWnd, m_pGameTime);	// CSceneを生成し, pSceneに格納.(m_pMainWndとm_pGameTimeを渡す.)
+		pScene = new CScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CSceneを生成し, pSceneに格納.(m_pMainWndとm_pGameTimeとm_pGameSystemを渡す.)
+	}
+	else if (m_iNo == 2 && m_pScene == NULL){	// m_iNoが2で生成されていない時.
+		pScene = new CScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CSceneを生成し, pSceneに格納.(m_pMainWndとm_pGameTimeとm_pGameSystemを渡す.)
+	}
+	else if (m_iNo == 3 && m_pScene == NULL){	// m_iNoが3で生成されていない時.
+		pScene = new CScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CSceneを生成し, pSceneに格納.(m_pMainWndとm_pGameTimeとm_pGameSystemを渡す.)
 	}
 
+	// 処理.
 	if (m_pScene == NULL){	// m_pSceneがNULLの時.	
 		m_pScene = pScene;	// pSceneを格納.
 		if (pScene == NULL){	// pSceneがNULLなら.
@@ -72,7 +79,16 @@ int CMainApplication::Main(){
 				m_pScene->ExitScene();	// 終了処理.
 				delete m_pScene;	// m_pSceneを削除.
 				m_pScene = NULL;	// NULLをセット.
-				m_iNo++;	// m_iNoをインクリメント.
+				//m_iNo++;	// m_iNoをインクリメント.
+				if (m_pGameSystem->GetMode() == 1){
+					m_iNo = 1;	// m_iNoを1にする.
+				}
+				else if (m_pGameSystem->GetMode() == 2){
+					m_iNo = 2;	// m_iNoを2にする.
+				}
+				else if (m_pGameSystem->GetMode() == 3){
+					m_iNo = 3;	// m_iNoを3にする.
+				}
 			}
 			else if (iRet == 2){	// 2なら終了.
 				m_pScene->ExitScene();	// 終了処理.
@@ -89,7 +105,16 @@ int CMainApplication::Main(){
 			m_pScene->ExitScene();	// 終了処理.
 			delete m_pScene;	// m_pSceneを削除.
 			m_pScene = NULL;	// NULLをセット.
-			m_iNo++;	// m_iNoをインクリメント.
+			//m_iNo++;	// m_iNoをインクリメント.
+			if (m_pGameSystem->GetMode() == 1){
+				m_iNo = 1;	// m_iNoを1にする.
+			}
+			else if (m_pGameSystem->GetMode() == 2){
+				m_iNo = 2;	// m_iNoを2にする.
+			}
+			else if (m_pGameSystem->GetMode() == 3){
+				m_iNo = 3;	// m_iNoを3にする.
+			}
 		}
 		else if (iRet == 2){	// 2なら終了.
 			m_pScene->ExitScene();	// 終了処理.
