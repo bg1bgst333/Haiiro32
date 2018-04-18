@@ -45,8 +45,10 @@ class CSelectBox : public CGameObject{
 		BOOL m_bUp;	// 上が押されているフラグm_bUp.
 		BOOL m_bReturn;	// リターンが押されているフラグm_bReturn.
 		BOOL m_bDetermine;	// 確定状態かどうかフラグm_bDetermine.
-		DWORD m_dwInterval;	// タイマー間隔m_dwInterval.
-		DWORD m_dwTimerStart;	// タイマー開始時刻.
+		DWORD m_dwFlashInterval;	// フラッシュタイマー間隔m_dwFlashInterval.
+		DWORD m_dwFlashTimerStart;	// フラッシュタイマー開始時刻m_dwFlashTimerStart.
+		DWORD m_dwDetermineInterval;	// 確定タイマー間隔m_dwDetermineInterval.
+		DWORD m_dwDetermineTimerStart;	// 確定タイマー開始時刻m_dwDetermineTimerStart.
 		std::vector<tstring> m_vectstrSelectItemList;	// セレクトアイテムリストm_vectstrSelectItemList.
 
 		// publicメンバ関数
@@ -67,8 +69,10 @@ class CSelectBox : public CGameObject{
 		virtual void Up();	// カーソルを上に移動Up.
 		virtual void Return();	// 決定Return.
 		virtual int Proc();	// 処理をするProc.
-		virtual void SetTimer(DWORD dwInterval);	// タイマーのセットSetTimer.
-		virtual BOOL IsElapsed();	// タイマーが経過時間を過ぎたかをチェックIsElapsed.
+		virtual void SetFlashTimer(DWORD dwInterval);	// フラッシュタイマーのセットSetFlashTimer.
+		virtual BOOL IsFlashElapsed();	// フラッシュタイマーが経過時間を過ぎたかをチェックIsFlashElapsed.
+		virtual void SetDetermineTimer(DWORD dwInterval);	// 確定タイマーのセットSetDetermineTimer.
+		virtual BOOL IsDetermineElapsed();	// 確定タイマーが経過時間を過ぎたかをチェックIsDetermineElapsed.
 
 };
 

@@ -137,7 +137,7 @@ int CScene::RunScene(){
 	CheckKeyboard();	// CheckKeyboardでキーボードのチェック.
 
 	// 入力や状態から次の状態を計算.
-	RunProc();	// RunProcで計算処理.
+	int iRet = RunProc();	// RunProcで計算処理し, 戻り値をiRetに格納.
 
 	// ゲームオブジェクトの描画.
 	DrawGameObjects();	// DrawGameObjectsでバックバッファへ描画処理.	
@@ -148,7 +148,10 @@ int CScene::RunScene(){
 	// フレームカウントの計測.
 	m_pGameTime->CountFrame();	// m_pGameTime->CountFrameでフレームを1つ増やす.
 
-	
+	// RunProcの値によって, シーンを変えるか判断.
+	if (iRet == 1){	// 1なら次のシーン.
+		return 1;	// 1を返す.
+	}
 #endif
 
 	// 継続なら0.

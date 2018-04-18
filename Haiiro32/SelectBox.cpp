@@ -26,8 +26,10 @@ CSelectBox::CSelectBox() : CGameObject(){
 	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
 	m_bReturn = FALSE;	// m_bReturnをFALSEで初期化.
 	m_bDetermine = FALSE;	// m_bDetermineをFALSEで初期化.
-	m_dwInterval = 0;	// m_dwIntervalを0で初期化.
-	m_dwTimerStart = 0;	// m_dwTimerStartを0で初期化.
+	m_dwFlashInterval = 0;	// m_dwFlashIntervalを0で初期化.
+	m_dwFlashTimerStart = 0;	// m_dwFlashTimerStartを0で初期化.
+	m_dwDetermineInterval = 0;	// m_dwDetermineIntervalを0で初期化.
+	m_dwDetermineTimerStart = 0;	// m_dwDetermineTimerStartを0で初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -56,8 +58,10 @@ CSelectBox::CSelectBox(const CScene *pScene) : CGameObject(pScene){
 	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
 	m_bReturn = FALSE;	// m_bReturnをFALSEで初期化.
 	m_bDetermine = FALSE;	// m_bDetermineをFALSEで初期化.
-	m_dwInterval = 0;	// m_dwIntervalを0で初期化.
-	m_dwTimerStart = 0;	// m_dwTimerStartを0で初期化.
+	m_dwFlashInterval = 0;	// m_dwFlashIntervalを0で初期化.
+	m_dwFlashTimerStart = 0;	// m_dwFlashTimerStartを0で初期化.
+	m_dwDetermineInterval = 0;	// m_dwDetermineIntervalを0で初期化.
+	m_dwDetermineTimerStart = 0;	// m_dwDetermineTimerStartを0で初期化.
 	m_vectstrSelectItemList.clear();	// m_vectstrSelectItemList.clearでクリア.
 
 }
@@ -144,8 +148,10 @@ BOOL CSelectBox::Create(int x, int y, int iWidth, int iHeight, HWND hWnd, UINT n
 	m_bUp = FALSE;	// m_bUpをFALSEで初期化.
 	m_bReturn = FALSE;	// m_bReturnをFALSEで初期化.
 	m_bDetermine = FALSE;	// m_bDetermineをFALSEで初期化.
-	m_dwInterval = 0;	// m_dwIntervalを0で初期化.
-	m_dwTimerStart = 0;	// m_dwTimerStartを0で初期化.
+	m_dwFlashInterval = 0;	// m_dwFlashIntervalを0で初期化.
+	m_dwFlashTimerStart = 0;	// m_dwFlashTimerStartを0で初期化.
+	m_dwDetermineInterval = 0;	// m_dwDetermineIntervalを0で初期化.
+	m_dwDetermineTimerStart = 0;	// m_dwDetermineTimerStartを0で初期化.
 	m_hCursorBitmap = (HBITMAP)LoadImage(hInstance, MAKEINTRESOURCE(nCursorID), IMAGE_BITMAP, m_iCursorWidth, m_iCursorHeight, LR_DEFAULTCOLOR);	// LoadImageでリソースIDがnCursorIDのビットマップをロード.
 	if (m_hCursorBitmap == NULL){	// m_hCursorBitmapがNULLなら.
 		DeleteDC(m_hCursorMemDC);	// DeleteDCでm_hCursorMemDCを削除.
@@ -191,8 +197,10 @@ void CSelectBox::Destroy(){
 	m_bUp = FALSE;	// m_bUpにFALSEを代入.
 	m_bReturn = FALSE;	// m_bReturnにFALSEを代入.
 	m_bDetermine = FALSE;	// m_bDetermineにFALSEを代入.
-	m_dwInterval = 0;	// m_dwIntervalに0を代入.
-	m_dwTimerStart = 0;	// m_dwTimerStartに0を代入.
+	m_dwFlashInterval = 0;	// m_dwFlashIntervalに0を代入.
+	m_dwFlashTimerStart = 0;	// m_dwFlashTimerStartに0を代入.
+	m_dwDetermineInterval = 0;	// m_dwDetermineIntervalに0を代入.
+	m_dwDetermineTimerStart = 0;	// m_dwDetermineTimerStartに0を代入.
 
 	// カーソルビットマップを戻す.
 	if (m_hOldCursorBitmap != NULL){	// m_hOldCursorBitmapがNULLでなければ.
@@ -344,7 +352,8 @@ int CSelectBox::Proc(){
 			m_bDetermine = TRUE;	// m_bDeterminにTRUEをセット.
 
 			// タイマーのセット.
-			SetTimer(100);	// 100ミリ秒(0.1秒)のタイマーをセット.
+			SetFlashTimer(100);	// 100ミリ秒(0.1秒)のフラッシュタイマーをセット.
+			SetDetermineTimer(3000);	// 3000ミリ秒(3秒)の確定タイマーをセット.
 
 			// 成功なので0.
 			return 0;	// 0を返す.
@@ -374,8 +383,8 @@ int CSelectBox::Proc(){
 	}
 	else{	// m_bDetermineがTRUEの時.
 
-		// タイマー発生ごとに切り替える.
-		if (IsElapsed()){	// IsElapsedがTRUE.
+		// フラッシュタイマー発生ごとに切り替える.
+		if (IsFlashElapsed()){	// IsFlashElapsedがTRUE.
 			if (m_bCursorVisible){	// TRUEなら
 				m_bCursorVisible = FALSE;	// FALSEに切り替え.
 			}
@@ -384,28 +393,33 @@ int CSelectBox::Proc(){
 			}
 		}
 
+		// 確定タイマーがONになったらシーン切り替え.
+		if (IsDetermineElapsed()){	// IsDetermineElapsedがTRUE.
+			return 1;	// 1を返してシーン切り替え.
+		}
+
 	}
 
-	// 成功なので0.
+	// シーン継続なら0.
 	return 0;	// 0を返す.
 
 }
 
-// タイマーのセットSetTimer.
-void CSelectBox::SetTimer(DWORD dwInterval){
+// フラッシュタイマーのセットSetTimer.
+void CSelectBox::SetFlashTimer(DWORD dwInterval){
 
-	// インターバルのセット.
-	m_dwInterval = dwInterval;	// m_dwIntervalにdwIntervalをセット.
+	// フラッシュインターバルのセット.
+	m_dwFlashInterval = dwInterval;	// m_dwFlashIntervalにdwIntervalをセット.
 
 	// タイマーのセット.
 	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
 	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
-	m_dwTimerStart = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をm_dwTimerStartに格納.
+	m_dwFlashTimerStart = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をm_dwFlashTimerStartに格納.
 
 }
 
 // タイマーが経過時間を過ぎたかをチェックIsElapsed.
-BOOL CSelectBox::IsElapsed(){
+BOOL CSelectBox::IsFlashElapsed(){
 
 	// 現在時刻の取得.
 	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
@@ -413,8 +427,40 @@ BOOL CSelectBox::IsElapsed(){
 	DWORD dwNow = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をdwNowに格納.
 
 	// 経過時間チェック.
-	if (dwNow - m_dwTimerStart >= m_dwInterval){	// m_dwInterval以上なら.
-		m_dwTimerStart = dwNow;	// dwNowをm_dwTimerStartにセット.
+	if (dwNow - m_dwFlashTimerStart >= m_dwFlashInterval){	// m_dwFlashInterval以上なら.
+		m_dwFlashTimerStart = dwNow;	// dwNowをm_dwFlashTimerStartにセット.
+		return TRUE;	// TRUEを返す.
+	}
+	else{
+		return FALSE;	// FALSEを返す.
+	}
+
+}
+
+// 確定タイマーのセットSetDetermineTimer.
+void CSelectBox::SetDetermineTimer(DWORD dwInterval){
+
+	// 確定インターバルのセット.
+	m_dwDetermineInterval = dwInterval;	// m_dwDetermineIntervalにdwIntervalをセット.
+
+	// タイマーのセット.
+	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
+	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
+	m_dwDetermineTimerStart = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をm_dwDetermineTimerStartに格納.
+
+}
+
+// 確定タイマーが経過時間を過ぎたかをチェックIsDetermineElapsed.
+BOOL CSelectBox::IsDetermineElapsed(){
+
+	// 現在時刻の取得.
+	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
+	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
+	DWORD dwNow = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をdwNowに格納.
+
+	// 経過時間チェック.
+	if (dwNow - m_dwDetermineTimerStart >= m_dwDetermineInterval){	// m_dwDetermineInterval以上なら.
+		m_dwDetermineTimerStart = dwNow;	// dwNowをm_dwDetermineTimerStartにセット.
 		return TRUE;	// TRUEを返す.
 	}
 	else{

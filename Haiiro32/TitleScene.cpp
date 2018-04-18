@@ -124,7 +124,10 @@ int CTitleScene::RunProc(){
 
 	// セレクトボックス処理.
 	if (m_pSelectBox != NULL){	// m_pSelectBoxがNULLでない時.
-		m_pSelectBox->Proc();	// m_pSelectBox->Procで処理.
+		int iRet = m_pSelectBox->Proc();	// m_pSelectBox->Procで処理し, 戻り値をiRetに格納.
+		if (iRet == 1){	// 1ならシーン変更.
+			return 1;	// 1を返す.
+		}
 	}
 
 	// ゲームタイムボックス処理.
@@ -132,7 +135,7 @@ int CTitleScene::RunProc(){
 		m_pGameTimeBox->Proc();	// m_pGameTimeBox->Procで処理.
 	}
 	
-	// 常に成功なので0.
+	// シーンを変えない場合は0.
 	return 0;	// 0を返す.
 
 }

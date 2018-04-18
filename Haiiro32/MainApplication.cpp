@@ -48,6 +48,9 @@ int CMainApplication::Main(){
 	if (m_iNo == 0 && m_pScene == NULL){	// m_iNo‚ª0‚Å¶¬‚³‚ê‚Ä‚¢‚È‚¢.
 		pScene = new CTitleScene(m_pMainWnd, m_pGameTime);	// CTitleScene‚ğ¶¬‚µ, pScene‚ÉŠi”[.(m_pMainWnd‚Æm_pGameTime‚ğ“n‚·.)
 	}
+	else if (m_iNo == 1 && m_pScene == NULL){	// m_iNo‚ª1‚Å¶¬‚³‚ê‚Ä‚¢‚È‚¢.
+		pScene = new CScene(m_pMainWnd, m_pGameTime);	// CScene‚ğ¶¬‚µ, pScene‚ÉŠi”[.(m_pMainWnd‚Æm_pGameTime‚ğ“n‚·.)
+	}
 
 	if (m_pScene == NULL){	// m_pScene‚ªNULL‚Ì.	
 		m_pScene = pScene;	// pScene‚ğŠi”[.
