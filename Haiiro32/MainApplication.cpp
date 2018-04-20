@@ -3,6 +3,7 @@
 #include "MainApplication.h"	// CMainApplication
 #include "MainWindow.h"	// CMainWindow
 #include "TitleScene.h"	// CTitleScene
+#include "GameScene.h"	// CGameScene
 
 // ƒCƒ“ƒXƒ^ƒ“ƒX‰Šú‰»ŠÖ”InitInstance.
 BOOL CMainApplication::InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int nShowCmd){
@@ -49,14 +50,17 @@ int CMainApplication::Main(){
 		pScene = new CTitleScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CTitleScene‚ğ¶¬‚µ, pScene‚ÉŠi”[.(m_pMainWnd‚Æm_pGameTime‚Æm_pGameSystem‚ğ“n‚·.)
 	}
 	else if (m_iNo == 1 && m_pScene == NULL){	// m_iNo‚ª1‚Å¶¬‚³‚ê‚Ä‚¢‚È‚¢.
-		pScene = new CScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CScene‚ğ¶¬‚µ, pScene‚ÉŠi”[.(m_pMainWnd‚Æm_pGameTime‚Æm_pGameSystem‚ğ“n‚·.)
+		pScene = new CGameScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CGameScene‚ğ¶¬‚µ, pScene‚ÉŠi”[.(m_pMainWnd‚Æm_pGameTime‚Æm_pGameSystem‚ğ“n‚·.)
 	}
+
+#if 0
 	else if (m_iNo == 2 && m_pScene == NULL){	// m_iNo‚ª2‚Å¶¬‚³‚ê‚Ä‚¢‚È‚¢.
 		pScene = new CScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CScene‚ğ¶¬‚µ, pScene‚ÉŠi”[.(m_pMainWnd‚Æm_pGameTime‚Æm_pGameSystem‚ğ“n‚·.)
 	}
 	else if (m_iNo == 3 && m_pScene == NULL){	// m_iNo‚ª3‚Å¶¬‚³‚ê‚Ä‚¢‚È‚¢.
 		pScene = new CScene(m_pMainWnd, m_pGameTime, m_pGameSystem);	// CScene‚ğ¶¬‚µ, pScene‚ÉŠi”[.(m_pMainWnd‚Æm_pGameTime‚Æm_pGameSystem‚ğ“n‚·.)
 	}
+#endif
 
 	// ˆ—.
 	if (m_pScene == NULL){	// m_pScene‚ªNULL‚Ì.	

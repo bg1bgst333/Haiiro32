@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,0,0,36
- PRODUCTVERSION 0,0,0,36
+ FILEVERSION 0,0,0,37
+ PRODUCTVERSION 0,0,0,37
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x29L
@@ -66,10 +66,10 @@ BEGIN
     BEGIN
         BLOCK "041104b0"
         BEGIN
-            VALUE "Comments", "Seibu-Chichibu #36"
+            VALUE "Comments", "Seibu-Chichibu #37"
             VALUE "CompanyName", "B.G-STATION"
-            VALUE "FileDescription", "Seibu-Chichibu #36"
-            VALUE "FileVersion", "0, 0, 0, 36"
+            VALUE "FileDescription", "Seibu-Chichibu #37"
+            VALUE "FileVersion", "0, 0, 0, 37"
             VALUE "InternalName", "Haiiro32"
             VALUE "LegalCopyright", "Copyright (C) 2005-2017 B.G-STATION, All rights reserved."
             VALUE "LegalTrademarks", "B.G-STATION"
@@ -110,6 +110,9 @@ IDB_BACKGROUND1         BITMAP                  "background1.bmp"
 IDB_TITLE1              BITMAP                  "title1.bmp"
 IDB_SELECTBOX1          BITMAP                  "selectbox1.bmp"
 IDB_CURSOR1             BITMAP                  "cursor1.bmp"
+IDB_SHARED2             BITMAP                  "shared2.bmp"
+IDB_SHARED1             BITMAP                  "shared1.bmp"
+IDB_SHARED3             BITMAP                  "shared3.bmp"
 #endif    // “ú–{Œê resources
 /////////////////////////////////////////////////////////////////////////////
 

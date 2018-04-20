@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameScene.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameSystem.cpp"
 				>
 			</File>
@@ -237,6 +241,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SharedImageBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SharedResources.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Title.cpp"
 				>
 			</File>
@@ -272,6 +284,10 @@
 			</File>
 			<File
 				RelativePath=".\GameObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameScene.h"
 				>
 			</File>
 			<File
@@ -327,6 +343,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SharedImageBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SharedResources.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Title.h"
 				>
 			</File>
@@ -358,6 +382,18 @@
 			</File>
 			<File
 				RelativePath=".\selectbox1.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\shared1.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\shared2.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\shared3.bmp"
 				>
 			</File>
 			<File

@@ -18,6 +18,7 @@ BOOL CGameApplication::InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int n
 
 	// ゲームシステムの作成.
 	m_pGameSystem = new CGameSystem();	// CGameSystemオブジェクトの作成え.
+	m_pGameSystem->Init(hInstance);	// Initで初期化.
 
 	// ゲームタイムの作成.
 	m_pGameTime = new CGameTime();	// CGameTimeオブジェクトの作成.
@@ -38,6 +39,7 @@ int CGameApplication::ExitInstance(){
 
 	// ゲームシステムの破棄.
 	if (m_pGameSystem != NULL){	// m_pGameSystemがNULLでなければ.
+		m_pGameSystem->Exit();	// Exitで終了処理.
 		delete m_pGameSystem;	// deleteでm_pGameSystemを削除.
 		m_pGameSystem = NULL;	// m_pGameSystemにNULLをセット.
 	}
