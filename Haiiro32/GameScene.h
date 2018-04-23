@@ -5,7 +5,10 @@
 // ヘッダのインクルード
 // 独自のヘッダ
 #include "Scene.h"	// CScene
-#include "SharedImageBuffer.h"	// CSharedImageBuffer
+#include "SharedObject.h"	// CSharedObject
+
+// 前方宣言.
+class CSharedObject;	// CSharedObject.
 
 // ゲームシーンクラスCGameScene
 class CGameScene : public CScene{
@@ -14,8 +17,9 @@ class CGameScene : public CScene{
 	public:
 
 		// publicメンバ変数
-		CSharedImageBuffer *m_pSharedImageBuffer;	// CSharedImageBufferオブジェクトポインタm_pSharedImageBuffer.
-		HDC m_hDC;	// デバイスコンテキストハンドルm_hDC.
+		CSharedObject *m_pSharedObject1;	// CSharedObjectオブジェクトポインタm_pSharedObject1.
+		CSharedObject *m_pSharedObject2;	// CSharedObjectオブジェクトポインタm_pSharedObject2.
+		CSharedObject *m_pSharedObject3;	// CSharedObjectオブジェクトポインタm_pSharedObject3.
 
 		// コンストラクタ・デストラクタ
 		CGameScene();	// コンストラクタCGameScene

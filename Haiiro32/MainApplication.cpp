@@ -33,6 +33,11 @@ BOOL CMainApplication::InitInstance(HINSTANCE hInstance, LPTSTR lpCmdLine, int n
 		m_pGameTime->SetTargetFPS(60);	// 60FPSを目指す.
 	}
 
+	// シェアードリソースのロード.(これは全体でファイルごとに1回ずつやっておけばいい.)
+	m_pGameSystem->m_pSharedResources->Add(IDB_SHARED1);	// m_pGameSystem->m_pSharedResources->AddでIDB_SHARED1を追加.
+	m_pGameSystem->m_pSharedResources->Add(IDB_SHARED2);	// m_pGameSystem->m_pSharedResources->AddでIDB_SHARED2を追加.
+	m_pGameSystem->m_pSharedResources->Add(IDB_SHARED3);	// m_pGameSystem->m_pSharedResources->AddでIDB_SHARED3を追加.
+
 	// InitInstanceの戻り値を返す.
 	return bRet;	// bRetを返す.
 

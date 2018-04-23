@@ -245,6 +245,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SharedObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SharedResources.cpp"
 				>
 			</File>
@@ -344,6 +348,10 @@
 			</File>
 			<File
 				RelativePath=".\SharedImageBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SharedObject.h"
 				>
 			</File>
 			<File

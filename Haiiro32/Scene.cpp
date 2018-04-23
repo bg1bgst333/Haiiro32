@@ -17,6 +17,7 @@ CScene::CScene(){
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
 	m_pTest = NULL;	// m_pTestをNULLで初期化.
+	m_pSharedImageBuffer = NULL;	// m_pSharedImageBufferにNULLをセット.
 
 }
 
@@ -35,6 +36,7 @@ CScene::CScene(const CWindow *pWnd){
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
 	m_pTest = NULL;	// m_pTestをNULLで初期化.
+	m_pSharedImageBuffer = NULL;	// m_pSharedImageBufferにNULLをセット.
 
 }
 
@@ -53,6 +55,7 @@ CScene::CScene(const CWindow *pWnd, CGameTime *pTime){
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
 	m_pTest = NULL;	// m_pTestをNULLで初期化.
+	m_pSharedImageBuffer = NULL;	// m_pSharedImageBufferにNULLをセット.
 
 }
 
@@ -71,6 +74,7 @@ CScene::CScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSystem){
 	m_iScreenHeight = 0;	// m_iScreenHeightを0で初期化.
 	m_pKeyboard = NULL;	// m_pKeyboardをNULLで初期化.
 	m_pTest = NULL;	// m_pTestをNULLで初期化.
+	m_pSharedImageBuffer = NULL;	// m_pSharedImageBufferにNULLをセット.
 
 }
 
@@ -275,7 +279,11 @@ void CScene::DestroyScreen(){
 // ゲームオブジェクトの初期化.
 int CScene::InitGameObjects(){
 
+	// シェアードイメージバッファの生成.
+	m_pSharedImageBuffer = new CSharedImageBuffer(m_pGameSystem->m_pSharedResources, m_hDC);	// 生成.
+
 	// テストオブジェクトの作成.
+#if 0
 	m_pTest = new CGameObject(this);	// CGameObjectオブジェクトを生成(thisを渡す.)し, ポインタをm_pTestに格納.
 	if (m_pGameSystem->GetMode() == 1){	// m_pGameSystem->GetModeが1の時.
 		m_pTest->Create(0, 0, m_iScreenWidth, m_iScreenHeight, RGB(0xff, 0x0, 0x0), RGB(0x7f, 0x0, 0x0));	// m_pTest->Createでテストオブジェクトを作成.
@@ -286,6 +294,7 @@ int CScene::InitGameObjects(){
 	else if (m_pGameSystem->GetMode() == 3){	// m_pGameSystem->GetModeが3の時.
 		m_pTest->Create(0, 0, m_iScreenWidth, m_iScreenHeight, RGB(0x0, 0x0, 0xff), RGB(0x0, 0x0, 0x7f));	// m_pTest->Createでテストオブジェクトを作成.
 	}
+#endif
 
 	// 成功なら0を返す.
 	return 0;	// 0を返す.
@@ -339,9 +348,11 @@ int CScene::RunProc(){
 int CScene::DrawGameObjects(){
 
 	// テストオブジェクトの描画.
+#if 0
 	if (m_pTest != NULL){	// m_pTestがNULLでない時.
 		m_pTest->DrawRect(0, 0);	// m_pTest->DrawRectで(0, 0)の位置に描画.
 	}
+#endif
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.
@@ -352,11 +363,17 @@ int CScene::DrawGameObjects(){
 int CScene::ExitGameObjects(){
 
 	// テストオブジェクトの破棄.
+#if 0
 	if (m_pTest != NULL){	// m_pTestがNULLでない時.
 		m_pTest->Destroy();	// m_pTest->Destroyで破棄.
 		delete m_pTest;	// deleteでm_pTestを解放.
 		m_pTest = NULL;	// m_pTestにNULlをセット.
 	}
+#endif
+
+	// シェアードイメージバッファの解放.
+	ReleaseDC(m_pMainWnd->m_hWnd, m_hDC);	// ReleaseDCで解放.
+	delete m_pSharedImageBuffer;	// m_pSharedImageBufferを削除.
 
 	// 常に成功なので0.
 	return 0;	// 0を返す.

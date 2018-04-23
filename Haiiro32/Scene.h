@@ -9,6 +9,7 @@
 #include "GameObject.h"	// CGameObject
 #include "GameTime.h"	// CGameTime
 #include "GameSystem.h"	// CGameSystem
+#include "SharedImageBuffer.h"	// CSharedImageBuffer
 
 // 前方宣言.
 class CGameObject;	// CGameObject.
@@ -31,6 +32,7 @@ class CScene{
 		int m_iScreenHeight;	// スクリーン高さ.
 		CKeyboard *m_pKeyboard;	// キーボードオブジェクトm_pKeyboard.
 		CGameObject *m_pTest;	// テストオブジェクトm_pTest.
+		CSharedImageBuffer *m_pSharedImageBuffer;	// CSharedImageBufferオブジェクトポインタm_pSharedImageBuffer.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
