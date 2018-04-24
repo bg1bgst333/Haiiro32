@@ -4,10 +4,7 @@
 
 // ヘッダのインクルード
 // 独自のヘッダ
-#include "GameScene.h"	// CGameScene
-
-// 前方宣言.
-class CGameScene;	// CScene.
+#include "Scene.h"	// CScene
 
 // シェアードオブジェクトクラスCSharedObject
 class CSharedObject{

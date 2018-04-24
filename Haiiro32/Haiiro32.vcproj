@@ -225,6 +225,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Map.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MenuBar.cpp"
 				>
 			</File>
@@ -324,6 +328,14 @@
 			</File>
 			<File
 				RelativePath=".\MainWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Map.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MapData.h"
 				>
 			</File>
 			<File

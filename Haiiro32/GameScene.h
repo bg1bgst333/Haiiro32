@@ -5,10 +5,11 @@
 // ヘッダのインクルード
 // 独自のヘッダ
 #include "Scene.h"	// CScene
-#include "SharedObject.h"	// CSharedObject
+#include "Map.h"	// CMap
 
 // 前方宣言.
-class CSharedObject;	// CSharedObject.
+class CScene;	// CScene.
+class CMap;	// CMap.
 
 // ゲームシーンクラスCGameScene
 class CGameScene : public CScene{
@@ -17,10 +18,12 @@ class CGameScene : public CScene{
 	public:
 
 		// publicメンバ変数
+#if 0
 		CSharedObject *m_pSharedObject1;	// CSharedObjectオブジェクトポインタm_pSharedObject1.
 		CSharedObject *m_pSharedObject2;	// CSharedObjectオブジェクトポインタm_pSharedObject2.
 		CSharedObject *m_pSharedObject3;	// CSharedObjectオブジェクトポインタm_pSharedObject3.
-
+#endif
+		CMap *m_pMap;	// CMapオブジェクトポインタm_pMap.
 		// コンストラクタ・デストラクタ
 		CGameScene();	// コンストラクタCGameScene
 		CGameScene(const CWindow *pWnd);	// コンストラクタCGameScene(const CWindow *pWnd)
