@@ -55,18 +55,23 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 		m_ppMapDataMatrix[i][1].m_iDestY = i;	// i
 		m_ppMapDataMatrix[i][1].m_iSrcX = 1;	// 1
 		m_ppMapDataMatrix[i][1].m_iSrcY = 0;	// 0
-		/*
 		m_ppMapDataMatrix[i][2].m_nID = IDB_SHARED1;	// shared1
 		m_ppMapDataMatrix[i][2].m_iDestX = 2;	// 2
 		m_ppMapDataMatrix[i][2].m_iDestY = i;	// i
 		m_ppMapDataMatrix[i][2].m_iSrcX = 2;	// 2
 		m_ppMapDataMatrix[i][2].m_iSrcY = 0;	// 0
-		*/
 #endif
 	}
 
+#if 1
+#if 1
 	// マップをエクスポート.
 	ExportFile(_T("testmap1.bin"));	// ExportFileで"testmap1.bin"をエクスポート.
+#else
+	// マップをインポート.
+	ImportFile(_T("testmap1.bin"));	// ImportFileで"testmap1.bin"をインポート.
+#endif
+#endif
 
 	// 成功なので0.
 	return 0;	// 0を返す.
@@ -109,6 +114,7 @@ void CMap::Draw(){
 BOOL CMap::ExportFile(LPCTSTR lpctszFileName){
 
 	// バイナリファイルの作成.
+#if 1
 	CBinaryFile *pBinaryFile = new CBinaryFile();	// CBinaryFileオブジェクトpBinaryFileの生成.
 	pBinaryFile->Set((BYTE *)&m_iChipWidth, sizeof(int));	// チップ幅.
 	pBinaryFile->Write(lpctszFileName);	// 指定のファイルに書き込み.
@@ -118,14 +124,59 @@ BOOL CMap::ExportFile(LPCTSTR lpctszFileName){
 	pBinaryFile->Write();	// 先程開いたファイルに追記.
 	pBinaryFile->Set((BYTE *)&m_iChipCountY, sizeof(int));	// チップ縦要素数.
 	pBinaryFile->Write();	// 先程開いたファイルに追記.
-	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[0][0], sizeof(MapData));	// (x, y) = (0, 0)のマップデータ.
-	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	// マップ配列の描画.
+	for (int y = 0; y < m_iChipCountY; y++){	// 縦方向.
+		for (int x = 0; x < m_iChipCountX; x++){	// 横方向.
+			pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[y][x], sizeof(MapData));	// (x, y)マップデータ.
+			pBinaryFile->Write();	// 先程開いたファイルに追記.
+		}
+	}
+#if 0
 	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[0][1], sizeof(MapData));	// (x, y) = (1, 0)のマップデータ.
 	pBinaryFile->Write();	// 先程開いたファイルに追記.
 	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[1][0], sizeof(MapData));	// (x, y) = (0, 1)のマップデータ.
 	pBinaryFile->Write();	// 先程開いたファイルに追記.
 	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[1][1], sizeof(MapData));	// (x, y) = (1, 1)のマップデータ.
 	pBinaryFile->Write();	// 先程開いたファイルに追記.
+#endif
+	delete pBinaryFile;	// pBinaryFileの終了処理.
+#endif
+	
+	// 成功ならTRUE.
+	return TRUE;	// TRUEを返す.
+
+}
+
+// マップデータをファイルとしてインポートImportFile.
+BOOL CMap::ImportFile(LPCTSTR lpctszFileName){
+
+	// バイナリファイルから読み込み.
+	CBinaryFile *pBinaryFile = new CBinaryFile();
+	pBinaryFile->Read(lpctszFileName, 0, sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipWidth = (int)*pBinaryFile->m_pBytes;	// チップ幅を取得.
+	pBinaryFile->Read(sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipHeight = (int)*pBinaryFile->m_pBytes;	// チップ高さを取得.
+	pBinaryFile->Read(sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipCountX = (int)*pBinaryFile->m_pBytes;	// チップ横要素数を取得.
+	pBinaryFile->Read(sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipCountY = (int)*pBinaryFile->m_pBytes;	// チップ縦要素数を取得.
+
+	// マップ配列作成.
+	m_ppMapDataMatrix = new MapData * [m_iChipCountY];	// 縦方向の要素数newする.
+	for (int i = 0; i < m_iChipCountY; i++){	// 縦方向の要素数繰り返す.
+		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX];	// 横方向の要素数newする.
+		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * m_iChipCountX);	// ZeroMemoryでクリア.
+	}
+
+	// マップ配列にバイナリの値をセット.
+	for (int y = 0; y < m_iChipCountY; y++){	// 縦方向.
+		for (int x = 0; x < m_iChipCountX; x++){	// 横方向.
+			pBinaryFile->Read(sizeof(MapData));	// pBinaryFile->Readで読み込み.
+			CopyMemory(&m_ppMapDataMatrix[y][x], (MapData *)pBinaryFile->m_pBytes, sizeof(MapData));	// CopyMemoryでバイナリデータをコピー.
+		}
+	}
+
+	// バイナリファイルオブジェクトの破棄.
 	delete pBinaryFile;	// pBinaryFileの終了処理.
 
 	// 成功ならTRUE.

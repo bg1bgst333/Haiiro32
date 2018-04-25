@@ -21,6 +21,8 @@ class CBinaryFile : public CFile{
 		CBinaryFile();	// コンストラクタCBinaryFile
 		virtual ~CBinaryFile();	// デストラクタ~CBinaryFile
 		virtual BOOL Read(LPCTSTR lpctszFileName);	// 指定のバイナリファイルを全部一斉読み込み.
+		virtual BOOL Read(LPCTSTR lpctszFileName, DWORD dwStart, DWORD dwSize);	// 指定のバイナリファイルを指定の位置から指定のサイズ分読み込む.
+		virtual BOOL Read(DWORD dwSize);	// 以前のファイルで以前読み込んだ後の位置から指定のサイズを読み込む.
 		virtual BOOL Write(LPCTSTR lpctszFileName);	// 指定のバイナリファイルに全部一斉書き込み.
 		virtual BOOL Write();	// 開いているバイナリファイルへの追加書き込み.
 		virtual void Set(BYTE *pBytes, DWORD dwSize);	// 全部一斉に書き込むバッファのセット.

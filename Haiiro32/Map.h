@@ -30,6 +30,7 @@ class CMap : public CSharedObject{
 		virtual void Destroy();	// マップの破棄Destroy.
 		virtual void Draw();	// マップの描画Draw.
 		virtual BOOL ExportFile(LPCTSTR lpctszFileName);	// マップデータをファイルとしてエクスポートExportFile.
+		virtual BOOL ImportFile(LPCTSTR lpctszFileName);	// マップデータをファイルとしてインポートImportFile.
 
 };
 

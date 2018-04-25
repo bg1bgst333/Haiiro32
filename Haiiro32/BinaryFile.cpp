@@ -51,6 +51,66 @@ BOOL CBinaryFile::Read(LPCTSTR lpctszFileName) {
 
 }
 
+// 指定のバイナリファイルを指定の位置から指定のサイズ分読み込む.
+BOOL CBinaryFile::Read(LPCTSTR lpctszFileName, DWORD dwStart, DWORD dwSize){
+
+	// いったんファイルを閉じて, バッファもクリアする.
+	Close();	// ファイルを閉じる.
+	Clear();	// バッファを破棄.
+
+	// ファイルのオープン
+	BOOL bRet = Open(lpctszFileName, GENERIC_READ, OPEN_EXISTING);	// Openで指定のファイルを開く.
+	if (bRet) {	// 成功.
+
+		// ファイルポインタの移動.
+		SetFilePointer(m_hFile, (LONG)dwStart, NULL, FILE_BEGIN);	// SetFilePointerでdwStartの位置まで移動.
+
+		// バッファの作成.
+		m_pBytes = new BYTE[dwSize + 1];	// newでdwSize + 1のバイト列を作成し, ポインタをm_pBytesに格納.
+		ZeroMemory(m_pBytes, dwSize + 1);	// ZeroMemoryでm_pBytesを(dwSize + 1)分, 0で埋める.
+
+		// ファイルの読み込み.
+		m_dwSize = CFile::Read(m_pBytes, dwSize);	// CFile::Readでデータを読み込む.
+		if (m_dwSize == dwSize) {	// 全て読み込めたら.
+			return TRUE;	// 成功.
+		}
+
+	}
+
+	// 失敗.
+	return FALSE;	// FALSEを返す.
+
+}
+
+// 以前のファイルで以前読み込んだ後の位置から指定のサイズを読み込む.
+BOOL CBinaryFile::Read(DWORD dwSize){
+
+	// ファイルを開いていない場合はエラー, 開いている場合読み込む.
+	if (m_tstrFileName.c_str() == _T("") && m_hFile == NULL) {
+		return FALSE;	// ファイルを開いていない場合はFALSEを返す.
+	}
+	else {	// ファイルを開いている場合.
+
+		// バッファを破棄.
+		Clear();	// バッファを破棄.
+
+		// バッファの作成.
+		m_pBytes = new BYTE[dwSize + 1];	// newでdwSize + 1のバイト列を作成し, ポインタをm_pBytesに格納.
+		ZeroMemory(m_pBytes, dwSize + 1);	// ZeroMemoryでm_pBytesを(dwSize + 1)分, 0で埋める.
+
+		// ファイルの読み込み.
+		m_dwSize = CFile::Read(m_pBytes, dwSize);	// CFile::Readでデータを読み込む.
+		if (m_dwSize == dwSize) {	// 全て読み込めたら.
+			return TRUE;	// 成功.
+		}
+		
+	}
+
+	// 失敗.
+	return FALSE;	// FALSEを返す.
+
+}
+
 // 指定のバイナリファイルに全部一斉書き込み.
 BOOL CBinaryFile::Write(LPCTSTR lpctszFileName) {
 
