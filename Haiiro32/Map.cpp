@@ -55,13 +55,18 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 		m_ppMapDataMatrix[i][1].m_iDestY = i;	// i
 		m_ppMapDataMatrix[i][1].m_iSrcX = 1;	// 1
 		m_ppMapDataMatrix[i][1].m_iSrcY = 0;	// 0
+		/*
 		m_ppMapDataMatrix[i][2].m_nID = IDB_SHARED1;	// shared1
 		m_ppMapDataMatrix[i][2].m_iDestX = 2;	// 2
 		m_ppMapDataMatrix[i][2].m_iDestY = i;	// i
 		m_ppMapDataMatrix[i][2].m_iSrcX = 2;	// 2
 		m_ppMapDataMatrix[i][2].m_iSrcY = 0;	// 0
+		*/
 #endif
 	}
+
+	// マップをエクスポート.
+	ExportFile(_T("testmap1.bin"));	// ExportFileで"testmap1.bin"をエクスポート.
 
 	// 成功なので0.
 	return 0;	// 0を返す.
@@ -97,5 +102,33 @@ void CMap::Draw(){
 			BitBlt(m_pScene->m_hMemDC, m_ppMapDataMatrix[y][x].m_iDestX * m_iChipWidth, m_ppMapDataMatrix[y][x].m_iDestY * m_iChipHeight, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y][x].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y][x].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
 		}
 	}
+
+}
+
+// マップデータをファイルとしてエクスポートExportFile.
+BOOL CMap::ExportFile(LPCTSTR lpctszFileName){
+
+	// バイナリファイルの作成.
+	CBinaryFile *pBinaryFile = new CBinaryFile();	// CBinaryFileオブジェクトpBinaryFileの生成.
+	pBinaryFile->Set((BYTE *)&m_iChipWidth, sizeof(int));	// チップ幅.
+	pBinaryFile->Write(lpctszFileName);	// 指定のファイルに書き込み.
+	pBinaryFile->Set((BYTE *)&m_iChipHeight, sizeof(int));	// チップ高さ.
+	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	pBinaryFile->Set((BYTE *)&m_iChipCountX, sizeof(int));	// チップ横要素数.
+	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	pBinaryFile->Set((BYTE *)&m_iChipCountY, sizeof(int));	// チップ縦要素数.
+	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[0][0], sizeof(MapData));	// (x, y) = (0, 0)のマップデータ.
+	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[0][1], sizeof(MapData));	// (x, y) = (1, 0)のマップデータ.
+	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[1][0], sizeof(MapData));	// (x, y) = (0, 1)のマップデータ.
+	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[1][1], sizeof(MapData));	// (x, y) = (1, 1)のマップデータ.
+	pBinaryFile->Write();	// 先程開いたファイルに追記.
+	delete pBinaryFile;	// pBinaryFileの終了処理.
+
+	// 成功ならTRUE.
+	return TRUE;	// TRUEを返す.
 
 }

@@ -81,7 +81,7 @@ int CGameScene::InitGameObjects(){
 	m_pSharedObject3->Create(2 * 32, 0 * 32, 32, 32, IDB_SHARED1);	// m_pSharedObject3->Createで生成.
 #endif
 	m_pMap = new CMap(this);	// CMapのオブジェクト生成.
-	m_pMap->Create(32, 32, 3, 3);	// Createで生成.
+	m_pMap->Create(32, 32, 2, 2);	// Createで生成.
 
 	// iRet.
 	return iRet;	// iRetを返す.

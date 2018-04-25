@@ -6,6 +6,7 @@
 // 独自のヘッダ
 #include "MapData.h"	// 構造体MapData
 #include "SharedObject.h"	// CSharedObject
+#include "BinaryFile.h"	// CBinaryFile
 
 // マップクラスCMap
 class CMap : public CSharedObject{
@@ -28,6 +29,7 @@ class CMap : public CSharedObject{
 		virtual BOOL Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCountY);	// マップの作成Create.
 		virtual void Destroy();	// マップの破棄Destroy.
 		virtual void Draw();	// マップの描画Draw.
+		virtual BOOL ExportFile(LPCTSTR lpctszFileName);	// マップデータをファイルとしてエクスポートExportFile.
 
 };
 

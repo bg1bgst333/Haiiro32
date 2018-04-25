@@ -185,6 +185,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BinaryFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\File.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameApplication.cpp"
 				>
 			</File>
@@ -284,6 +292,14 @@
 			</File>
 			<File
 				RelativePath=".\Background.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BinaryFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\File.h"
 				>
 			</File>
 			<File
