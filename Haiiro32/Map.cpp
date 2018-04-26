@@ -12,6 +12,12 @@ CMap::CMap() : CSharedObject(){
 	m_iChipCountX;	// m_iChipCountXに0をセット.
 	m_iChipCountY;	// m_iChipCountYに0をセット.
 	m_ppMapDataMatrix = NULL;	// m_ppMapDataMatrixにNULLをセット.
+	m_bDown = FALSE;	// m_bDownにFALSEをセット.
+	m_bUp = FALSE;	// m_bUpにFALSEをセット.
+	m_bRight = FALSE;	// m_bRightにFALSEをセット.
+	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
+	m_iCursorX = 0;	// m_iCursorXに0をセット.
+	m_iCursorY = 0;	// m_iCursorYに0をセット.
 
 }
 
@@ -24,6 +30,12 @@ CMap::CMap(CScene *pScene) : CSharedObject(pScene){
 	m_iChipCountX;	// m_iChipCountXに0をセット.
 	m_iChipCountY;	// m_iChipCountYに0をセット.
 	m_ppMapDataMatrix = NULL;	// m_ppMapDataMatrixにNULLをセット.
+	m_bDown = FALSE;	// m_bDownにFALSEをセット.
+	m_bUp = FALSE;	// m_bUpにFALSEをセット.
+	m_bRight = FALSE;	// m_bRightにFALSEをセット.
+	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
+	m_iCursorX = 0;	// m_iCursorXに0をセット.
+	m_iCursorY = 0;	// m_iCursorYに0をセット.
 
 }
 
@@ -67,7 +79,7 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 	for (int y = 0; y < m_iChipCountY; y++){	// 縦方向.
 		for (int x = 0; x < m_iChipCountX; x++){	// 横方向.
 			m_ppMapDataMatrix[y][x].m_nID = IDB_SHARED1;
-			if (x == 0){
+			if (x <= 1){
 				m_ppMapDataMatrix[y][x].m_iDestX = x;
 				m_ppMapDataMatrix[y][x].m_iDestY = y;
 				m_ppMapDataMatrix[y][x].m_iSrcX = y;
@@ -124,10 +136,10 @@ void CMap::Destroy(){
 void CMap::Draw(){
 
 	// マップ配列の描画.
-	for (int y = 0; y < m_iChipCountY; y++){	// 縦方向.
-		for (int x = 0; x < m_iChipCountX; x++){	// 横方向.
-			HDC hMemDC = m_pScene->m_pSharedImageBuffer->Get(m_ppMapDataMatrix[y][x].m_nID);	// 指定のIDのバッファを取得.
-			BitBlt(m_pScene->m_hMemDC, m_ppMapDataMatrix[y][x].m_iDestX * m_iChipWidth, m_ppMapDataMatrix[y][x].m_iDestY * m_iChipHeight, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y][x].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y][x].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+	for (int y = 0; y < 15/*m_iChipCountY*/; y++){	// 縦方向.
+		for (int x = 0; x < 20/*m_iChipCountX*/; x++){	// 横方向.
+			HDC hMemDC = m_pScene->m_pSharedImageBuffer->Get(m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_nID);	// 指定のIDのバッファを取得.
+			BitBlt(m_pScene->m_hMemDC, x * m_iChipWidth, y * m_iChipHeight, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
 		}
 	}
 
@@ -204,5 +216,90 @@ BOOL CMap::ImportFile(LPCTSTR lpctszFileName){
 
 	// 成功ならTRUE.
 	return TRUE;	// TRUEを返す.
+
+}
+
+// マップの移動状態をクリア.
+void CMap::Clear(){
+
+	// フラグをクリア.
+	m_bDown = FALSE;	// m_bDownをFALSEにする.
+	m_bUp = FALSE;	// m_bUpをFALSEにする.
+	m_bRight = FALSE;	// m_bRightをFALSEにする.
+	m_bLeft = FALSE;	// m_bLeftをFALSEにする.
+
+}
+
+// マップの視点を下に移動Down.(マップ自体は上に移動.)
+void CMap::Down(){
+
+	// 下が有効.
+	m_bDown = TRUE;	// m_bDownをTRUEにする.
+
+}
+
+// マップの視点を上に移動Up.(マップ自体は下に移動.)
+void CMap::Up(){
+
+	// 上が有効.
+	m_bUp = TRUE;	// m_bUpをTRUEにする.
+
+}
+
+// マップの視点を右に移動Right.(マップ自体は左に移動.)
+void CMap::Right(){
+
+	// 右が有効.
+	m_bRight = TRUE;	// m_bRightをTRUEにする.
+
+}
+
+// マップの視点を左に移動Ledt.(マップ自体は右に移動.)
+void CMap::Left(){
+
+	// 左が有効.
+	m_bLeft =TRUE;	// m_bLeftをTRUEにする.
+
+}
+
+// 処理をするProc.
+int CMap::Proc(){
+
+	// 下.
+	if (m_bDown){
+		m_iCursorY++;	// yを1増やす.
+	}
+
+	// 上.
+	if (m_bUp){
+		m_iCursorY--;	// yを1減らす.
+	}
+
+	// 右.
+	if (m_bRight){
+		m_iCursorX++;	// xを1増やす.
+	}
+
+	// 左.
+	if (m_bLeft){
+		m_iCursorX--;	// xを1減らす.
+	}
+
+	// カーソル最小値最大値を超えないようにする.
+	if (m_iCursorX < 0){	// 0未満.
+		m_iCursorX = 0;	// 0にする.
+	}
+	if (m_iCursorY < 0){	// 0未満.
+		m_iCursorY = 0;	// 0にする.
+	}
+	if (m_iCursorX > m_iChipCountX - 20){	// m_iChipCountX - 20を超える.
+		m_iCursorX = m_iChipCountX - 20;	// m_iChipCountX - 20にする.
+	}
+	if (m_iCursorY > m_iChipCountY - 15){	// m_iChipCountY - 15を超える.
+		m_iCursorY = m_iChipCountY - 15;	// m_iChipCountY - 15にする.
+	}
+
+	// シーン継続なら0.
+	return 0;	// 0を返す.
 
 }
