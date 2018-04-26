@@ -83,7 +83,7 @@ int CGameScene::InitGameObjects(){
 	m_pMap = new CMap(this);	// CMapのオブジェクト生成.
 
 #if 0
-	m_pMap->Create(32, 32, 3, 3);	// Createで生成.
+	m_pMap->Create(32, 32, 20, 15);	// Createで生成.
 #else
 	m_pMap->ImportFile(_T("testmap1.bin"));	// m_pMap->ImportFileでインポート.
 #endif

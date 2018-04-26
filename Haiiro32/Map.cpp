@@ -46,7 +46,7 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 	for (int i = 0; i < m_iChipCountY; i++){	// c•ûŒü‚Ì—v‘f”ŒJ‚è•Ô‚·.
 		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX];	// ‰¡•ûŒü‚Ì—v‘f”new‚·‚é.
 		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * m_iChipCountX);	// ZeroMemory‚ÅƒNƒŠƒA.
-#if 1
+#if 0
 		m_ppMapDataMatrix[i][0].m_nID = IDB_SHARED1;	// shared1
 		m_ppMapDataMatrix[i][0].m_iDestX = 0;	// 0
 		m_ppMapDataMatrix[i][0].m_iDestY = i;	// i
@@ -61,6 +61,29 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 		m_ppMapDataMatrix[i][2].m_iSrcX = 2;	// 2
 		m_ppMapDataMatrix[i][2].m_iSrcY = 0;	// 0
 #endif
+	}
+
+	// ƒ}ƒbƒv”z’u.
+	for (int y = 0; y < m_iChipCountY; y++){	// c•ûŒü.
+		for (int x = 0; x < m_iChipCountX; x++){	// ‰¡•ûŒü.
+			m_ppMapDataMatrix[y][x].m_nID = IDB_SHARED1;
+			if (x == 0){
+				m_ppMapDataMatrix[y][x].m_iDestX = x;
+				m_ppMapDataMatrix[y][x].m_iDestY = y;
+				m_ppMapDataMatrix[y][x].m_iSrcX = y;
+				m_ppMapDataMatrix[y][x].m_iSrcY = 0;
+				if (y >= 10){
+					m_ppMapDataMatrix[y][x].m_iSrcX = y - 10;
+					m_ppMapDataMatrix[y][x].m_iSrcY = 1;
+				}
+			}
+			else{
+				m_ppMapDataMatrix[y][x].m_iDestX = x;
+				m_ppMapDataMatrix[y][x].m_iDestY = y;
+				m_ppMapDataMatrix[y][x].m_iSrcX = 0;
+				m_ppMapDataMatrix[y][x].m_iSrcY = 2;
+			}
+		}
 	}
 
 #if 1
