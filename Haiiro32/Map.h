@@ -21,6 +21,8 @@ class CMap : public CSharedObject{
 		int m_iChipCountY;	// 縦チップ数.
 		int m_iCursorX;	// 描画開始位置x.
 		int m_iCursorY;	// 描画開始位置y.
+		int m_iPixelX;	// 描画開始位置(ピクセル単位)x.
+		int m_iPixelY;	// 描画開始位置(ピクセル単位)y.
 		MapData** m_ppMapDataMatrix;	// MapData2次元配列m_ppMapDataMatrix.
 		BOOL m_bDown;	// 下が押されているフラグm_bDown.
 		BOOL m_bUp;	// 上が押されているフラグm_bUp.

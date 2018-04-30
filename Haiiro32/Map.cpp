@@ -18,6 +18,8 @@ CMap::CMap() : CSharedObject(){
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_iCursorX = 0;	// m_iCursorXに0をセット.
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
+	m_iPixelX = 0;	// m_iPixelXに0をセット.
+	m_iPixelY = 0;	// m_iPixelYに0をセット.
 
 }
 
@@ -36,6 +38,8 @@ CMap::CMap(CScene *pScene) : CSharedObject(pScene){
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_iCursorX = 0;	// m_iCursorXに0をセット.
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
+	m_iPixelX = 0;	// m_iPixelXに0をセット.
+	m_iPixelY = 0;	// m_iPixelYに0をセット.
 
 }
 
@@ -54,10 +58,10 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 	m_iChipCountY = iChipCountY;	// m_iChipCountYにiChipCountYをセット.
 
 	// マップ配列作成.
-	m_ppMapDataMatrix = new MapData * [m_iChipCountY];	// 縦方向の要素数newする.
-	for (int i = 0; i < m_iChipCountY; i++){	// 縦方向の要素数繰り返す.
-		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX];	// 横方向の要素数newする.
-		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * m_iChipCountX);	// ZeroMemoryでクリア.
+	m_ppMapDataMatrix = new MapData * [m_iChipCountY + 2];	// (縦方向の要素数 + 2)分newする.
+	for (int i = 0; i < m_iChipCountY + 2; i++){	// (縦方向の要素数 + 2)分繰り返す.
+		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX + 2];	// (横方向の要素数 + 2)分newする.
+		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * m_iChipCountX + 2);	// ZeroMemoryでクリア.
 #if 0
 		m_ppMapDataMatrix[i][0].m_nID = IDB_SHARED1;	// shared1
 		m_ppMapDataMatrix[i][0].m_iDestX = 0;	// 0
@@ -76,22 +80,22 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 	}
 
 	// マップ配置.
-	for (int y = 0; y < m_iChipCountY; y++){	// 縦方向.
-		for (int x = 0; x < m_iChipCountX; x++){	// 横方向.
+	for (int y = 1; y < m_iChipCountY + 1; y++){	// 縦方向.
+		for (int x = 1; x < m_iChipCountX + 1; x++){	// 横方向.
 			m_ppMapDataMatrix[y][x].m_nID = IDB_SHARED1;
-			if (x <= 1){
-				m_ppMapDataMatrix[y][x].m_iDestX = x;
-				m_ppMapDataMatrix[y][x].m_iDestY = y;
-				m_ppMapDataMatrix[y][x].m_iSrcX = y;
+			if (x <= 2){
+				m_ppMapDataMatrix[y][x].m_iDestX = x - 1;
+				m_ppMapDataMatrix[y][x].m_iDestY = y - 1;
+				m_ppMapDataMatrix[y][x].m_iSrcX = y - 1;
 				m_ppMapDataMatrix[y][x].m_iSrcY = 0;
-				if (y >= 10){
-					m_ppMapDataMatrix[y][x].m_iSrcX = y - 10;
+				if (y >= 11){
+					m_ppMapDataMatrix[y][x].m_iSrcX = y - 11;
 					m_ppMapDataMatrix[y][x].m_iSrcY = 1;
 				}
 			}
 			else{
-				m_ppMapDataMatrix[y][x].m_iDestX = x;
-				m_ppMapDataMatrix[y][x].m_iDestY = y;
+				m_ppMapDataMatrix[y][x].m_iDestX = x - 1;
+				m_ppMapDataMatrix[y][x].m_iDestY = y - 1;
 				m_ppMapDataMatrix[y][x].m_iSrcX = 0;
 				m_ppMapDataMatrix[y][x].m_iSrcY = 2;
 			}
@@ -117,7 +121,7 @@ BOOL CMap::Create(int iChipWidth, int iChipHeight, int iChipCountX, int iChipCou
 void CMap::Destroy(){
 	
 	// マップ配列の破棄.
-	for (int i = 0; i < m_iChipCountY; i++){	// 縦方向の要素数繰り返す.
+	for (int i = 0; i < m_iChipCountY + 2; i++){	// (縦方向の要素数 + 2)分繰り返す.
 		delete [] m_ppMapDataMatrix[i];	// m_ppMapDataMatrix[i]を解放.
 		m_ppMapDataMatrix[i] = NULL;	// m_ppMapDataMatrix[i]にNULLをセット.
 	}
@@ -136,10 +140,15 @@ void CMap::Destroy(){
 void CMap::Draw(){
 
 	// マップ配列の描画.
-	for (int y = 0; y < 15/*m_iChipCountY*/; y++){	// 縦方向.
-		for (int x = 0; x < 20/*m_iChipCountX*/; x++){	// 横方向.
+	for (int y = 0; y < 17/*m_iChipCountY*/; y++){	// 縦方向.
+		for (int x = 0; x < 22/*m_iChipCountX*/; x++){	// 横方向.
 			HDC hMemDC = m_pScene->m_pSharedImageBuffer->Get(m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_nID);	// 指定のIDのバッファを取得.
-			BitBlt(m_pScene->m_hMemDC, x * m_iChipWidth, y * m_iChipHeight, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+			if (hMemDC == NULL){
+				BitBlt(m_pScene->m_hMemDC, (x - 1) * m_iChipWidth + m_iPixelX, (y - 1) * m_iChipHeight + m_iPixelY, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+			}
+			else{
+				BitBlt(m_pScene->m_hMemDC, (m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iDestX - m_iCursorX) * m_iChipWidth + m_iPixelX, (m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iDestY - m_iCursorY) * m_iChipHeight + m_iPixelY, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+			}
 		}
 	}
 
@@ -160,8 +169,8 @@ BOOL CMap::ExportFile(LPCTSTR lpctszFileName){
 	pBinaryFile->Set((BYTE *)&m_iChipCountY, sizeof(int));	// チップ縦要素数.
 	pBinaryFile->Write();	// 先程開いたファイルに追記.
 	// マップ配列の描画.
-	for (int y = 0; y < m_iChipCountY; y++){	// 縦方向.
-		for (int x = 0; x < m_iChipCountX; x++){	// 横方向.
+	for (int y = 1; y < m_iChipCountY + 1; y++){	// 縦方向.
+		for (int x = 1; x < m_iChipCountX + 1; x++){	// 横方向.
 			pBinaryFile->Set((BYTE *)&m_ppMapDataMatrix[y][x], sizeof(MapData));	// (x, y)マップデータ.
 			pBinaryFile->Write();	// 先程開いたファイルに追記.
 		}
@@ -197,15 +206,15 @@ BOOL CMap::ImportFile(LPCTSTR lpctszFileName){
 	m_iChipCountY = (int)*pBinaryFile->m_pBytes;	// チップ縦要素数を取得.
 
 	// マップ配列作成.
-	m_ppMapDataMatrix = new MapData * [m_iChipCountY];	// 縦方向の要素数newする.
-	for (int i = 0; i < m_iChipCountY; i++){	// 縦方向の要素数繰り返す.
-		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX];	// 横方向の要素数newする.
-		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * m_iChipCountX);	// ZeroMemoryでクリア.
+	m_ppMapDataMatrix = new MapData * [m_iChipCountY + 2];	// (縦方向の要素数 + 2)分newする.
+	for (int i = 0; i < m_iChipCountY + 2; i++){	// (縦方向の要素数 + 2)分繰り返す.
+		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX + 2];	// (横方向の要素数 + 2)分newする.
+		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * (m_iChipCountX + 2));	// ZeroMemoryでクリア.
 	}
 
 	// マップ配列にバイナリの値をセット.
-	for (int y = 0; y < m_iChipCountY; y++){	// 縦方向.
-		for (int x = 0; x < m_iChipCountX; x++){	// 横方向.
+	for (int y = 1; y < m_iChipCountY + 1; y++){	// 縦方向.
+		for (int x = 1; x < m_iChipCountX + 1; x++){	// 横方向.
 			pBinaryFile->Read(sizeof(MapData));	// pBinaryFile->Readで読み込み.
 			CopyMemory(&m_ppMapDataMatrix[y][x], (MapData *)pBinaryFile->m_pBytes, sizeof(MapData));	// CopyMemoryでバイナリデータをコピー.
 		}
@@ -267,22 +276,52 @@ int CMap::Proc(){
 
 	// 下.
 	if (m_bDown){
-		m_iCursorY++;	// yを1増やす.
+		//m_iCursorY++;	// yを1増やす.
+		if (!(m_iCursorY == m_iChipCountY - 15 && m_iPixelY <= 0)){
+			m_iPixelY--;	// yを1増やす.
+		}
 	}
 
 	// 上.
 	if (m_bUp){
-		m_iCursorY--;	// yを1減らす.
+		//m_iCursorY--;	// yを1減らす.
+		if (!(m_iCursorY == 0 && m_iPixelY >= 0)){
+			m_iPixelY++;	// yを1増やす.
+		}
 	}
 
 	// 右.
 	if (m_bRight){
-		m_iCursorX++;	// xを1増やす.
+		//m_iCursorX++;	// xを1増やす.
+		if (!(m_iCursorX == m_iChipCountX - 20 && m_iPixelX <= 0)){
+			m_iPixelX--;	// yを1増やす.
+		}
 	}
 
 	// 左.
 	if (m_bLeft){
-		m_iCursorX--;	// xを1減らす.
+		//m_iCursorX--;	// xを1減らす.
+		if (!(m_iCursorX == 0 && m_iPixelX >= 0)){
+			m_iPixelX++;	// xを1増やす.
+		}
+	}
+
+	// ピクセルの処理.
+	if (m_iPixelY <= (-1 * m_iChipHeight) + 1){
+		m_iPixelY = 0;	// 0
+		m_iCursorY++;	// 1増える.
+	}
+	if (m_iPixelX <= (-1 * m_iChipWidth) + 1){
+		m_iPixelX = 0;	// 0
+		m_iCursorX++;	// 1増える.
+	}
+	if (m_iPixelY >= m_iChipHeight){
+		m_iPixelY = 0;	// 0
+		m_iCursorY--;	// 1減らす.
+	}
+	if (m_iPixelX >= m_iChipWidth){
+		m_iPixelX = 0;	// 0
+		m_iCursorX--;	// 1減らす.
 	}
 
 	// カーソル最小値最大値を超えないようにする.
