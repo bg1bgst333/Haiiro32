@@ -1,6 +1,7 @@
 // ヘッダのインクルード
 // 独自のヘッダ
 #include "Map.h"	// CMap
+#include "BinaryResource.h"	// CBinaryResource
 #include "resource.h"	// リソース.
 
 // コンストラクタCMap
@@ -194,6 +195,29 @@ BOOL CMap::ExportFile(LPCTSTR lpctszFileName){
 // マップデータをファイルとしてインポートImportFile.
 BOOL CMap::ImportFile(LPCTSTR lpctszFileName){
 
+#if 0
+	// バイナリリソースから読み込み.
+	CBinaryResource *pBinaryResource = new CBinaryResource();
+	pBinaryResource->Load(m_pScene->m_pMainWnd->m_hWnd, IDR_TESTMAP1, _T("BIN"));	// pBinaryResource->Loadでロード.
+	m_iChipWidth = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	m_iChipHeight = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	m_iChipCountX = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	m_iChipCountY = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	// マップ配列作成.
+	m_ppMapDataMatrix = new MapData * [m_iChipCountY + 2];	// (縦方向の要素数 + 2)分newする.
+	for (int i = 0; i < m_iChipCountY + 2; i++){	// (縦方向の要素数 + 2)分繰り返す.
+		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX + 2];	// (横方向の要素数 + 2)分newする.
+		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * (m_iChipCountX + 2));	// ZeroMemoryでクリア.
+	}
+	// マップ配列にバイナリの値をセット.
+	for (int y = 1; y < m_iChipCountY + 1; y++){	// 縦方向.
+		for (int x = 1; x < m_iChipCountX + 1; x++){	// 横方向.
+			CopyMemory(&m_ppMapDataMatrix[y][x], (MapData *)pBinaryResource->Get(sizeof(MapData)), sizeof(MapData));	// CopyMemoryでバイナリデータをコピー.
+		}
+	}
+	// バイナリリソースオブジェクトの破棄.
+	delete pBinaryResource;	// pBinaryResourceの終了処理.
+#else
 	// バイナリファイルから読み込み.
 	CBinaryFile *pBinaryFile = new CBinaryFile();
 	pBinaryFile->Read(lpctszFileName, 0, sizeof(int));	// pBinaryFile->Readで読み込み.
@@ -222,6 +246,68 @@ BOOL CMap::ImportFile(LPCTSTR lpctszFileName){
 
 	// バイナリファイルオブジェクトの破棄.
 	delete pBinaryFile;	// pBinaryFileの終了処理.
+#endif
+
+	// 成功ならTRUE.
+	return TRUE;	// TRUEを返す.
+
+}
+
+// マップデータをリソースとしてインポートImportResource.
+BOOL CMap::ImportResource(int nID){
+
+#if 1
+	// バイナリリソースから読み込み.
+	CBinaryResource *pBinaryResource = new CBinaryResource();
+	pBinaryResource->Load(m_pScene->m_pMainWnd->m_hWnd, nID, _T("BIN"));	// pBinaryResource->Loadでロード.
+	m_iChipWidth = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	m_iChipHeight = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	m_iChipCountX = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	m_iChipCountY = (int)(*(BYTE *)pBinaryResource->Get(sizeof(int)));
+	// マップ配列作成.
+	m_ppMapDataMatrix = new MapData * [m_iChipCountY + 2];	// (縦方向の要素数 + 2)分newする.
+	for (int i = 0; i < m_iChipCountY + 2; i++){	// (縦方向の要素数 + 2)分繰り返す.
+		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX + 2];	// (横方向の要素数 + 2)分newする.
+		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * (m_iChipCountX + 2));	// ZeroMemoryでクリア.
+	}
+	// マップ配列にバイナリの値をセット.
+	for (int y = 1; y < m_iChipCountY + 1; y++){	// 縦方向.
+		for (int x = 1; x < m_iChipCountX + 1; x++){	// 横方向.
+			CopyMemory(&m_ppMapDataMatrix[y][x], (MapData *)pBinaryResource->Get(sizeof(MapData)), sizeof(MapData));	// CopyMemoryでバイナリデータをコピー.
+		}
+	}
+	// バイナリリソースオブジェクトの破棄.
+	delete pBinaryResource;	// pBinaryResourceの終了処理.
+#else
+	// バイナリファイルから読み込み.
+	CBinaryFile *pBinaryFile = new CBinaryFile();
+	pBinaryFile->Read(lpctszFileName, 0, sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipWidth = (int)*pBinaryFile->m_pBytes;	// チップ幅を取得.
+	pBinaryFile->Read(sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipHeight = (int)*pBinaryFile->m_pBytes;	// チップ高さを取得.
+	pBinaryFile->Read(sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipCountX = (int)*pBinaryFile->m_pBytes;	// チップ横要素数を取得.
+	pBinaryFile->Read(sizeof(int));	// pBinaryFile->Readで読み込み.
+	m_iChipCountY = (int)*pBinaryFile->m_pBytes;	// チップ縦要素数を取得.
+
+	// マップ配列作成.
+	m_ppMapDataMatrix = new MapData * [m_iChipCountY + 2];	// (縦方向の要素数 + 2)分newする.
+	for (int i = 0; i < m_iChipCountY + 2; i++){	// (縦方向の要素数 + 2)分繰り返す.
+		m_ppMapDataMatrix[i] = new MapData[m_iChipCountX + 2];	// (横方向の要素数 + 2)分newする.
+		ZeroMemory(m_ppMapDataMatrix[i], sizeof(MapData) * (m_iChipCountX + 2));	// ZeroMemoryでクリア.
+	}
+
+	// マップ配列にバイナリの値をセット.
+	for (int y = 1; y < m_iChipCountY + 1; y++){	// 縦方向.
+		for (int x = 1; x < m_iChipCountX + 1; x++){	// 横方向.
+			pBinaryFile->Read(sizeof(MapData));	// pBinaryFile->Readで読み込み.
+			CopyMemory(&m_ppMapDataMatrix[y][x], (MapData *)pBinaryFile->m_pBytes, sizeof(MapData));	// CopyMemoryでバイナリデータをコピー.
+		}
+	}
+
+	// バイナリファイルオブジェクトの破棄.
+	delete pBinaryFile;	// pBinaryFileの終了処理.
+#endif
 
 	// 成功ならTRUE.
 	return TRUE;	// TRUEを返す.

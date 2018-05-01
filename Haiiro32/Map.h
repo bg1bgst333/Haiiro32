@@ -39,6 +39,7 @@ class CMap : public CSharedObject{
 		virtual void Draw();	// マップの描画Draw.
 		virtual BOOL ExportFile(LPCTSTR lpctszFileName);	// マップデータをファイルとしてエクスポートExportFile.
 		virtual BOOL ImportFile(LPCTSTR lpctszFileName);	// マップデータをファイルとしてインポートImportFile.
+		virtual BOOL ImportResource(int nID);	// マップデータをリソースとしてインポートImportResource.
 		virtual void Clear();	// マップの移動状態をクリア.
 		virtual void Down();	// マップの視点を下に移動Down.(マップ自体は上に移動.)
 		virtual void Up();	// マップの視点を上に移動Up.(マップ自体は下に移動.)

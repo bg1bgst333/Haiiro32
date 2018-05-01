@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BinaryResource.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\File.cpp"
 				>
 			</File>
@@ -296,6 +300,10 @@
 			</File>
 			<File
 				RelativePath=".\BinaryFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BinaryResource.h"
 				>
 			</File>
 			<File
@@ -430,6 +438,10 @@
 			</File>
 			<File
 				RelativePath=".\shared3.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\testmap1.bin"
 				>
 			</File>
 			<File

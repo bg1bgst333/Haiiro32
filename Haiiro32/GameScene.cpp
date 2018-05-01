@@ -85,7 +85,8 @@ int CGameScene::InitGameObjects(){
 #if 0
 	m_pMap->Create(32, 32, 21, 17);	// Createで生成.
 #else
-	m_pMap->ImportFile(_T("testmap1.bin"));	// m_pMap->ImportFileでインポート.
+	//m_pMap->ImportFile(_T("testmap1.bin"));	// m_pMap->ImportFileでインポート.
+	m_pMap->ImportResource(IDR_TESTMAP1);	// m_pMap->ImportResourceでインポート.
 #endif
 
 	// iRet.
