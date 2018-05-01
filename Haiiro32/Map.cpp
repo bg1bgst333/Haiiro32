@@ -17,6 +17,7 @@ CMap::CMap() : CSharedObject(){
 	m_bUp = FALSE;	// m_bUpにFALSEをセット.
 	m_bRight = FALSE;	// m_bRightにFALSEをセット.
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
+	m_bLoop = FALSE;	// m_bLoopにFALSEをセット.
 	m_iCursorX = 0;	// m_iCursorXに0をセット.
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
 	m_iPixelX = 0;	// m_iPixelXに0をセット.
@@ -37,6 +38,7 @@ CMap::CMap(CScene *pScene) : CSharedObject(pScene){
 	m_bUp = FALSE;	// m_bUpにFALSEをセット.
 	m_bRight = FALSE;	// m_bRightにFALSEをセット.
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
+	m_bLoop = FALSE;	// m_bLoopにFALSEをセット.
 	m_iCursorX = 0;	// m_iCursorXに0をセット.
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
 	m_iPixelX = 0;	// m_iPixelXに0をセット.
@@ -140,15 +142,52 @@ void CMap::Destroy(){
 // マップの描画Draw.
 void CMap::Draw(){
 
-	// マップ配列の描画.
-	for (int y = 0; y < 17/*m_iChipCountY*/; y++){	// 縦方向.
-		for (int x = 0; x < 22/*m_iChipCountX*/; x++){	// 横方向.
-			HDC hMemDC = m_pScene->m_pSharedImageBuffer->Get(m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_nID);	// 指定のIDのバッファを取得.
-			if (hMemDC == NULL){
-				BitBlt(m_pScene->m_hMemDC, (x - 1) * m_iChipWidth + m_iPixelX, (y - 1) * m_iChipHeight + m_iPixelY, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+	// ループ.
+	if (m_bLoop){	// する.
+		int iStartX = 0;
+		int iStartY = 0;
+		if (m_iCursorX == 0){
+			iStartX = m_iChipCountX;
+		}
+		else{
+			iStartX = m_iCursorX;
+		}
+		if (m_iCursorY == 0){
+			iStartY = m_iChipCountY;
+		}
+		else{
+			iStartY = m_iCursorY;
+		}
+		for (int y = 0; y < 17/*m_iChipCountY*/; y++){	// 縦方向.
+			for (int x = 0; x < 22/*m_iChipCountX*/; x++){	// 横方向.
+				int valx = x + iStartX;
+				int valy = y + iStartY;
+				if (valx > m_iChipCountX){
+					valx = valx - m_iChipCountX;
+				}
+				if (valy > m_iChipCountY){
+					valy = valy - m_iChipCountY;
+				}
+				HDC hMemDC = m_pScene->m_pSharedImageBuffer->Get(m_ppMapDataMatrix[valy][valx].m_nID);
+				if (hMemDC == NULL){
+				}
+				else{
+					BitBlt(m_pScene->m_hMemDC, (x - 1) * m_iChipWidth + m_iPixelX, (y - 1) * m_iChipHeight + m_iPixelY, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[valy][valx].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[valy][valx].m_iSrcY * m_iChipHeight, SRCCOPY);
+				}
 			}
-			else{
-				BitBlt(m_pScene->m_hMemDC, (m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iDestX - m_iCursorX) * m_iChipWidth + m_iPixelX, (m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iDestY - m_iCursorY) * m_iChipHeight + m_iPixelY, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+		}
+	}
+	else{	// しない.
+		// マップ配列の描画.
+		for (int y = 0; y < 17/*m_iChipCountY*/; y++){	// 縦方向.
+			for (int x = 0; x < 22/*m_iChipCountX*/; x++){	// 横方向.
+				HDC hMemDC = m_pScene->m_pSharedImageBuffer->Get(m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_nID);	// 指定のIDのバッファを取得.
+				if (hMemDC == NULL){
+					BitBlt(m_pScene->m_hMemDC, (x - 1) * m_iChipWidth + m_iPixelX, (y - 1) * m_iChipHeight + m_iPixelY, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+				}
+				else{
+					BitBlt(m_pScene->m_hMemDC, (m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iDestX - m_iCursorX) * m_iChipWidth + m_iPixelX, (m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iDestY - m_iCursorY) * m_iChipHeight + m_iPixelY, m_iChipWidth, m_iChipHeight, hMemDC, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcX * m_iChipWidth, m_ppMapDataMatrix[y + m_iCursorY][x + m_iCursorX].m_iSrcY * m_iChipHeight, SRCCOPY);	// BitBltで描画.
+				}
 			}
 		}
 	}
@@ -360,68 +399,130 @@ void CMap::Left(){
 // 処理をするProc.
 int CMap::Proc(){
 
-	// 下.
-	if (m_bDown){
-		//m_iCursorY++;	// yを1増やす.
-		if (!(m_iCursorY == m_iChipCountY - 15 && m_iPixelY <= 0)){
-			m_iPixelY--;	// yを1増やす.
+	// ループ.
+	if (m_bLoop){	// する.
+
+		// 下.
+		if (m_bDown){
+			//m_iCursorY++;
+			m_iPixelY--;
 		}
-	}
-
-	// 上.
-	if (m_bUp){
-		//m_iCursorY--;	// yを1減らす.
-		if (!(m_iCursorY == 0 && m_iPixelY >= 0)){
-			m_iPixelY++;	// yを1増やす.
+		// 上.
+		if (m_bUp){
+			//m_iCursorY--;
+			m_iPixelY++;
 		}
-	}
-
-	// 右.
-	if (m_bRight){
-		//m_iCursorX++;	// xを1増やす.
-		if (!(m_iCursorX == m_iChipCountX - 20 && m_iPixelX <= 0)){
-			m_iPixelX--;	// yを1増やす.
+		// 右.
+		if (m_bRight){
+			//m_iCursorX++;
+			m_iPixelX--;
 		}
-	}
-
-	// 左.
-	if (m_bLeft){
-		//m_iCursorX--;	// xを1減らす.
-		if (!(m_iCursorX == 0 && m_iPixelX >= 0)){
-			m_iPixelX++;	// xを1増やす.
+		// 左.
+		if (m_bLeft){
+			//m_iCursorX--;
+			m_iPixelX++;
 		}
-	}
 
-	// ピクセルの処理.
-	if (m_iPixelY <= (-1 * m_iChipHeight) + 1){
-		m_iPixelY = 0;	// 0
-		m_iCursorY++;	// 1増える.
-	}
-	if (m_iPixelX <= (-1 * m_iChipWidth) + 1){
-		m_iPixelX = 0;	// 0
-		m_iCursorX++;	// 1増える.
-	}
-	if (m_iPixelY >= m_iChipHeight){
-		m_iPixelY = 0;	// 0
-		m_iCursorY--;	// 1減らす.
-	}
-	if (m_iPixelX >= m_iChipWidth){
-		m_iPixelX = 0;	// 0
-		m_iCursorX--;	// 1減らす.
-	}
+		// ピクセルの処理.
+		if (m_iPixelY <= (-1 * m_iChipHeight) + 1){
+			m_iPixelY = 0;	// 0
+			m_iCursorY++;	// 1増える.
+		}
+		if (m_iPixelX <= (-1 * m_iChipWidth) + 1){
+			m_iPixelX = 0;	// 0
+			m_iCursorX++;	// 1増える.
+		}
+		if (m_iPixelY >= m_iChipHeight){
+			m_iPixelY = 0;	// 0
+			m_iCursorY--;	// 1減らす.
+		}
+		if (m_iPixelX >= m_iChipWidth){
+			m_iPixelX = 0;	// 0
+			m_iCursorX--;	// 1減らす.
+		}
 
-	// カーソル最小値最大値を超えないようにする.
-	if (m_iCursorX < 0){	// 0未満.
-		m_iCursorX = 0;	// 0にする.
+		// m_iCursorYが0未満なら.
+		if (m_iCursorY < 0){
+			m_iCursorY = m_iChipCountY - 1;
+		}
+		// m_iCursorYがm_iChipCountY - 1を超える.
+		if (m_iCursorY > m_iChipCountY - 1){
+			m_iCursorY = 0;
+		}
+		// m_iCursorXが0未満なら.
+		if (m_iCursorX < 0){
+			m_iCursorX = m_iChipCountX - 1;
+		}
+		// m_iCursorXがm_iChipCountX - 1を超える.
+		if (m_iCursorX > m_iChipCountX - 1){
+			m_iCursorX = 0;
+		}
+
 	}
-	if (m_iCursorY < 0){	// 0未満.
-		m_iCursorY = 0;	// 0にする.
-	}
-	if (m_iCursorX > m_iChipCountX - 20){	// m_iChipCountX - 20を超える.
-		m_iCursorX = m_iChipCountX - 20;	// m_iChipCountX - 20にする.
-	}
-	if (m_iCursorY > m_iChipCountY - 15){	// m_iChipCountY - 15を超える.
-		m_iCursorY = m_iChipCountY - 15;	// m_iChipCountY - 15にする.
+	else{	// しない.
+		// 下.
+		if (m_bDown){
+			//m_iCursorY++;	// yを1増やす.
+			if (!(m_iCursorY == m_iChipCountY - 15 && m_iPixelY <= 0)){
+				m_iPixelY--;	// yを1増やす.
+			}
+		}
+
+		// 上.
+		if (m_bUp){
+			//m_iCursorY--;	// yを1減らす.
+			if (!(m_iCursorY == 0 && m_iPixelY >= 0)){
+				m_iPixelY++;	// yを1増やす.
+			}
+		}
+
+		// 右.
+		if (m_bRight){
+			//m_iCursorX++;	// xを1増やす.
+			if (!(m_iCursorX == m_iChipCountX - 20 && m_iPixelX <= 0)){
+				m_iPixelX--;	// yを1増やす.
+			}
+		}
+
+		// 左.
+		if (m_bLeft){
+			//m_iCursorX--;	// xを1減らす.
+			if (!(m_iCursorX == 0 && m_iPixelX >= 0)){
+				m_iPixelX++;	// xを1増やす.
+			}
+		}
+
+		// ピクセルの処理.
+		if (m_iPixelY <= (-1 * m_iChipHeight) + 1){
+			m_iPixelY = 0;	// 0
+			m_iCursorY++;	// 1増える.
+		}
+		if (m_iPixelX <= (-1 * m_iChipWidth) + 1){
+			m_iPixelX = 0;	// 0
+			m_iCursorX++;	// 1増える.
+		}
+		if (m_iPixelY >= m_iChipHeight){
+			m_iPixelY = 0;	// 0
+			m_iCursorY--;	// 1減らす.
+		}
+		if (m_iPixelX >= m_iChipWidth){
+			m_iPixelX = 0;	// 0
+			m_iCursorX--;	// 1減らす.
+		}
+
+		// カーソル最小値最大値を超えないようにする.
+		if (m_iCursorX < 0){	// 0未満.
+			m_iCursorX = 0;	// 0にする.
+		}
+		if (m_iCursorY < 0){	// 0未満.
+			m_iCursorY = 0;	// 0にする.
+		}
+		if (m_iCursorX > m_iChipCountX - 20){	// m_iChipCountX - 20を超える.
+			m_iCursorX = m_iChipCountX - 20;	// m_iChipCountX - 20にする.
+		}
+		if (m_iCursorY > m_iChipCountY - 15){	// m_iChipCountY - 15を超える.
+			m_iCursorY = m_iChipCountY - 15;	// m_iChipCountY - 15にする.
+		}
 	}
 
 	// シーン継続なら0.

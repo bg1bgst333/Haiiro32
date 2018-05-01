@@ -28,6 +28,8 @@ class CMap : public CSharedObject{
 		BOOL m_bUp;	// 上が押されているフラグm_bUp.
 		BOOL m_bRight;	// 右が押されているフラグm_bRight.
 		BOOL m_bLeft;	// 左が押されているフラグm_bLeft.
+		BOOL m_bLoop;	// ループかどうかフラグm_bLoop.
+
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
 		CMap();	// コンストラクタCMap
