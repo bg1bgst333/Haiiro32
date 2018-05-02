@@ -18,6 +18,8 @@ CMap::CMap() : CSharedObject(){
 	m_bRight = FALSE;	// m_bRightにFALSEをセット.
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_bLoop = FALSE;	// m_bLoopにFALSEをセット.
+	m_bLoopX = FALSE;	// m_bLoopXにFALSEをセット.
+	m_bLoopY = FALSE;	// m_bLoopYにFALSEをセット.
 	m_iCursorX = 0;	// m_iCursorXに0をセット.
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
 	m_iPixelX = 0;	// m_iPixelXに0をセット.
@@ -39,6 +41,8 @@ CMap::CMap(CScene *pScene) : CSharedObject(pScene){
 	m_bRight = FALSE;	// m_bRightにFALSEをセット.
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_bLoop = FALSE;	// m_bLoopにFALSEをセット.
+	m_bLoopX = FALSE;	// m_bLoopXにFALSEをセット.
+	m_bLoopY = FALSE;	// m_bLoopYにFALSEをセット.
 	m_iCursorX = 0;	// m_iCursorXに0をセット.
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
 	m_iPixelX = 0;	// m_iPixelXに0をセット.
@@ -405,22 +409,50 @@ int CMap::Proc(){
 		// 下.
 		if (m_bDown){
 			//m_iCursorY++;
-			m_iPixelY--;
+			if (m_bLoopY){
+				m_iPixelY--;
+			}
+			else{
+				if (!(m_iCursorY == m_iChipCountY - 15 && m_iPixelY <= 0)){
+					m_iPixelY--;	// yを1増やす.
+				}
+			}
 		}
 		// 上.
 		if (m_bUp){
 			//m_iCursorY--;
-			m_iPixelY++;
+			if (m_bLoopY){
+				m_iPixelY++;
+			}
+			else{
+				if (!(m_iCursorY == 0 && m_iPixelY >= 0)){
+					m_iPixelY++;	// yを1増やす.
+				}
+			}
 		}
 		// 右.
 		if (m_bRight){
 			//m_iCursorX++;
-			m_iPixelX--;
+			if (m_bLoopX){
+				m_iPixelX--;
+			}
+			else{
+				if (!(m_iCursorX == m_iChipCountX - 20 && m_iPixelX <= 0)){
+					m_iPixelX--;	// yを1増やす.
+				}
+			}
 		}
 		// 左.
 		if (m_bLeft){
 			//m_iCursorX--;
-			m_iPixelX++;
+			if (m_bLoopX){
+				m_iPixelX++;
+			}
+			else{
+				if (!(m_iCursorX == 0 && m_iPixelX >= 0)){
+					m_iPixelX++;	// xを1増やす.
+				}
+			}
 		}
 
 		// ピクセルの処理.

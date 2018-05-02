@@ -88,6 +88,8 @@ int CGameScene::InitGameObjects(){
 	//m_pMap->ImportFile(_T("testmap1.bin"));	// m_pMap->ImportFileでインポート.
 	m_pMap->ImportResource(IDR_TESTMAP1);	// m_pMap->ImportResourceでインポート.
 	m_pMap->m_bLoop = TRUE;	// ループ.
+	m_pMap->m_bLoopX = FALSE;	// 横ループ.
+	m_pMap->m_bLoopY = TRUE;	// 縦ループ.
 #endif
 
 	// iRet.
