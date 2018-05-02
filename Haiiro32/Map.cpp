@@ -24,6 +24,8 @@ CMap::CMap() : CSharedObject(){
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
 	m_iPixelX = 0;	// m_iPixelXに0をセット.
 	m_iPixelY = 0;	// m_iPixelYに0をセット.
+	m_dwScrollTimerInterval = 0;	// m_dwScrollTimerIntervalを0で初期化.
+	m_dwScrollTimerStart = 0;	// m_dwScrollTimerStartを0で初期化.
 
 }
 
@@ -47,6 +49,8 @@ CMap::CMap(CScene *pScene) : CSharedObject(pScene){
 	m_iCursorY = 0;	// m_iCursorYに0をセット.
 	m_iPixelX = 0;	// m_iPixelXに0をセット.
 	m_iPixelY = 0;	// m_iPixelYに0をセット.
+	m_dwScrollTimerInterval = 0;	// m_dwScrollTimerIntervalを0で初期化.
+	m_dwScrollTimerStart = 0;	// m_dwScrollTimerStartに0をセット.
 
 }
 
@@ -406,6 +410,21 @@ int CMap::Proc(){
 	// ループ.
 	if (m_bLoop){	// する.
 
+#if 1
+		// 自動スクロール.
+		if (IsScrollElapsed()){
+			//m_iCursorY--;
+			if (m_bLoopY){
+				m_iPixelY = m_iPixelY + 1;	// yを1増やす.
+			}
+			else{
+				if (!(m_iCursorY == 0 && m_iPixelY >= 0)){
+					m_iPixelY = m_iPixelY + 1;	// yを1増やす.
+				}
+			}
+		}
+#else
+		// 手動スクロール.
 		// 下.
 		if (m_bDown){
 			//m_iCursorY++;
@@ -454,6 +473,7 @@ int CMap::Proc(){
 				}
 			}
 		}
+#endif
 
 		// ピクセルの処理.
 		if (m_iPixelY <= (-1 * m_iChipHeight) + 1){
@@ -559,5 +579,37 @@ int CMap::Proc(){
 
 	// シーン継続なら0.
 	return 0;	// 0を返す.
+
+}
+
+// スクロールタイマーのセットSetScrollTimer.
+void CMap::SetScrollTimer(DWORD dwInterval){
+
+	// スクロールタイマーインターバルのセット.
+	m_dwScrollTimerInterval = dwInterval;	// m_dwScrollTimerIntervalにdwIntervalをセット.
+
+	// タイマーのセット.
+	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
+	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
+	m_dwScrollTimerStart = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をm_dwScrollTimerStartに格納.
+
+}
+
+// スクロールタイマーが経過時間を過ぎたかをチェックIsScrollElapsed.
+BOOL CMap::IsScrollElapsed(){
+
+	// 現在時刻の取得.
+	const CScene *pScene = m_pScene;	// m_pSceneをpSceneに格納.
+	CGameTime *pTime = pScene->m_pGameTime;	// pScene->m_pGameTimeをpTimeに格納.
+	DWORD dwNow = pTime->GetSystemTime();	// pTime->GetSystemTimeで取得した時刻をdwNowに格納.
+
+	// 経過時間チェック.
+	if (dwNow - m_dwScrollTimerStart >= m_dwScrollTimerInterval){	// m_dwScrollTimerInterval以上なら.
+		m_dwScrollTimerStart = dwNow;	// dwNowをm_dwScrollTimerStartにセット.
+		return TRUE;	// TRUEを返す.
+	}
+	else{
+		return FALSE;	// FALSEを返す.
+	}
 
 }

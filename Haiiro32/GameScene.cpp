@@ -13,6 +13,7 @@ CGameScene::CGameScene() : CScene(){
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
 
@@ -26,6 +27,7 @@ CGameScene::CGameScene(const CWindow *pWnd) : CScene(pWnd){
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
 
@@ -39,6 +41,7 @@ CGameScene::CGameScene(const CWindow *pWnd, CGameTime *pTime) : CScene(pWnd, pTi
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
 
@@ -52,6 +55,7 @@ CGameScene::CGameScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSyst
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
 
@@ -90,7 +94,12 @@ int CGameScene::InitGameObjects(){
 	m_pMap->m_bLoop = TRUE;	// ループ.
 	m_pMap->m_bLoopX = FALSE;	// 横ループ.
 	m_pMap->m_bLoopY = TRUE;	// 縦ループ.
+	m_pMap->SetScrollTimer(16);	// 16ミリ秒後にスクロール.(これ以上はFPS値60では速くならない.)
 #endif
+
+	// ゲームタイムボックスの描画.
+	m_pGameTimeBox = new CGameTimeBox(this);	// CGameTimeBoxオブジェクトを生成(thisを渡す.), ポインタをm_pGameTimeBoxに格納.
+	m_pGameTimeBox->Create(0, 0, 160, 30, 36, _T("ＭＳ ゴシック"));	// m_pGameTimeBox->Createで作成.
 
 	// iRet.
 	return iRet;	// iRetを返す.
@@ -156,6 +165,11 @@ int CGameScene::RunProc(){
 		m_pMap->Proc();	// m_pMap->Procで処理.
 	}
 
+	// ゲームタイムボックス処理.
+	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
+		m_pGameTimeBox->Proc();	// m_pGameTimeBox->Procで処理.
+	}
+
 	// 成功なので0.
 	return 0;	// 0を返す.
 
@@ -172,6 +186,14 @@ int CGameScene::DrawGameObjects(){
 #endif
 	m_pMap->Draw();
 
+	// ゲームタイムボックスの描画.
+	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
+		m_pGameTimeBox->DrawTime(0, 0, 160, 30, RGB(0x98, 0xfb, 0x98));	// m_pGameTimeBox->DrawTimeで時刻を描画.
+		m_pGameTimeBox->DrawFPS(0, 30, 160, 30, RGB(0x98, 0xfb, 0x98));	// m_pGameTimeBox->DrawFPSでFPSを描画.
+		//m_pGameTimeBox->DrawRunFPS(0, 60, 160, 30, RGB(0xff, 0xff, 0xff));	// m_pGameTimeBox->DrawRunFPSで実行PFSを描画.
+		m_pGameTimeBox->DrawFrameIntervalMilliTime(0, 60, 160, 30, RGB(0x98, 0xfb, 0x98));	// m_pGameTimeBox->DrawFrameIntervalMilliTimeでフレーム間隔を描画.
+	}
+
 	// 基底クラスの処理.
 	return CScene::DrawGameObjects();	// CScene::DrawGameObjectsを呼ぶ.
 
@@ -179,6 +201,13 @@ int CGameScene::DrawGameObjects(){
 
 // ゲームオブジェクトの終了処理.
 int CGameScene::ExitGameObjects(){
+
+	// ゲームタイムボックスの破棄.
+	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
+		m_pGameTimeBox->Destroy();	// m_pGameTimeBox->Destroyで廃棄.
+		delete m_pGameTimeBox;	// deleteでm_pGameTimeBoxを解放.
+		m_pGameTimeBox = NULL;	// m_pGameTimeBoxにNULLをセット.
+	}
 
 	// シェアードオブジェクトの破棄.
 #if 0

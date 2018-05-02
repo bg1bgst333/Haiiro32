@@ -31,6 +31,8 @@ class CMap : public CSharedObject{
 		BOOL m_bLoop;	// ループかどうかフラグm_bLoop.
 		BOOL m_bLoopX;	// 横方向ループかどうかフラグm_bLoopX.
 		BOOL m_bLoopY;	// 縦方向ループかどうかフラグm_bLoopY.
+		DWORD m_dwScrollTimerInterval;	// スクロールタイマー間隔m_dwScrollTimerInterval.
+		DWORD m_dwScrollTimerStart;	// スクロールタイマー開始時刻m_dwScrollTimerStart.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -50,6 +52,8 @@ class CMap : public CSharedObject{
 		virtual void Right();	// マップの視点を右に移動Right.(マップ自体は左に移動.)
 		virtual void Left();	// マップの視点を左に移動Ledt.(マップ自体は右に移動.))
 		virtual int Proc();	// 処理をするProc.
+		virtual void SetScrollTimer(DWORD dwInterval);	// スクロールタイマーのセットSetScrollTimer.
+		virtual BOOL IsScrollElapsed();	// スクロールタイマーが経過時間を過ぎたかをチェックIsScrollElapsed.
 
 };
 
