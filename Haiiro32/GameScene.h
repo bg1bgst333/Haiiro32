@@ -6,11 +6,13 @@
 // 独自のヘッダ
 #include "Scene.h"	// CScene
 #include "Map.h"	// CMap
+#include "Character.h"	// CCharacter
 #include "GameTimeBox.h"	// CGameTimeBox
 
 // 前方宣言.
 class CScene;	// CScene.
 class CMap;	// CMap.
+class CCharacter;	// CCharacter.
 
 // ゲームシーンクラスCGameScene
 class CGameScene : public CScene{
@@ -25,8 +27,9 @@ class CGameScene : public CScene{
 		CSharedObject *m_pSharedObject3;	// CSharedObjectオブジェクトポインタm_pSharedObject3.
 #endif
 		CMap *m_pMap;	// CMapオブジェクトポインタm_pMap.
+		CCharacter *m_pCharacter;	// CCharacterオブジェクトポインタm_pCharacter.
 		CGameTimeBox *m_pGameTimeBox;	// ゲームタイムボックスm_pGameTimeBox.
-
+		
 		// コンストラクタ・デストラクタ
 		CGameScene();	// コンストラクタCGameScene
 		CGameScene(const CWindow *pWnd);	// コンストラクタCGameScene(const CWindow *pWnd)

@@ -13,6 +13,7 @@ CGameScene::CGameScene() : CScene(){
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pCharacter = NULL;	// m_pCharacterにNULLをセット.
 	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
@@ -27,6 +28,7 @@ CGameScene::CGameScene(const CWindow *pWnd) : CScene(pWnd){
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pCharacter = NULL;	// m_pCharacterにNULLをセット.
 	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
@@ -41,6 +43,7 @@ CGameScene::CGameScene(const CWindow *pWnd, CGameTime *pTime) : CScene(pWnd, pTi
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pCharacter = NULL;	// m_pCharacterにNULLをセット.
 	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
@@ -55,6 +58,7 @@ CGameScene::CGameScene(const CWindow *pWnd, CGameTime *pTime, CGameSystem *pSyst
 	m_pSharedObject3 = NULL;	// m_pSharedObject3にNULLをセット.
 #endif
 	m_pMap = NULL;	// m_pMapにNULLをセット.
+	m_pCharacter = NULL;	// m_pCharacterにNULLをセット.
 	m_pGameTimeBox = NULL;	// m_pGameTimeBoxをNULLで初期化.
 
 }
@@ -96,6 +100,12 @@ int CGameScene::InitGameObjects(){
 	m_pMap->m_bLoopY = TRUE;	// 縦ループ.
 	m_pMap->SetScrollTimer(16);	// 16ミリ秒後にスクロール.(これ以上はFPS値60では速くならない.)
 #endif
+
+	// キャラクターの描画.
+	m_pCharacter = new CCharacter(this);	// CCharacterオブジェクトを生成.
+	m_pCharacter->Add(0, 0, 32, 32, IDB_SHARED2);	// Addで追加.
+	m_pCharacter->Add(32, 0, 32, 32, IDB_SHARED2);	// Addで追加.
+	m_pCharacter->Add(64, 0, 32, 32, IDB_SHARED2);	// Addで追加.
 
 	// ゲームタイムボックスの描画.
 	m_pGameTimeBox = new CGameTimeBox(this);	// CGameTimeBoxオブジェクトを生成(thisを渡す.), ポインタをm_pGameTimeBoxに格納.
@@ -184,7 +194,20 @@ int CGameScene::DrawGameObjects(){
 	m_pSharedObject2->Draw(1 * 32, 0 * 32);	// m_pSharedObject2->Drawで描画.
 	m_pSharedObject3->Draw(2 * 32, 0 * 32);	// m_pSharedObject3->Drawで描画.
 #endif
-	m_pMap->Draw();
+
+	// マップの描画.
+	m_pMap->Draw();	// m_pMap->Drawでマップを描画.
+
+	// キャラの描画.
+	if (m_pMap->m_bRight){
+		m_pCharacter->Draw(0, 0, 1);	// m_pCharacter->Drawでキャラ(右)を描画.
+	}
+	else if (m_pMap->m_bLeft){
+		m_pCharacter->Draw(0, 0, 2);	// m_pCharacter->Drawでキャラ(左)を描画.
+	}
+	else{
+		m_pCharacter->Draw(0, 0, 0);	// m_pCharacter->Drawでキャラ(中)を描画.
+	}
 
 	// ゲームタイムボックスの描画.
 	if (m_pGameTimeBox != NULL){	// m_pGameTimeBoxがNULLでない時.
@@ -215,6 +238,8 @@ int CGameScene::ExitGameObjects(){
 	delete m_pSharedObject2;	// m_pSharedObject2を破棄.
 	delete m_pSharedObject3;	// m_pSharedObject3を破棄.
 #endif
+	m_pCharacter->Destroy();	// Destroyで破棄.
+	delete m_pCharacter;	// m_pCharacterを削除.
 	m_pMap->Destroy();	// Destroyで破棄.
 	delete m_pMap;	// m_pMapを削除.
 	m_pMap = NULL;	// m_pMapにNULLをセット.

@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Character.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\File.cpp"
 				>
 			</File>
@@ -304,6 +308,10 @@
 			</File>
 			<File
 				RelativePath=".\BinaryResource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Character.h"
 				>
 			</File>
 			<File
