@@ -111,6 +111,9 @@ int CGameScene::InitGameObjects(){
 	m_pPlayer->Add(0, 0, 32, 32, IDB_SHARED2);	// Addで追加.
 	m_pPlayer->Add(32, 0, 32, 32, IDB_SHARED2);	// Addで追加.
 	m_pPlayer->Add(64, 0, 32, 32, IDB_SHARED2);	// Addで追加.
+	m_pPlayer->AddMask(320 + 0, 0, 32, 32, IDB_SHARED2);	// AddMaskで追加.
+	m_pPlayer->AddMask(320 + 32, 0, 32, 32, IDB_SHARED2);	// AddMaskで追加.
+	m_pPlayer->AddMask(320 + 64, 0, 32, 32, IDB_SHARED2);	// AddMaskで追加.
 	m_pPlayer->Set(640 / 2 - 32 / 2, 480 - 32);	// Setで初期位置をセット.
 #else
 	m_pCharacter = new CCharacter(this);	// CCharacterオブジェクトを生成.

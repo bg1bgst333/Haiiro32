@@ -144,6 +144,7 @@ void CPlayer::Set(int iNo){
 void CPlayer::Draw(){
 
 	// •`‰æ.
-	CCharacter::Draw(m_x, m_y, m_iNo);	// CCharacter::Draw‚Å•`‰æ.
+	//CCharacter::Draw(m_x, m_y, m_iNo);	// CCharacter::Draw‚Å•`‰æ.
+	CCharacter::DrawSprite(m_x, m_y, m_iNo);	// CCharacter::DrawSprite‚Å•`‰æ.
 
 }
