@@ -17,8 +17,10 @@ class CPlayer : public CCharacter{
 		BOOL m_bUp;	// 上が押されているフラグm_bUp.
 		BOOL m_bRight;	// 右が押されているフラグm_bRight.
 		BOOL m_bLeft;	// 左が押されているフラグm_bLeft.
+		BOOL m_bShot;	// ショットが押されているフラグm_bShot.
 		int m_iNo;	// アニメーション番号m_iNo.
 		std::vector<CSharedObject *> m_vecpShotList;	// ショットリストm_vecpShotList.
+		int m_iShotIdx;	// ショットのインデックス.(発射する番号.)
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -31,6 +33,7 @@ class CPlayer : public CCharacter{
 		virtual void Up();	// マップの視点を上に移動Up.(マップ自体は下に移動.)
 		virtual void Right();	// マップの視点を右に移動Right.(マップ自体は左に移動.)
 		virtual void Left();	// マップの視点を左に移動Ledt.(マップ自体は右に移動.))
+		virtual void Shot();	// ショット発射.
 		virtual int Proc();	// 処理をするProc.
 		virtual void Set(int x, int y);	// 位置をセットするSet.
 		virtual void Set(int iNo);	// アニメーションをセットするSet.

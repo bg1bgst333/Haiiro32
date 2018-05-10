@@ -92,3 +92,28 @@ void CShot::DrawSprite(int x, int y, int iNo){
 	BitBlt(m_pScene->m_hMemDC, m_x, m_y, m_iWidth, m_iHeight, hMemDC, m_sx, m_sy, SRCAND);	// SRCANDでメインイメージを描画.
 
 }
+
+// 位置をセットするSet.
+void CShot::Set(int x, int y){
+
+	// 位置のセット.
+	m_x = x;	// m_xにxをセット.
+	m_y = y;	// m_yにyをセット.
+
+}
+
+// 状態のセット.
+void CShot::Set(int iState){
+
+	// 状態のセット.
+	m_iState = iState;	// m_iStateにiStateをセット.
+
+}
+
+// 状態の取得.
+int CShot::Get(){
+
+	// 状態の取得.
+	return m_iState;	// m_iStateを返す.
+
+}

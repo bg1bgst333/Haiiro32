@@ -143,6 +143,7 @@ int CGameScene::InitKeyboard(){
 	m_pKeyboard->AddKey(VK_UP);	// 上キーを追加.
 	m_pKeyboard->AddKey(VK_RIGHT);	// 右キーを追加.
 	m_pKeyboard->AddKey(VK_LEFT);	// 左キーを追加.
+	m_pKeyboard->AddKey('Z');	// Zキーを追加.
 
 	// 成功なので0.
 	return 0;	// 0を返す.
@@ -181,6 +182,11 @@ int CGameScene::CheckKeyboard(){
 	if (m_pKeyboard->IsDown(3)){	// m_pKeyboard->IsDown(3)がTRUEなら.
 		//m_pMap->Left();	// 左.
 		m_pPlayer->Left();	// 左.
+	}
+
+	// 4番目のキー(ここではZキー.)が押された瞬間.
+	if (m_pKeyboard->IsPress(4)){	// m_pKeyboard->IsPress(4)がTRUEなら.
+		m_pPlayer->Shot();	// ショット.
 	}
 
 	// 成功なので0.

@@ -14,6 +14,7 @@ CPlayer::CPlayer() : CCharacter(){
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_iNo = 0;	// m_iNoに0をセット.
 	m_vecpShotList.clear(); // m_vecpShotList.clearでクリア.
+	m_iShotIdx = 0;	// m_iShotIdxに0をセット.
 
 }
 
@@ -27,6 +28,7 @@ CPlayer::CPlayer(CScene *pScene) : CCharacter(pScene){
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_iNo = 0;	// m_iNoに0をセット.
 	m_vecpShotList.clear(); // m_vecpShotList.clearでクリア.
+	m_iShotIdx = 0;	// m_iShotIdxに0をセット.
 
 }
 
@@ -70,6 +72,7 @@ void CPlayer::Clear(){
 	m_bUp = FALSE;	// m_bUpにFALSEをセット.
 	m_bRight = FALSE;	// m_bRightにFALSEをセット.
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
+	m_bShot = FALSE;	// m_bShotにFALSEをセット.
 
 }
 
@@ -102,6 +105,14 @@ void CPlayer::Left(){
 
 	// 左のフラグ.
 	m_bLeft = TRUE;	// m_bLeftにTRUEをセット.
+
+}
+
+// ショット発射.
+void CPlayer::Shot(){
+
+	// ショットフラグ.
+	m_bShot = TRUE;	// m_bShotにTRUEをセット.
 
 }
 
@@ -140,6 +151,34 @@ int CPlayer::Proc(){
 		Set(2);	// 左をセット.
 	}
 
+	// ショットの描画.
+	for (int i = 0, j = m_iShotIdx; i < m_vecpShotList.size(); i++){
+		int iState = ((CShot *)m_vecpShotList[j])->Get();	// iState取得.
+		if (iState == 0){	// 0なら.
+			if (m_bShot){	// ショットが押された時.
+				((CShot *)m_vecpShotList[j])->Set(1);	// 1をセット.
+				m_iShotIdx = j + 1;
+				if (m_iShotIdx >= m_vecpShotList.size()){	// サイズ以上.
+					m_iShotIdx = 0;	// 0に戻す.
+				}
+				break;	// 抜ける.
+			}
+		}
+		else if (iState == 1){	// 1なら.
+			((CShot *)m_vecpShotList[j])->m_y--;	// y座標を1減らす.
+			if (((CShot *)m_vecpShotList[j])->m_y <= -32){	// -32以下.
+				((CShot *)m_vecpShotList[j])->Set(2);
+			}
+		}
+		else if (iState == 2){	// 2なら.
+			((CShot *)m_vecpShotList[j])->Set(0);	// 0にリセット.
+		}
+		j++;	// jを増やす.
+		if (j >= m_vecpShotList.size()){	// jがサイズ以上.
+			j = 0;	// 0に戻す.
+		}
+	}
+
 	// シーン継続なら0.
 	return 0;	// 0を返す.
 
@@ -176,7 +215,14 @@ void CPlayer::DrawShot(){
 
 	// ショットの描画.
 	for (int i = 0; i < m_vecpShotList.size(); i++){
-		((CShot *)m_vecpShotList[i])->DrawSprite(((CShot *)m_vecpShotList[i])->m_x, ((CShot *)m_vecpShotList[i])->m_y, 0);	// 描画.
+		int iState = ((CShot *)m_vecpShotList[i])->Get();	// iState取得.
+		if (iState == 1){	// 状態が1なら描画.
+			((CShot *)m_vecpShotList[i])->DrawSprite(((CShot *)m_vecpShotList[i])->m_x, ((CShot *)m_vecpShotList[i])->m_y, 0);	// 描画.
+		}
+		else if (iState == 0){	// 0なら自機の座標.
+			((CShot *)m_vecpShotList[i])->Set(m_x + 32 / 2 - 4 / 2, m_y);
+			//((CShot *)m_vecpShotList[i])->DrawSprite(((CShot *)m_vecpShotList[i])->m_x, ((CShot *)m_vecpShotList[i])->m_y, 0);	// 描画.
+		}
 	}
 
 }
@@ -189,8 +235,8 @@ void CPlayer::CreateShot(int iSize){
 		CShot *pShot = new CShot(m_pScene);	// CShotオブジェクトの作成.
 		pShot->Add(0, 32, 4, 32, IDB_SHARED2);	// イメージ追加.
 		pShot->AddMask(320 + 0, 32, 4, 32, IDB_SHARED2);	// イメージ追加.
-		pShot->m_x = m_x;
-		pShot->m_y = m_y;
+		pShot->Set(m_x + 32 / 2 - 4 / 2, m_y);	// pShot->Setでm_x, m_yをセット.
+		pShot->Set(0);	// 状態0をセット.
 		m_vecpShotList.push_back(pShot);	// m_vecpShotList.push_backで追加.
 	}
 

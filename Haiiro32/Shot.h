@@ -14,6 +14,7 @@ class CShot : public CSharedObject{
 
 		// publicメンバ変数
 		std::vector<CSharedObject *> m_vecpMaskList;	// マスクリストm_vecpMaskList.
+		int m_iState;	// 状態.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
@@ -26,6 +27,9 @@ class CShot : public CSharedObject{
 		virtual void Destroy();	// ショットの破棄Destroy.
 		virtual void Draw(int x, int y, int iNo);	// シェアードオブジェクトの描画Draw.
 		virtual void DrawSprite(int x, int y, int iNo);	// スプライトの描画DrawSprite.
+		virtual void Set(int x, int y);	// 位置をセットするSet.
+		virtual void Set(int iState);	// 状態のセット.
+		virtual int Get();	// 状態の取得.
 
 };
 
