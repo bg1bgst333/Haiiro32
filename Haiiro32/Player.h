@@ -18,12 +18,14 @@ class CPlayer : public CCharacter{
 		BOOL m_bRight;	// 右が押されているフラグm_bRight.
 		BOOL m_bLeft;	// 左が押されているフラグm_bLeft.
 		int m_iNo;	// アニメーション番号m_iNo.
+		std::vector<CSharedObject *> m_vecpShotList;	// ショットリストm_vecpShotList.
 
 		// publicメンバ関数
 		// コンストラクタ・デストラクタ
 		CPlayer();	// コンストラクタCPlayer
 		CPlayer(CScene *pScene);	// デストラクタCPlayer(CScene *pScene)
 		virtual ~CPlayer();	// デストラクタ~CPlayer()
+		virtual void Destroy();	// キャラクターの破棄Destroy.
 		virtual void Clear();	// マップの移動状態をクリア.
 		virtual void Down();	// マップの視点を下に移動Down.(マップ自体は上に移動.)
 		virtual void Up();	// マップの視点を上に移動Up.(マップ自体は下に移動.)
@@ -33,6 +35,8 @@ class CPlayer : public CCharacter{
 		virtual void Set(int x, int y);	// 位置をセットするSet.
 		virtual void Set(int iNo);	// アニメーションをセットするSet.
 		virtual void Draw();	// 描画をするDraw.
+		virtual void DrawShot();	// ショットを描画するDrawShot.
+		virtual void CreateShot(int iSize);	// ショットの作成CreateShot.
 
 };
 

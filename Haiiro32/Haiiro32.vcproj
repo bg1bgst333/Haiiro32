@@ -277,6 +277,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Shot.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Title.cpp"
 				>
 			</File>
@@ -408,6 +412,10 @@
 			</File>
 			<File
 				RelativePath=".\SharedResources.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shot.h"
 				>
 			</File>
 			<File

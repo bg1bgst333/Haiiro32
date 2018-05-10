@@ -1,6 +1,8 @@
 // ヘッダのインクルード
 // 独自のヘッダ
 #include "Player.h"	// CPlayer
+#include "Shot.h"	// CShot
+#include "resource.h"	// リソース.
 
 // コンストラクタCPlayer
 CPlayer::CPlayer() : CCharacter(){
@@ -11,6 +13,7 @@ CPlayer::CPlayer() : CCharacter(){
 	m_bRight = FALSE;	// m_bRightにFALSEをセット.
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_iNo = 0;	// m_iNoに0をセット.
+	m_vecpShotList.clear(); // m_vecpShotList.clearでクリア.
 
 }
 
@@ -23,6 +26,7 @@ CPlayer::CPlayer(CScene *pScene) : CCharacter(pScene){
 	m_bRight = FALSE;	// m_bRightにFALSEをセット.
 	m_bLeft = FALSE;	// m_bLeftにFALSEをセット.
 	m_iNo = 0;	// m_iNoに0をセット.
+	m_vecpShotList.clear(); // m_vecpShotList.clearでクリア.
 
 }
 
@@ -37,6 +41,24 @@ CPlayer::~CPlayer(){
 
 	// 破棄.
 	Destroy();	// Destroyで破棄.
+
+}
+
+// キャラクターの破棄Destroy.
+void CPlayer::Destroy(){
+
+	// ショットの破棄.
+	for (std::vector<CSharedObject *>::iterator itor = m_vecpShotList.begin(); itor != m_vecpShotList.end(); itor++){	// リスト全ての破棄.
+		if ((*itor) != NULL){	// (*itor)がNULLじゃない時.
+			(*itor)->Destroy();	// (*itor)->Destroyで破棄.
+			delete (*itor);	// deleteで(*Itor)を破棄.
+			(*itor) = NULL;	// NULLをセット.
+		}
+	}
+	m_vecpShotList.clear();	// クリア.
+
+	// 親クラスのメンバ関数.
+	CCharacter::Destroy();	// CCharacter::Destroyで破棄.
 
 }
 
@@ -146,5 +168,30 @@ void CPlayer::Draw(){
 	// 描画.
 	//CCharacter::Draw(m_x, m_y, m_iNo);	// CCharacter::Drawで描画.
 	CCharacter::DrawSprite(m_x, m_y, m_iNo);	// CCharacter::DrawSpriteで描画.
+
+}
+
+// ショットを描画するDrawShot.
+void CPlayer::DrawShot(){
+
+	// ショットの描画.
+	for (int i = 0; i < m_vecpShotList.size(); i++){
+		((CShot *)m_vecpShotList[i])->DrawSprite(((CShot *)m_vecpShotList[i])->m_x, ((CShot *)m_vecpShotList[i])->m_y, 0);	// 描画.
+	}
+
+}
+
+// ショットの作成CreateShot.
+void CPlayer::CreateShot(int iSize){
+
+	// ショットの作成.
+	for (int i = 0; i < iSize; i++){	// iSize個繰り返す.
+		CShot *pShot = new CShot(m_pScene);	// CShotオブジェクトの作成.
+		pShot->Add(0, 32, 4, 32, IDB_SHARED2);	// イメージ追加.
+		pShot->AddMask(320 + 0, 32, 4, 32, IDB_SHARED2);	// イメージ追加.
+		pShot->m_x = m_x;
+		pShot->m_y = m_y;
+		m_vecpShotList.push_back(pShot);	// m_vecpShotList.push_backで追加.
+	}
 
 }
